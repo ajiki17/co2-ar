@@ -275,6 +275,7 @@ body.text-mode .scene, body.text-mode model-viewer, body.text-mode .arbox{displa
   <div class="field"><span class="q" id="qc">その中から、まず1つ決めるなら</span><div class="pick" id="pick" role="group" aria-labelledby="qc"><span style="color:var(--sub);font-size:.85rem">上で選ぶと、ここに出てきます</span></div></div>
   <div class="field"><span class="q" id="q2">あらためて。日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q2" data-q="post"></div></div>
   <div class="field"><span class="q" id="qi2">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi2" data-q="ipost"></div></div>
+  <div class="field"><span class="q">理解度クイズ（3問）：体験の内容から、あてはまるものを1つずつ選んでください。</span><div id="quizBox"></div></div>
   <div class="field"><span class="q">体験を終えて、あらためて。「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち最初の質問で「現在、取り組んでいる」と回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7post"></div></div>
   <p style="font-size:.8rem;color:var(--sub)">回答は、体験の効果を確かめるために匿名で集計します。保存するのは年代・地域・前後の回答・選んだ選択肢だけで、名前などは保存しません。</p>
   <button class="btn" id="finish">宣言カードをつくる</button>
@@ -549,14 +550,14 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
 })();
 
 // ---------- 回答の保存と集計 (db) ----------
-const API=''; // ← Google Apps Script のウェブアプリURLを入れる（gas/Code.gs）。空のときは保存しない
+const API='https://script.google.com/macros/s/AKfycbwUBvNo37f7Y0D1jM7PqMLqdTgLMQPrgf8wDgdq3aXf7OEz4jLBtYy1ot3br_YtqdAdKQ/exec'; // Google Apps Script のウェブアプリURL（gas/Code.gs）
 const GROUP=(new URLSearchParams(location.search).get('g')||'').slice(0,2);
 const pct=(n,d)=>d?Math.round(n/d*100)+'%':'―';
 async function saveAndAggregate(chosenIdxs, chosenOne){
   const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:.88rem;color:var(--sub)"';
   if(!API){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>このページでは、回答は保存されません。</p>`; return; }
   box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計しています…</p>`;
-  const K=window.KAKU?window.KAKU():{}; const doc={region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:ans.ipre, ipost:ans.ipost, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost};
+  const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:ans.ipre, ipost:ans.ipost, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
   let saved=true; try{ await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(doc)}); }catch(e){ saved=false; }   // 失敗しても体験は止めない
   let a=null; try{ a=await (await fetch(API)).json(); }catch(e){}
   if(!a){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計を読み込めませんでした。</p>`; return; }
@@ -740,6 +741,12 @@ reveal(); updateGen(); drawFuture(); drawElder();
   // 企業の商品選択（選択肢9）：1＝現在実践、2＝今後取り組みたい、3＝どちらでもない（分析⑤の主な指標）
   window.KAKU=()=>{ const q6=picked('q6'); if(!q6.length && !picked('q7pre').length && !picked('q7post').length) return {};
     return { cpre: q6.includes(9)?1:(picked('q7pre').includes(9)?2:3), cpost: q6.includes(9)?1:(picked('q7post').includes(9)?2:3) }; };
+  const QUIZ=[['今の20歳が生まれた時点で、世界のこれまでのCO₂排出のうち、すでに積み上がっていたのはおよそ何%？',['約10%','約40%','約64%','約90%'],2],
+    ['日本で出たCO₂のうち、家庭で使う電気やガスの分はおよそ何%？',['約16%','約40%','約60%','約84%'],0],
+    ['大阪で、小中学生の9年間に経験した猛暑日が多かったのはどちら？',['今の60歳','今の15歳','ほぼ同じ'],1]];
+  const qb=document.getElementById('quizBox');
+  if(qb) qb.innerHTML=QUIZ.map(([q,opts],i)=>`<p style="margin:10px 0 4px">${i+1}．${q}</p><div class="checks">${opts.map((o,j)=>`<label><input type="radio" name="quiz${i}" value="${j}"><span>${o}</span></label>`).join('')}</div>`).join('');
+  window.QUIZSCORE=()=>{ const a=QUIZ.map((_,i)=>document.querySelector(`input[name="quiz${i}"]:checked`)); if(a.every(x=>!x)) return ''; return QUIZ.reduce((n,[, ,ok],i)=>n+(a[i]&&+a[i].value===ok?1:0),0); };
   const CONTACT='', DELETE_DATE='';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
   document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。回答は匿名で、保存するのは年代・地域・質問への回答・選んだ選択肢・かかった時間だけです。名前やメールアドレスは保存しません。途中でやめても問題ありません。'+(DELETE_DATE?`データは${DELETE_DATE}に削除します。`:'')+(CONTACT?`問い合わせ：${CONTACT}`:'');
   if(qs.get('start')==='ar'){                                                        // 審査員用の近道
