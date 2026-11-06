@@ -213,7 +213,7 @@ body.text-mode .scene, body.text-mode model-viewer, body.text-mode .arbox{displa
   <div class="scene" id="scFlood"><div class="under" id="under"></div><div class="cap" id="capFlood">ドラッグで見回せます</div></div>
   <p id="wdText" style="margin-top:12px"></p>
   <div class="arbox">
-    <model-viewer id="mvFlood" src="models/flood_050.glb" alt="床から0.5mまで水が来た部屋（実寸）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" loading="lazy" shadow-intensity="0.4" style="width:100%;height:220px;background:var(--soft);border-radius:16px">
+    <model-viewer id="mvFlood" src="flood_050.glb" alt="床から0.5mまで水が来た部屋（実寸）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" loading="lazy" shadow-intensity="0.4" style="width:100%;height:220px;background:var(--soft);border-radius:16px">
       <button slot="ar-button" class="btn" style="position:absolute;left:12px;bottom:12px">ARで、自分の部屋に水を入れる</button>
     </model-viewer>
     <p style="font-size:.85rem;color:var(--sub);margin-top:8px">床にカメラを向けると、選んだ高さまで水が来た状態が実寸で重なります。机やベッドの高さと比べてください。0.5mごとに色を変えた柱が目盛りです。</p>
@@ -405,7 +405,7 @@ function setSpan(m){ spanMode=m; press('data-span',m); const t=$('volText'),cap=
     else {cap.textContent=`箱1つが6畳間。${age}年分で${n.toLocaleString()}部屋`; t.innerHTML=`生まれてから今日まで、あなたの分として数えられるのは約<b>${Math.round(lifeTons())}トン</b>。6畳間にして約<b>${n.toLocaleString()}部屋</b>分が、見えないまますでに大気にあります。`;} } }
 document.querySelectorAll('[data-span]').forEach(b=>b.addEventListener('click',()=>setSpan(b.dataset.span)));
 document.querySelectorAll('[data-span]').forEach(b=>b.addEventListener('click',()=>{ const sp=b.dataset.span, mvx=document.getElementById('mv'); if(!mvx) return;
-  const a=Math.min(99,Math.max(10,age)); mvx.setAttribute('src', sp==='life' ? `models/cube_life_${a}.glb` : `models/cube_${sp}.glb`);
+  const a=Math.min(99,Math.max(10,age)); mvx.setAttribute('src', sp==='life' ? `cube_life_${a}.glb` : `cube_${sp}.glb`);
   const note=document.getElementById('arSpanNote'); if(note) note.textContent = sp==='day' ? '' : 'とても大きいので、ARは屋外の広い場所で試してください。室内では1日分がおすすめです。'; }));
 
 // ---------- 体験2 ----------
@@ -433,7 +433,7 @@ function drawFuture(){ const RR=REG[region]||REG.kinki, rn=REG[region]?RR.n:'近
   $('wdText').textContent={0.5:'0.5m：床上浸水。大人のひざの上まで水が来ます。流れがあると、歩いて逃げるのが難しくなるおそれがあります。',1:'1.0m：大人の腰から胸まで。家具が動き、ドアが水圧で開きにくくなるおそれがあります。',3:'3.0m：2階の床の高さまで。1階にいると、上の階へ逃げるしかなくなります。'}[wd]; }
 document.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{sc=+b.dataset.sc;press('data-sc',sc);drawFuture();drawRegion();}));
 document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{wd=+b.dataset.wd;press('data-wd',b.dataset.wd);drawFuture();}));
-document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{ const cm=String(Math.round(Number(b.dataset.wd)*100)).padStart(3,'0'); const f=document.getElementById('mvFlood'); if(f) f.setAttribute('src',`models/flood_${cm}.glb`); }));
+document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{ const cm=String(Math.round(Number(b.dataset.wd)*100)).padStart(3,'0'); const f=document.getElementById('mvFlood'); if(f) f.setAttribute('src',`flood_${cm}.glb`); }));
 function initFlood(){ const el=$('scFlood'); if(!window.THREE){$('capFlood').textContent='3Dを読み込めませんでした';return;}
   S4=baseScene(el,72); const s=S4.scene; S4.r.setClearColor(0x6e7682);
   buildRoom(s,{W:3.6,D:2.7,H:2.4,floor:T.wood,window:true,sky:T.rainsky,sun:.35,sunColor:0xc8d2de});
@@ -536,7 +536,7 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
 
 // ---------- AR (model-viewer) ----------
 (function(){  const mv=$('mv'), msg=$('arMsg');
-  mv.setAttribute('src','models/cube_day.glb');
+  mv.setAttribute('src','cube_day.glb');
   const diag=()=>{ let fr='不明'; try{ fr = (window.self!==window.top)?'埋め込み表示（iframe）':'単独のページ'; }catch(e){ fr='埋め込み表示（iframe）'; } const ua=navigator.userAgent; const ios=/iPhone|iPad/.test(ua), crios=/CriOS/.test(ua); $('arDiag').textContent=`AR起動可否: ${mv.canActivateAR?'可':'不可'} ／ 表示形態: ${fr} ／ 端末: ${ios?'iOS':'その他'}${crios?'（Chrome）':''} ／ Quick Look対応: ${(()=>{try{return document.createElement('a').relList.supports('ar')?'あり':'なし'}catch(e){return '不明'}})()} ／ model-viewer: ${customElements.get('model-viewer')?'読み込み済':'未読み込み'}`; };
   const ua=navigator.userAgent, isIOS=/iPhone|iPad/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1), iosOther=isIOS&&/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
   let qlOK=false; try{ qlOK=document.createElement('a').relList.supports('ar'); }catch(e){}
@@ -726,7 +726,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
     const mx=Math.max(me.days,young.days,1);
     document.getElementById('oppBars').innerHTML=`<div class="row"><span>あなた（${by}年生まれ）</span><div class="bar me" style="width:${me.days/mx*100}%"></div></div><div class="row"><span>今の15歳</span><div class="bar young" style="width:${young.days/mx*100}%"></div></div>`;
   }
-  fetch('data/data.json').then(r=>r.json()).then(d=>{D=d;drawOpportunity();}).catch(()=>{document.getElementById('oppText').textContent='データを読み込めませんでした。';});
+  fetch('data.json').then(r=>r.json()).then(d=>{D=d;drawOpportunity();}).catch(()=>{document.getElementById('oppText').textContent='データを読み込めませんでした。';});
   document.getElementById('age').addEventListener('input',drawOpportunity);
   document.getElementById('reg').addEventListener('change',drawOpportunity);
   document.getElementById('reg').addEventListener('change',()=>{ try{ drawFuture(); }catch(e){} });
