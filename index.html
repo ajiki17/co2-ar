@@ -428,7 +428,7 @@ function growStack(){[...stack.children].forEach(d=>d.style.flexGrow=d.dataset.v
 const CTR=[['アメリカ',14.197],['中国',8.658],['日本（あなた）',7.772],['ドイツ',6.769],['世界全体',4.729],['インド',2.201],['バングラデシュ',0.624],['エチオピア',0.135]];
 CTR.forEach(([n,v])=>{const r=document.createElement('div');r.className='cbar'+(n.startsWith('日本')?' jp':'');r.innerHTML=`<span>${n}</span><span class="t"><i></i></span><span class="v">${v.toFixed(1)}t</span>`;$('countries').appendChild(r);});
 function genVals(){const pw=CUMW[String(birth()-1)]||0, pj=CUM[String(birth()-1)]||0; const b=Math.round(pw/CUMW['2024']*100), bj=Math.round(pj/CUM['2024']*100); return [b,100-b,bj];}
-function updateGen(){const [b,a]=genVals();$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1850〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
+function updateGen(){const [b,a]=genVals();$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
 let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children;g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
 
 // ---------- 体験4 : flood ----------
@@ -753,7 +753,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   window.KAKU=()=>{ const q6=picked('q6'); if(!q6.length && !picked('q7pre').length && !picked('q7post').length) return {};
     return { cpre: q6.includes(9)?1:(picked('q7pre').includes(9)?2:3), cpost: q6.includes(9)?1:(picked('q7post').includes(9)?2:3) }; };
   const QUIZ=[['今の20歳が生まれた時点で、世界のこれまでのCO₂排出のうち、すでに積み上がっていたのはおよそ何%？',['約10%','約40%','約64%','約90%'],2],
-    ['日本で出たCO₂のうち、家庭で使う電気やガスの分はおよそ何%？',['約16%','約40%','約60%','約84%'],0],
+    ['日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分はおよそ何%？',['約16%','約40%','約60%','約84%'],0],
     ['大阪で、小中学生の9年間に経験した猛暑日が多かったのはどちら？',['今の60歳','今の15歳','ほぼ同じ'],1]];
   const qb=document.getElementById('quizBox');
   if(qb) qb.innerHTML=QUIZ.map(([q,opts],i)=>`<p style="margin:10px 0 4px">${i+1}．${q}</p><div class="checks">${opts.map((o,j)=>`<label><input type="radio" name="quiz${i}" value="${j}"><span>${o}</span></label>`).join('')}</div>`).join('');
