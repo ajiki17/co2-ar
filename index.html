@@ -1,5 +1,14 @@
 <!DOCTYPE html>
 <html lang="ja"><head><meta charset="utf-8">
+<script>
+// アプリ内ブラウザの判定（ARが使えない）。LINE は openExternalBrowser=1 を付けて外部ブラウザで開き直す
+(function(){ var ua=navigator.userAgent||'', n='';
+  if(/\bLine\//i.test(ua)) n='LINE'; else if(/Instagram/i.test(ua)) n='Instagram'; else if(/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) n='Facebook';
+  else if(/Twitter/i.test(ua)) n='X（Twitter）'; else if(/MicroMessenger/i.test(ua)) n='WeChat'; else if(/BytedanceWebview|musical_ly|TikTok/i.test(ua)) n='TikTok'; else if(/KAKAOTALK/i.test(ua)) n='KakaoTalk';
+  window.INAPP=n;
+  if(n==='LINE'){ try{ var u=new URL(location.href); if(u.searchParams.get('openExternalBrowser')!=='1'){ u.searchParams.set('openExternalBrowser','1'); window.INAPP_REDIRECT=true; location.replace(u.toString()); } }catch(e){} }
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>そのCO₂のつけは、誰が払う？</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -118,12 +127,22 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .oppbars .bar.me{background:#1f5fbf}.oppbars .bar.young{background:#e8702a}
 .checks{display:grid;gap:6px;margin-top:8px}.checks label{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;line-height:1.5}.checks input{margin-top:5px}.checks label.off{opacity:.4}
 .judge-note{background:var(--soft);border-left:4px solid #e8702a;padding:10px 12px;border-radius:8px;font-size:.92rem}
+.inapp{background:#fff4d6;color:#1a1d23;border-bottom:3px solid #e8702a;padding:14px 20px;font-size:1rem;line-height:1.6}.inapp p{margin:0 0 10px;font-weight:700}.inapp .btn{font-size:1rem;padding:10px 16px}.inapp span{display:block;margin-top:8px;font-size:1rem}
 body.text-mode .scene, body.text-mode model-viewer, body.text-mode .arbox, body.text-mode .no-tx{display:none!important}
 .safe{font-size:1rem;font-weight:700;margin:12px 0 8px}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
 </style></head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="heat" x="0" y="0" width="100%" height="100%"><feTurbulence id="turb" type="fractalNoise" baseFrequency="0.006 0.018" numOctaves="1" seed="3"/><feDisplacementMap id="disp" in="SourceGraphic" scale="0"/></filter></svg>
+<div id="inapp" class="inapp" role="alert" hidden><p>このアプリの中ではARが使えません。右上（または右下）のメニューから「Safariで開く」（AndroidはChromeで開く）を選んでください</p><button type="button" class="btn" id="inappCopy">URLをコピー</button><span id="inappMsg" aria-live="polite"></span></div>
+<script>
+(function(){ if(!window.INAPP||window.INAPP_REDIRECT) return; var box=document.getElementById('inapp'); box.hidden=false;
+  var url=function(){ try{ var u=new URL(location.href); u.searchParams.delete('openExternalBrowser'); return u.toString(); }catch(e){ return location.href; } };
+  var done=function(ok){ document.getElementById('inappMsg').textContent= ok?'コピーしました。Safari（AndroidはChrome）に貼り付けて開いてください。':'コピーできませんでした。メニューの「リンクをコピー」などを使ってください。'; };
+  var fallback=function(t){ try{ var a=document.createElement('textarea'); a.value=t; a.setAttribute('readonly',''); a.style.position='fixed'; a.style.opacity='0'; document.body.appendChild(a); a.select(); a.setSelectionRange(0,t.length); var ok=document.execCommand('copy'); a.remove(); done(ok); }catch(e){ done(false); } };
+  document.getElementById('inappCopy').addEventListener('click',function(){ var t=url(); if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){done(true);},function(){fallback(t);}); else fallback(t); });
+})();
+</script>
 <div class="ticker" aria-live="off"><span>このページを開いてから出た、あなたの分のCO₂</span><b><span id="tick">0.0</span>g</b></div>
 <div class="wrap">
 <header>
@@ -547,7 +566,7 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
 // ---------- AR (model-viewer) ----------
 (function(){  const mv=$('mv'), msg=$('arMsg');
   mv.setAttribute('src','cube_day.glb?v=3');
-  const diag=()=>{ let fr='不明'; try{ fr = (window.self!==window.top)?'埋め込み表示（iframe）':'単独のページ'; }catch(e){ fr='埋め込み表示（iframe）'; } const ua=navigator.userAgent; const ios=/iPhone|iPad/.test(ua), crios=/CriOS/.test(ua); $('arDiag').textContent=`AR起動可否: ${mv.canActivateAR?'可':'不可'} ／ 表示形態: ${fr} ／ 端末: ${ios?'iOS':'その他'}${crios?'（Chrome）':''} ／ Quick Look対応: ${(()=>{try{return document.createElement('a').relList.supports('ar')?'あり':'なし'}catch(e){return '不明'}})()} ／ model-viewer: ${customElements.get('model-viewer')?'読み込み済':'未読み込み'}`; };
+  const diag=()=>{ let fr='不明'; try{ fr = (window.self!==window.top)?'埋め込み表示（iframe）':'単独のページ'; }catch(e){ fr='埋め込み表示（iframe）'; } if(window.INAPP) fr=`アプリ内ブラウザ（${window.INAPP}）`; const ua=navigator.userAgent; const ios=/iPhone|iPad/.test(ua), crios=/CriOS/.test(ua); $('arDiag').textContent=`AR起動可否: ${mv.canActivateAR?'可':'不可'} ／ 表示形態: ${fr} ／ 端末: ${ios?'iOS':'その他'}${crios?'（Chrome）':''} ／ Quick Look対応: ${(()=>{try{return document.createElement('a').relList.supports('ar')?'あり':'なし'}catch(e){return '不明'}})()} ／ model-viewer: ${customElements.get('model-viewer')?'読み込み済':'未読み込み'}`; };
   const ua=navigator.userAgent, isIOS=/iPhone|iPad/.test(ua)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1), iosOther=isIOS&&/CriOS|FxiOS|EdgiOS|OPiOS/.test(ua);
   let qlOK=false; try{ qlOK=document.createElement('a').relList.supports('ar'); }catch(e){}
   const ready=()=>{ diag();
