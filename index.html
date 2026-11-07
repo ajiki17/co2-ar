@@ -185,6 +185,24 @@ html.mo .oppbars .bar{transform-origin:0 50%}
 .ecomsg{border-left:4px solid var(--blue);background:var(--bg);border-radius:0 12px 12px 0;padding:10px 12px;margin:10px 0 0;font-size:1rem}
 .ecomsg b{display:block}
 .ecosim{font-size:1rem;color:var(--sub);margin:8px 0 0}
+/* ---- v1.11 体験4 避難の判断ゲーム ---- */
+.fglv{position:absolute;left:10px;top:10px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;max-width:calc(100% - 20px);background:rgba(15,20,30,.82);color:#fff;border-radius:10px;padding:6px 10px;font-size:1rem;line-height:1.4;pointer-events:none}
+.fglv b{display:inline-block;border-radius:6px;padding:1px 8px;font-size:1rem;background:#55606e;color:#fff}
+.fgsit{position:absolute;left:10px;right:10px;bottom:10px;z-index:3;background:rgba(15,20,30,.82);color:#fff;border-radius:10px;padding:8px 12px;font-size:1rem;line-height:1.5;pointer-events:none}
+.scene.fgon .cap{display:none}
+.fglv b.l3{background:#c8102e}.fglv b.l4{background:#7a2fa0}.fglv b.l5{background:#000;outline:2px solid #fff}
+.fgame{background:var(--soft);border-radius:14px;padding:16px;margin:12px 0;scroll-margin-bottom:12px}
+.fgame .how{font-size:1rem;font-weight:700;margin:0 0 10px}
+.fgstep{font-size:1rem;color:var(--sub);margin:0 0 8px}
+.fgbtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.fgbtns button{appearance:none;font:inherit;font-size:1rem;font-weight:700;line-height:1.3;min-height:64px;padding:8px 6px;border:2px solid var(--blue);border-radius:12px;background:var(--bg);color:var(--blue);cursor:pointer}
+.fgbtns button[data-fg=wait]{border-color:var(--line);color:var(--ink)}
+.fgcard{background:var(--bg);border-left:5px solid var(--blue);border-radius:0 12px 12px 0;padding:12px 14px;font-size:1rem}
+.fgcard.good{border-left-color:#1e8449}.fgcard.warn{border-left-color:#c0392b}
+.fgcard .rc{display:block;color:var(--sub);font-size:1rem;margin-bottom:4px}
+.fgcard p{margin:6px 0 0}
+.fgend{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.fgend .btn{font-size:1rem;text-decoration:none;display:inline-block}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
 </style></head>
 <body>
@@ -292,9 +310,17 @@ html.mo .oppbars .bar{transform-origin:0 50%}
   <h3>その大雨で、あなたの部屋が浸水したら</h3>
   <p class="no-tx" style="font-size:.9rem;color:var(--sub)">あなたの目の高さ（1.5m）から見た部屋。水は下から上がってきます。</p>
   <div class="seg" role="group" aria-label="浸水の深さ"><button aria-pressed="true" data-wd="0.5">0.5m</button><button aria-pressed="false" data-wd="1">1.0m</button><button aria-pressed="false" data-wd="3">3.0m</button></div>
-  <div class="pin" id="pin4"><div class="stick"><div class="scene" id="scFlood" data-vis="flood"><div class="under" id="under"></div><div class="cap" id="capFlood">ドラッグで見回せます</div></div>
+  <div class="pin" id="pin4"><div class="stick"><div class="scene" id="scFlood" data-vis="flood"><div class="under" id="under"></div><div class="fglv" id="fgLv" hidden><b id="fgLvT"></b><span id="fgLvW"></span></div><div class="fgsit" id="fgSit" aria-live="polite" hidden></div><div class="cap" id="capFlood">ドラッグで見回せます</div></div>
   <p class="tx" id="txFlood"></p>
   <p id="wdText" style="margin-top:12px"></p></div></div>
+  <div class="fgame no-tx" id="fgame">
+    <div id="fgStart"><p class="how">祖母と一緒に、いつ避難するかを決めてみましょう（約1分。やらなくても先へ進めます）</p><button type="button" class="btn" id="fgGo">判断ゲームを始める</button></div>
+    <div id="fgPlay" hidden><p class="fgstep" id="fgStep"></p>
+      <div class="fgbtns" role="group" aria-label="どうする？"><button type="button" data-fg="go">祖母と避難所へ向かう</button><button type="button" data-fg="up">2階へ上がる</button><button type="button" data-fg="wait">様子を見る</button></div></div>
+    <div id="fgEnd" hidden><div class="fgcard" id="fgCard"><span class="rc" id="fgRc"></span><b id="fgMsg"></b><p id="fgMsg2"></p></div>
+      <div class="fgend"><button type="button" class="btn ghost" id="fgAgain">もう一度</button><a class="btn" href="#s4b">次の場面へ</a></div></div>
+  </div>
+  <p class="tx" id="txGame">警戒レベル3「高齢者等避難」は、高齢者など避難に時間がかかる人が、危険な場所から避難を始める段階です。警戒レベル4「避難指示」は、危険な場所にいる人が全員避難する段階です。警戒レベル5「緊急安全確保」は、すでに災害が起きているおそれがあり、命を守るための最善の行動をとる段階で、必ず出るとは限りません。水がひざ（約50cm）を超えると、大人でも歩いての避難は危険です。流れがあれば20cmでも歩けなくなります。そのときは2階以上へ上がります。ただ、家が浸水する深さによっては2階も安全ではないので、<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で自宅の浸水の深さを確かめておきましょう。</p>
   <div class="arbox">
     <p class="safe">周りに人や段差がない、広い場所で使ってください</p>
     <model-viewer id="mvFlood" src="flood_050.glb?v=3" alt="床から0.5mまで水が来た部屋（実寸）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" loading="lazy" shadow-intensity="0.4" style="width:100%;height:220px;background:var(--soft);border-radius:16px">
@@ -389,7 +415,7 @@ html.mo .oppbars .bar{transform-origin:0 50%}
   </div>
 </section>
 
-<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
+<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
 </div>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -529,6 +555,8 @@ function updateGen(){const [b,a]=genVals();$('h3x').textContent=`${birth()}年�
 let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);}[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
 
 // ---------- 体験4 : flood ----------
+window.FGAME={on:false,show:false,wl:0,dest:''};   // 体験4の判断ゲーム（v1.11）
+const floodTarget=()=>FGAME.on?FGAME.wl:Math.min(wd,2.4);
 let S4=null, wd=0.5, sc=2, wl=0, rainT=0, floodIntro=RM?1:0;   // floodIntro：場面の入口で1回だけ、床から水が上がる（v1.8）
 const cal=$('cal'); for(let i=0;i<365;i++) cal.appendChild(document.createElement('i'));
 function drawFuture(){ const RR=REG[region]||REG.kinki, rn=REG[region]?RR.n:'近畿地方', tn=sc===2?RR.tn[0]:RR.tn[1], rain=sc===2?RR.r30[0]:RR.r30[1];
@@ -563,13 +591,23 @@ function initFlood(){ const el=$('scFlood'); if(!window.THREE){$('capFlood').tex
   // floating debris
   S4.float=[]; const fm=[new THREE.MeshStandardMaterial({color:0xc9a26b}),new THREE.MeshStandardMaterial({color:0xd0d6de}),new THREE.MeshStandardMaterial({color:0x8e44ad}),new THREE.MeshStandardMaterial({color:0xe67e22})];
   [[.5,.25,.35,-.6,.3],[.35,.12,.35,.9,.5],[.4,.1,.3,-.2,-.6],[.25,.25,.25,1.1,-.3],[.2,.08,.45,-1.0,.6]].forEach((d,i)=>{const m=box(d[0],d[1],d[2],fm[i%4],d[3],0,d[4],s);m.userData={ph:i*1.3,h:d[1]};S4.float.push(m);});
+  // 判断ゲームの2人と案内（v1.11。ゲーム中だけ表示）
+  const person=(h,col,stoop)=>{ const g=new THREE.Group(), m=new THREE.MeshLambertMaterial({color:col}); const body=new THREE.Mesh(new THREE.CylinderGeometry(.13,.15,h*.76,12),m); body.position.y=h*.38; g.add(body);
+    const head=new THREE.Mesh(new THREE.SphereGeometry(h*.07,14,10),new THREE.MeshLambertMaterial({color:0xe8c4a0})); head.position.y=h*.76+h*.07; g.add(head); if(stoop){ g.children.forEach(c=>c.rotation.x=stoop); const cane=new THREE.Mesh(new THREE.CylinderGeometry(.012,.012,h*.62,6),new THREE.MeshLambertMaterial({color:0x5a3d22})); cane.position.set(.2,h*.31,.08); g.add(cane); } s.add(g); return g; };
+  S4.you=person(1.7,0x2e5f9e,0); S4.gma=person(1.45,0x8e5ea2,.12);
+  S4.home={you:[.45,-.42],gma:[.08,-.5]}; S4.dest={door:{you:[1.5,-.72],gma:[1.18,-.68]},up:{you:[-.62,-.8],gma:[-.95,-.72]}};
+  const sign=(t,x,y)=>{ const m=new THREE.Mesh(new THREE.PlaneGeometry(.5,.25),new THREE.MeshBasicMaterial({map:tex(256,128,(g,w,h)=>{g.fillStyle='#1d6f42';g.fillRect(0,0,w,h);g.fillStyle='#fff';g.font='bold 54px sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(t,w/2,h/2+2);})})); m.position.set(x,y,-1.33); s.add(m); return m; };
+  S4.signs=[sign('↑ 2階へ',-.78,1.6),sign('玄関 →',1.5,1.45)]; S4.signs[0].position.z=-1.2; S4.signs[1].position.z=-1.24;
+  const placeHome=()=>{ S4.you.position.set(S4.home.you[0],0,S4.home.you[1]); S4.gma.position.set(S4.home.gma[0],0,S4.home.gma[1]); }; placeHome(); S4.placeHome=placeHome;
   // rain on window
   S4.drops=[]; const dm=new THREE.MeshBasicMaterial({color:0xdfe7ef,transparent:true,opacity:.6}); for(let i=0;i<60;i++){const d=new THREE.Mesh(new THREE.PlaneGeometry(.006,.08),dm);d.position.set(-.85+Math.random()*1.7,.8+Math.random()*1.2,-1.36);s.add(d);S4.drops.push(d);}
-  (function loop(){ if(vis.flood){ rainT+=.016; const k=RM?1:.02; if(floodIntro<1){ if(vis.floodT0) floodIntro=Math.min(1,(performance.now()-vis.floodT0)/2400); const e=floodIntro<.5?4*floodIntro**3:1-(-2*floodIntro+2)**3/2; wl=Math.min(wd,2.4)*e; } else wl+=(Math.min(wd,2.4)-wl)*k; const lv=Math.max(.002,wl);
+  (function loop(){ if(vis.flood){ rainT+=.016; const k=RM?1:.02; if(floodIntro<1){ if(vis.floodT0) floodIntro=Math.min(1,(performance.now()-vis.floodT0)/2400); const e=floodIntro<.5?4*floodIntro**3:1-(-2*floodIntro+2)**3/2; wl=floodTarget()*e; } else wl+=(floodTarget()-wl)*k; const lv=Math.max(.002,wl);
       const a=S4.water.geometry.attributes.position; for(let i=0;i<a.count;i++){const x=S4.base[i*3],z=S4.base[i*3+2]; a.setY(i,lv+(RM?0:Math.sin(x*3+rainT*2.1)*.012+Math.cos(z*4-rainT*1.7)*.01+Math.sin((x+z)*7+rainT*3)*.004));} a.needsUpdate=true; S4.water.geometry.computeVertexNormals();
       if(!RM&&S4.water.material.map){S4.water.material.map.offset.x=rainT*.01;S4.water.material.map.offset.y=Math.sin(rainT*.2)*.02;} S4.body.scale.y=lv; S4.body.position.y=lv/2;
       S4.float.forEach(m=>{const f=m.userData; m.position.y=Math.max(f.h/2, lv+(RM?0:Math.sin(rainT*1.4+f.ph)*.02)); m.rotation.z=RM?0:Math.sin(rainT+f.ph)*.08; m.rotation.x=RM?0:Math.cos(rainT*.8+f.ph)*.06; if(lv>f.h&&!RM){m.position.x+=Math.sin(rainT*.3+f.ph)*.0015;}});
       S4.drops.forEach(d=>{d.position.y-=RM?0:.012; if(d.position.y<.8) d.position.y=2.0;});
+      { const G=window.FGAME, on=G.show; S4.you.visible=S4.gma.visible=on; S4.signs.forEach(m=>m.visible=on);
+        if(on){ const D=G.dest?S4.dest[G.dest]:S4.home, kk=RM?1:.035; [['you',S4.you],['gma',S4.gma]].forEach(([n,o])=>{ o.position.x+=(D[n][0]-o.position.x)*kk; o.position.z+=(D[n][1]-o.position.z)*kk; }); } }
       const eye=1.5, under=lv>eye;
       $('under').style.background= under?'rgba(70,55,30,.78)':'rgba(70,55,30,0)'; $('under').textContent= under?'水面が目の高さを超えました。この部屋にとどまることはできません。':'';
       lookFrom(S4,-.9,eye+(RM?0:Math.sin(rainT*.9)*.01),.9,-.35,-.28); S4.r.render(S4.scene,S4.cam);} requestAnimationFrame(loop); })();
@@ -872,6 +910,41 @@ reveal(); updateGen(); drawFuture(); drawElder();
     const acKg=kgOf(R.kW.ac);
     $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、カーテンを閉めて日差しを遮ると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ますが、電気を再エネのプランにすると実質ゼロになります。`;
     $e('eco').hidden=false; update(); }
+  // ---------- 体験4：祖母と一緒に、いつ避難するか（v1.11） ----------
+  (function(){ const G=window.FGAME, $g=id=>document.getElementById(id); if(!$g('fgame')) return;
+    const ST=[ {lv:'',  name:'大雨',                 wl:0,   t:'大雨が続いています。あなたは祖母と2人で、1階の部屋にいます。'},
+               {lv:'l3',name:'警戒レベル3 高齢者等避難',wl:0,   t:'警戒レベル3「高齢者等避難」が出ました。避難に時間がかかる人は、避難を始める段階です。祖母は歩くのに時間がかかります。'},
+               {lv:'l4',name:'警戒レベル4 避難指示',   wl:.2,  t:'警戒レベル4「避難指示」が出ました。危険な場所にいる人は全員避難する段階です。道路が浸水し始めています。'},
+               {lv:'l4',name:'警戒レベル4 避難指示',   wl:.5,  t:'水が大人のひざ近くまで来ました。'},
+               {lv:'l5',name:'警戒レベル5 緊急安全確保',wl:1.0, t:'警戒レベル5「緊急安全確保」が出ました。すでに災害が起きているおそれがあります。'} ];
+    const HZ='<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>';
+    const UP='命を守る行動です。ただ、家が浸水する深さによっては2階も安全ではありません。'+HZ+'で自宅の浸水の深さを確かめておきましょう。';
+    let st=0;
+    const smooth=()=>matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth';
+    const show=id=>['fgStart','fgPlay','fgEnd'].forEach(x=>$g(x).hidden=x!==id);
+    // 3D場面の上端をヘッダーのすぐ下に。ボタンやカードが下にはみ出すときは、パネルの下端に合わせる（場面はピン留めなので、ピンの外枠から計算）
+    const keepInView=()=>setTimeout(()=>{ const tk=(document.querySelector('.ticker')||{offsetHeight:0}).offsetHeight, w=$g('pin4'), stH=w.firstElementChild.offsetHeight,
+      wb=w.getBoundingClientRect().bottom, pn=$g('fgame').getBoundingClientRect(); let dy=(wb-stH)-(tk+6); if(pn.bottom-dy>innerHeight-8) dy=pn.bottom-(innerHeight-8);
+      if(Math.abs(dy)>2) scrollBy({top:dy,behavior:smooth()}); },80);   // ピンの高さの再計算（ResizeObserver）を待つ
+    function stage(i){ st=i; const S=ST[i]; G.wl=S.wl; const b=$g('fgLvT'); b.textContent=S.name; b.className=S.lv; $g('fgLvW').textContent=`部屋の水位 ${S.wl.toFixed(1)}m`; $g('fgSit').textContent=S.t;
+      $g('fgStep').textContent=`段階 ${i+1}／${ST.length}　どうしますか？`; }
+    function start(){ G.on=G.show=true; G.dest=''; G.wl=0; if(typeof wl!=='undefined') wl=0; if(typeof S4!=='undefined'&&S4&&S4.placeHome) S4.placeHome(); $g('fgLv').hidden=$g('fgSit').hidden=false; $g('scFlood').classList.add('fgon'); $g('wdText').hidden=true; show('fgPlay'); stage(0); keepInView(); }
+    function end(kind,msg,msg2,dest,recap){ G.dest=dest; const c=$g('fgCard'); c.className='fgcard '+kind; $g('fgRc').textContent=recap; $g('fgMsg').innerHTML=msg; $g('fgMsg2').innerHTML=msg2||'';
+      $g('fgSit').textContent=dest==='door'?'2人は玄関へ向かいます。':'2人は2階へ上がります。'; show('fgEnd'); keepInView(); }
+    function choose(c){ const at=`段階${st+1}（${ST[st].name}）で`;
+      if(c==='wait'){ if(st<ST.length-1){ stage(st+1); return; }
+        return end('warn','命の危険が迫っています。直ちに2階以上へ。警戒レベル5は必ず出るとは限らないので、待たずに動くことが大切です。','','up',at+'「様子を見る」を選びました'); }
+      if(c==='up') return end('','',UP,'up',at+'「2階へ上がる」を選びました');
+      if(st<=1) return end('good','最善の判断。避難に時間がかかる人と一緒なら、警戒レベル3で動くのが目安です。','','door',at+'「祖母と避難所へ向かう」を選びました');
+      if(st===2) return end('','間に合いました。でも祖母と一緒なら、レベル3で動き始めると余裕がありました。','','door',at+'「祖母と避難所へ向かう」を選びました');
+      return end('warn','水がひざ（約50cm）を超えると、大人でも歩いての避難は危険です。流れがあれば20cmでも歩けなくなります。2階以上へ。',UP,'up',at+'「祖母と避難所へ向かう」を選びました（避難所へは向かわず、2階へ）'); }
+    function stop(){ G.on=G.show=false; G.dest=''; $g('fgLv').hidden=$g('fgSit').hidden=true; $g('scFlood').classList.remove('fgon'); $g('wdText').hidden=false; show('fgStart'); }
+    $g('fgGo').addEventListener('click',start);
+    document.querySelectorAll('[data-fg]').forEach(b=>b.addEventListener('click',()=>choose(b.dataset.fg)));
+    $g('fgAgain').addEventListener('click',start);
+    // 水位ボタン（0.5m／1.0m／3.0m）を押したら、ゲームを終えてボタンの表示に戻す
+    document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{ if(G.on) stop(); }));
+  })();
   document.getElementById('age').addEventListener('input',drawOpportunity);
   document.getElementById('reg').addEventListener('change',drawOpportunity);
   document.getElementById('reg').addEventListener('change',()=>{ try{ drawFuture(); }catch(e){} });
