@@ -952,6 +952,18 @@
    "label": "エアコン＝チームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）／扇風機＝一般的な目安（30W）",
    "url": "",
    "accessed": "2026-11-08"
+  },
+  {
+   "id": "alert_levels",
+   "label": "警戒レベル（内閣府「避難情報に関するガイドライン」の区分。大牟田市の資料による）",
+   "url": "https://www.city.omuta.lg.jp/kiji00317776/3_17776_88885_up_8xo0y0kq.pdf",
+   "accessed": "2026-11-08"
+  },
+  {
+   "id": "flood_walk",
+   "label": "浸水時に歩ける深さの目安（札幌市・明和町の防災資料）",
+   "url": "https://www.city.sapporo.jp/kikikanri/aramasi/documents/sin_sapporo_bosai-6huusuigai.pdf",
+   "accessed": "2026-11-08"
   }
  ],
  "room6": {
