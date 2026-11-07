@@ -934,6 +934,44 @@
    "label": "気象庁 大都市における猛暑日日数の長期変化傾向（年別値）",
    "url": "https://www.data.jma.go.jp/cpdinfo/himr/himr_tmaxGE35.html",
    "accessed": "2026-11-05"
+  },
+  {
+   "id": "enecho_ef",
+   "label": "資源エネルギー庁 電気の全国平均係数（2026年5月公表、0.423kg-CO2/kWh）",
+   "url": "",
+   "accessed": null
+  },
+  {
+   "id": "who_fan",
+   "label": "WHO 熱中症対策の助言（扇風機と室温の目安）",
+   "url": "",
+   "accessed": null
+  },
+  {
+   "id": "appliance_kw",
+   "label": "エアコン（6畳用の冷房）・扇風機の消費電力の一般的な目安",
+   "url": "",
+   "accessed": null
   }
- ]
+ ],
+ "room6": {
+  "note": "体験6の部屋のシミュレーション（目安）。外は猛暑日。",
+  "outdoorC": 35,
+  "roomC": {
+   "none": 34,
+   "window": 33,
+   "ac": 28
+  },
+  "riskHighC": 32,
+  "riskCautionC": 28,
+  "fanLimitC": 35,
+  "kW": {
+   "ac": 0.5,
+   "fan": 0.03
+  },
+  "hoursPerDay": 8,
+  "days": 90,
+  "kgCO2PerKWh": 0.423,
+  "room6M3": 23.28
+ }
 }
