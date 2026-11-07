@@ -176,7 +176,7 @@ html.mo .oppbars .bar{transform-origin:0 50%}
 .ecom b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
 .ecom .bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden;margin-top:6px}
 .ecom .bar i{display:block;height:100%;transform-origin:0 50%;transform:scaleX(0);transition:transform .6s ease;background:var(--blue)}
-.ecom .enote{font-size:1rem;color:var(--sub);margin:4px 0 0}
+.eco>.enote,.ecom .enote{font-size:1rem;color:var(--sub);margin:4px 0 0}
 .ecom .warn{font-size:1rem;font-weight:700;color:#a5281b;border-left:4px solid #c0392b;padding-left:8px;margin:6px 0 0}
 .risk-high{color:#b03020}.risk-mid{color:#9a6200}.risk-low{color:#1e7a43}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .risk-high{color:#ff8a7a}:root:not([data-theme="light"]) .risk-mid{color:#f3c15a}:root:not([data-theme="light"]) .risk-low{color:#6fd39a}:root:not([data-theme="light"]) .ecom .warn{color:#ff8a7a}}
@@ -349,7 +349,8 @@ html.mo .oppbars .bar{transform-origin:0 50%}
     <div class="cap">ドラッグで見回せます</div></div>
   <div class="eco no-tx" id="eco" hidden>
     <p class="how">ボタンを押すと、部屋の機器が動きます（押さなくても先へ進めます）</p>
-    <div class="ecobtns" role="group" aria-label="部屋の機器"><button type="button" aria-pressed="false" data-dev="ac">エアコン（冷房28℃）</button><button type="button" aria-pressed="false" data-dev="fan">扇風機</button><button type="button" aria-pressed="false" data-dev="win">窓を開ける</button></div>
+    <div class="ecobtns" role="group" aria-label="部屋の機器"><button type="button" aria-pressed="false" data-dev="ac">エアコン（冷房28℃）</button><button type="button" aria-pressed="false" data-dev="fan">扇風機</button><button type="button" aria-pressed="false" data-dev="cur">カーテンを閉める（日差しを遮る）</button></div>
+    <p class="enote" id="ecoWin">猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）</p>
     <div class="ecom" aria-live="polite">
       <div><div class="lab"><span>部屋の温度（目安）</span><b id="ecoT">34℃</b></div><div class="bar"><i id="ecoTb" style="background:#c0392b"></i></div><p class="enote" id="ecoTn">外は猛暑日（35℃）</p></div>
       <div><div class="lab"><span>熱中症の危険度</span><b id="ecoR" class="risk-high">高い</b></div><p class="enote" id="ecoRn"></p><p class="warn" id="ecoW" hidden></p></div>
@@ -388,7 +389,7 @@ html.mo .oppbars .bar{transform-origin:0 50%}
   </div>
 </section>
 
-<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh）／扇風機と室温の目安＝WHOの熱中症対策の助言／エアコン・扇風機の消費電力＝一般的な目安（6畳用の冷房）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
+<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
 </div>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -581,7 +582,7 @@ function growYears(){const pickIdx=(n,seed)=>{const s=new Set();let x=seed;while
   const a=pickIdx(2,7),b=pickIdx(7,11);[...yNo.children].forEach((c,i)=>setTimeout(()=>c.classList.toggle('hit',a.has(i)),RM?0:i*12));[...yYes.children].forEach((c,i)=>setTimeout(()=>c.classList.toggle('hit',b.has(i)),RM?0:i*12));}
 
 // ---------- 体験6 : elder ----------
-let S6=null, pv='young', temp=34, acFlap=null, acWind=null, curtain=null, fanBlade=null, thermo=null, et=0;
+let S6=null, pv='young', temp=34, acFlap=null, acWind=null, curtain=null, sun6=null, fanBlade=null, thermo=null, et=0;
 function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   S6=baseScene(el,68); const s=S6.scene; S6.r.setClearColor(0xf0e6d4);
   buildRoom(s,{W:3.6,D:2.7,H:2.4,floor:T.tatami,window:true,sky:T.sky,sun:1.1,sunColor:0xfff0d0});
@@ -605,8 +606,9 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   acFlap=box(.03,.02,.8,grey,1.56,1.97,-.55,s);
   acWind=new THREE.Group(); s.add(acWind); const windM=new THREE.MeshBasicMaterial({color:0xbfe6ff,transparent:true,opacity:.6,depthWrite:false,side:THREE.DoubleSide});
   for(let i=0;i<6;i++){ const w=new THREE.Mesh(new THREE.PlaneGeometry(.5,.025),windM); w.rotation.z=-.5; w.userData.ph=i/6; w.userData.z=-.85+(i%3)*.3; acWind.add(w); } acWind.visible=false;
-  // カーテン（窓の右。v1.9：窓を開けると揺れる）
-  curtain=new THREE.Group(); curtain.position.set(1.12,2.12,-1.3); s.add(curtain);
+  // カーテン（窓の右。v1.10：「カーテンを閉める」で窓を覆い、日差しが弱まる）
+  curtain=new THREE.Group(); curtain.position.set(1.12,2.12,-1.3); s.add(curtain); curtain.userData.k=0;
+  sun6=s.children.find(o=>o.isDirectionalLight)||null; if(sun6) sun6.userData.base=sun6.intensity;
   const cm=new THREE.Mesh(new THREE.PlaneGeometry(.38,1.45),new THREE.MeshStandardMaterial({color:0xe9e3d3,roughness:1,side:THREE.DoubleSide})); cm.position.y=-.72; curtain.add(cm);
   // wall thermometer
   thermo=new THREE.Mesh(new THREE.PlaneGeometry(.45,.45),new THREE.MeshBasicMaterial({map:thermoTex(temp)}));thermo.position.set(1.795,1.45,-.4);thermo.rotation.y=-Math.PI/2;s.add(thermo);
@@ -614,7 +616,7 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   const calM=new THREE.Mesh(new THREE.PlaneGeometry(.3,.42),new THREE.MeshBasicMaterial({map:tex(128,180,(g,w,h)=>{g.fillStyle='#fff';g.fillRect(0,0,w,h);g.fillStyle='#c0392b';g.font='bold 34px sans-serif';g.textAlign='center';g.fillText('8月',w/2,40);g.fillStyle='#555';for(let i=0;i<31;i++){g.font='13px sans-serif';g.fillText(i+1,14+(i%7)*17,70+Math.floor(i/7)*22);}})}));calM.position.set(1.795,1.45,.5);calM.rotation.y=-Math.PI/2;s.add(calM);
   (function loop(){ if(vis.elder){ et+=.016; const E=window.ECO||{}; if(fanBlade&&E.fan&&!RM) fanBlade.rotation.z+=.35;
       acFlap.rotation.z=E.ac?-.7:0; acWind.visible=!!E.ac; if(E.ac) acWind.children.forEach(w=>{ const t=RM?.45:(et*.6+w.userData.ph)%1; w.position.set(1.5-t*1.1,1.92-t*.7,w.userData.z); w.material.opacity=.6; });
-      curtain.rotation.x=E.win?(RM?.25:.22+Math.sin(et*2.1)*.16):0; curtain.rotation.z=E.win&&!RM?Math.sin(et*1.3)*.05:0;
+      { const u=curtain.userData, tgt=E.cur?1:0; u.k=RM?tgt:u.k+(tgt-u.k)*.08; curtain.position.x=1.12-.945*u.k; curtain.scale.x=1+4.9*u.k; if(sun6) sun6.intensity=sun6.userData.base*(1-.6*u.k); }
       const heat=Math.max(0,temp-28), sway=RM?0:(pv==='old'?.004:.0015)*heat;
       lookFrom(S6,-.7,1.05+Math.sin(et*1.3)*sway,.95,-1.05+Math.sin(et*.7)*sway*2,-.04); S6.r.render(S6.scene,S6.cam);
       const d=document.getElementById('disp'), tb=document.getElementById('turb'); if(d&&!RM){ d.setAttribute('scale', (heat*0.75).toFixed(2)); tb.setAttribute('baseFrequency', `0.006 ${(0.018+Math.sin(et*1.5)*0.004).toFixed(4)}`); } }
@@ -624,7 +626,7 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
 }
 function drawElder6Head(){ const y80=birth()+80; $('h6x').textContent=`${y80}年、80歳になったあなたの部屋`; $('pvOld').textContent=`${y80}年・80歳のあなた`;
   $('p6x').textContent = age>=80 ? `あなたはすでに80歳を超えています。この部屋は、いまのあなたの部屋です。` : `あなたが80歳になるのは${y80}年。${y80>=2081?'今世紀末、体験4で見た気温上昇の世界です。':'今より暑くなった世界です。'}体験3で見た積み重なりの影響を、年を取ったあなたが、一番暑さに弱い体で受けることになります。`; }
-window.ECO={ac:false,fan:false,win:false,re:false,fanLimit:35};   // 体験6の機器（v1.9）
+window.ECO={ac:false,fan:false,cur:false,re:false,fanLimit:35};   // 体験6の機器（v1.9）
 function drawElder(){ drawElder6Head(); const real=Math.min(100,(temp-24)/12*100), feel0=pv==='young'?real:Math.max(0,real*.55-8), feel=(ECO.fan&&temp<=ECO.fanLimit)?Math.max(0,feel0-8):feel0;   // 扇風機：体感だけ少し下がる
   $('mReal').style.width=real+'%'; $('mFeel').style.width=feel+'%';
   const heat=Math.max(0,temp-28); const cv=document.querySelector('#heatwrap canvas');
@@ -850,10 +852,10 @@ reveal(); updateGen(); drawFuture(); drawElder();
     const maxKg=kgOf(R.kW.ac+R.kW.fan), $e=id=>document.getElementById(id);
     const risk=t=>t>=R.riskHighC?['高い','risk-high']:t>=R.riskCautionC?['注意','risk-mid']:['低い','risk-low'];
     const setTemp=t=>{ temp=t; $e('temp').value=t; $e('tempOut').textContent=t; drawElder(); };
-    const roomByDevices=()=>E.ac?R.roomC.ac:E.win?R.roomC.window:R.roomC.none;
+    const roomByDevices=()=>E.ac?R.roomC.ac:E.cur?R.roomC.curtain:R.roomC.none;
     function update(){ const t=temp, [rl,rc]=risk(t);
       $e('ecoT').textContent=t+'℃'; $e('ecoTb').style.transform=`scaleX(${Math.max(0,Math.min(1,(t-24)/12)).toFixed(3)})`;
-      $e('ecoTn').textContent=`外は猛暑日（${R.outdoorC}℃）。`+(t!==roomByDevices()?`上のスライダーで${t}℃にしています。`:E.ac?`エアコン（冷房${R.roomC.ac}℃）で下がります。`:E.win?`窓を開けると少し下がります（${R.roomC.window}℃）。`:'何もしないと、この温度です。')+(E.fan&&!E.ac?'扇風機は室温を下げません。':'');
+      $e('ecoTn').textContent=`外は猛暑日（${R.outdoorC}℃）。`+(t!==roomByDevices()?`上のスライダーで${t}℃にしています。`:E.ac?`エアコン（冷房${R.roomC.ac}℃）で下がります。`:E.cur?`カーテンを閉めて日差しを遮ると、少し下がります（${R.roomC.curtain}℃）。`:'何もしないと、この温度です。')+(E.fan&&!E.ac?'扇風機は室温を下げません。':'');
       const r=$e('ecoR'); r.textContent=rl; r.className=rc;
       $e('ecoRn').textContent=E.fan&&t<=R.fanLimitC?'扇風機で体感は少し下がりますが、危険度の段階は変わりません。':'';
       const w=$e('ecoW'); w.hidden=!(E.fan&&t>R.fanLimitC); w.textContent='扇風機だけでは熱中症を防ぎきれないおそれがあります（WHO）';
@@ -868,7 +870,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
     $e('ecoMsg2').textContent=`体験のあとの「${CH[1][0]}」から選べます。`;
     $e('ecoSim').textContent=`部屋の温度はシミュレーション（目安）です。CO₂は、エアコン${R.kW.ac}kW・扇風機${R.kW.fan}kWを1日${R.hoursPerDay}時間×${R.days}日、電気1kWhあたり${R.kgCO2PerKWh}kgで計算しています。`;
     const acKg=kgOf(R.kW.ac);
-    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ますが、電気を再エネのプランにすると実質ゼロになります。`;
+    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、カーテンを閉めて日差しを遮ると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ますが、電気を再エネのプランにすると実質ゼロになります。`;
     $e('eco').hidden=false; update(); }
   document.getElementById('age').addEventListener('input',drawOpportunity);
   document.getElementById('reg').addEventListener('change',drawOpportunity);

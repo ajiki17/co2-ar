@@ -938,20 +938,20 @@
   {
    "id": "enecho_ef",
    "label": "資源エネルギー庁 電気の全国平均係数（2026年5月公表、0.423kg-CO2/kWh）",
-   "url": "",
-   "accessed": null
+   "url": "https://www.enecho.meti.go.jp/category/electricity_and_gas/electric/gwc/260525bessi.pdf",
+   "accessed": "2026-11-08"
   },
   {
    "id": "who_fan",
-   "label": "WHO 熱中症対策の助言（扇風機と室温の目安）",
-   "url": "",
-   "accessed": null
+   "label": "WHO 熱中症対策の助言（室温の目安・扇風機・窓の開け閉め）",
+   "url": "https://www.who.int/docs/default-source/documents/radiation/phe-info-for-the-public--heatwaves.pdf",
+   "accessed": "2026-11-08"
   },
   {
    "id": "appliance_kw",
-   "label": "エアコン（6畳用の冷房）・扇風機の消費電力の一般的な目安",
+   "label": "エアコン＝チームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）／扇風機＝一般的な目安（30W）",
    "url": "",
-   "accessed": null
+   "accessed": "2026-11-08"
   }
  ],
  "room6": {
@@ -959,14 +959,14 @@
   "outdoorC": 35,
   "roomC": {
    "none": 34,
-   "window": 33,
+   "curtain": 33,
    "ac": 28
   },
   "riskHighC": 32,
   "riskCautionC": 28,
   "fanLimitC": 35,
   "kW": {
-   "ac": 0.5,
+   "ac": 0.535,
    "fan": 0.03
   },
   "hoursPerDay": 8,
