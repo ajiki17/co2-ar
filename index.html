@@ -23,7 +23,8 @@ try{ if(!matchMedia('(prefers-reduced-motion: reduce)').matches) document.docume
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:calc(var(--tkh,60px) + 8px);scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{margin:0;font-size:1.0625rem;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.75;font-feature-settings:"palt";-webkit-font-smoothing:antialiased}
-.ticker{position:sticky;top:0;padding-top:calc(8px + env(safe-area-inset-top,0px))!important;transition:opacity .3s ease,transform .3s ease,visibility 0s;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.875rem;color:var(--sub)}
+.ticker{position:sticky;top:0;padding-top:calc(6px + env(safe-area-inset-top,0px))!important;transition:opacity .3s ease,transform .3s ease,visibility 0s;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.875rem;color:var(--sub)}
+.ticker{line-height:1.35;padding-bottom:6px!important}
 .ticker.tk-hide{opacity:0;transform:translateY(-100%);visibility:hidden;pointer-events:none;transition:opacity .3s ease,transform .3s ease,visibility 0s linear .3s}
 .ticker b{font-size:1.2rem;white-space:nowrap;color:var(--ink);font-variant-numeric:tabular-nums}
 .wrap{max-width:760px;margin:0 auto;padding:0 max(20px,env(safe-area-inset-right,0px)) 80px max(20px,env(safe-area-inset-left,0px))}
@@ -65,11 +66,11 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .stack{display:flex;height:64px;border-radius:12px;overflow:hidden}
 .stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9375rem;transition:flex-grow 1s ease;flex:0 0 0;min-width:0;white-space:nowrap;overflow:hidden;cursor:pointer}
 .stack div.sel{box-shadow:inset 0 -5px 0 #fff, inset 0 0 0 2px #fff}
-.slegend{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5em,1fr));gap:6px;margin:10px 0 0}
+.slegend{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .slegend button{appearance:none;font:inherit;font-size:.9375rem;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}
 .slegend button[aria-pressed=true]{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
 .slegend i{width:14px;height:14px;border-radius:3px;flex:none;outline:1px solid rgba(0,0,0,.15)}
-.slegend span{flex:1}.slegend b{font-variant-numeric:tabular-nums}
+.slegend span{white-space:nowrap}.slegend b{font-variant-numeric:tabular-nums}
 .detail{background:var(--soft);border-radius:14px;padding:14px 16px;margin-top:14px;min-height:92px}
 .detail b{display:block;margin-bottom:4px}
 .gen{display:flex;height:90px;border-radius:14px;overflow:hidden;margin:14px 0 6px}
@@ -221,6 +222,9 @@ h1,h2,h3{overflow-wrap:anywhere}
 .checks label.off{cursor:not-allowed}
 #regBox a{display:inline-block;padding:10px 0}
 .choice small,#agg small{font-size:.875rem}
+.gen div.tight span,.gen div.tiny b{visibility:hidden}
+@media (max-width:420px){.ecobtns{grid-template-columns:1fr}.ecobtns button{min-height:48px;text-align:left;padding:8px 12px}.ecobtns button::before{display:inline-block;min-width:2.8em}}
+@media (max-width:359px){.fgbtns{grid-template-columns:1fr}.fgbtns button{min-height:44px;text-align:left;padding:6px 12px}.fgame{padding:12px}}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
 </style></head>
 <body>
@@ -576,7 +580,9 @@ const CTR=[['アメリカ',14.197],['中国',8.658],['日本（あなた）',7.7
 CTR.forEach(([n,v])=>{const r=document.createElement('div');r.className='cbar'+(n.startsWith('日本')?' jp':'');r.innerHTML=`<span>${n}</span><span class="t"><i></i></span><span class="v">${v.toFixed(1)}t</span>`;$('countries').appendChild(r);});
 function genVals(){const pw=CUMW[String(birth()-1)]||0, pj=CUM[String(birth()-1)]||0; const b=Math.round(pw/CUMW['2024']*100), bj=Math.round(pj/CUM['2024']*100); return [b,100-b,bj];}
 function updateGen(){const [b,a]=genVals();$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
-let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);}[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
+function fitGen(){ [...$('gen').children].forEach(d=>{ d.classList.toggle('tight',d.clientWidth<96); d.classList.toggle('tiny',d.clientWidth<52); }); }
+$('gen').addEventListener('transitionend',fitGen); addEventListener('resize',fitGen);
+let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);} setTimeout(fitGen,60); setTimeout(fitGen,1300);[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
 
 // ---------- 体験4 : flood ----------
 window.FGAME={on:false,show:false,wl:0,dest:''};   // 体験4の判断ゲーム（v1.11）
@@ -955,7 +961,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
       wb=w.getBoundingClientRect().bottom, pn=$g('fgame').getBoundingClientRect(); let dy=(wb-stH)-(tk+6); if(pn.bottom-dy>innerHeight-8) dy=pn.bottom-(innerHeight-8);
       if(Math.abs(dy)>2) scrollBy({top:dy,behavior:smooth()}); },80);   // ピンの高さの再計算（ResizeObserver）を待つ
     function stage(i){ st=i; const S=ST[i]; G.wl=S.wl; const b=$g('fgLvT'); b.textContent=S.name; b.className=S.lv; $g('fgLvW').textContent=`部屋の水位 ${S.wl.toFixed(1)}m`; $g('fgSit').textContent=S.t;
-      $g('fgStep').textContent=`段階 ${i+1}／${ST.length}　どうしますか？`; }
+      $g('fgStep').textContent=`段階 ${i+1}／${ST.length}（${S.name}・水位${S.wl.toFixed(1)}m）　どうしますか？`; }
     function start(){ G.on=G.show=true; G.dest=''; G.wl=0; if(typeof wl!=='undefined') wl=0; if(typeof S4!=='undefined'&&S4&&S4.placeHome) S4.placeHome(); $g('fgLv').hidden=$g('fgSit').hidden=false; $g('scFlood').classList.add('fgon'); $g('wdText').hidden=true; show('fgPlay'); stage(0); keepInView(); }
     function end(kind,msg,msg2,dest,recap){ G.dest=dest; const c=$g('fgCard'); c.className='fgcard '+kind; $g('fgRc').textContent=recap; $g('fgMsg').innerHTML=msg; $g('fgMsg2').innerHTML=msg2||'';
       $g('fgSit').textContent=dest==='door'?'2人は玄関へ向かいます。':'2人は2階へ上がります。'; show('fgEnd'); keepInView(); }
@@ -1064,7 +1070,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   if(!TEXT&&window.THREE&&Q.get('start')!=='ar'){ M.s1=0; mkPin('pin1',.9,p=>{ M.s1=ease(clamp(p/.8)); }); }   // 立方体（気体）が床からせり上がる
   M.pinGen=true; $('gen').classList.add('scrub');
   mkPin('pin3',.8,p=>{ const [b,a]=genVals(), e=ease(clamp(p/.85)), g=$('gen').children, B=Math.max(b,8), A=Math.max(a,8);  // 積み上がりの棒が伸びる
-    g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; });
+    g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; fitGen(); });
   if(!TEXT&&window.THREE) mkPin('pin4',.7,null);                                                   // 浸水：止まって見せ、水は入口で1回だけ上がる
   const TOPMIN=(document.querySelector('.ticker')||{offsetHeight:48}).offsetHeight+8;
   const sizePins=()=>pins.forEach(o=>{ const h=o.s.offsetHeight; o.top=Math.max(TOPMIN,Math.round((VH-h)/2)); o.s.style.top=o.top+'px'; o.w.style.height=(h+VH*o.extra)+'px'; o.last=-1; });
