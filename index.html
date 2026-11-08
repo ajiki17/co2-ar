@@ -1000,7 +1000,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   if(qb) qb.innerHTML=QUIZ.map(([q,opts],i)=>`<p style="margin:10px 0 4px">${i+1}．${q}</p><div class="checks">${opts.map((o,j)=>`<label><input type="radio" name="quiz${i}" value="${j}"><span>${o}</span></label>`).join('')}</div>`).join('');
   window.QUIZSCORE=()=>{ const a=QUIZ.map((_,i)=>document.querySelector(`input[name="quiz${i}"]:checked`)); if(a.every(x=>!x)) return ''; return QUIZ.reduce((n,[, ,ok],i)=>n+(a[i]&&+a[i].value===ok?1:0),0); };
   const SAVE_ITEMS=document.querySelector('.saveItems').textContent;   // 保存項目の説明（体験のあとと同じ文。Code.gs の COLS に合わせる）
-  const CONTACT='', DELETE_DATE='';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
+  const CONTACT='worketcluke@gmail.com', DELETE_DATE='2027年3月31日';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
   document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。回答は匿名で集計します。'+SAVE_ITEMS+'途中でやめても問題ありません。'+(DELETE_DATE?`データは${DELETE_DATE}に削除します。`:'')+(CONTACT?`問い合わせ：${CONTACT}`:'');
   if(qs.get('start')==='ar'){                                                        // 審査員用の近道
     const s1=document.getElementById('s1'), note=document.createElement('p');
