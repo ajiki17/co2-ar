@@ -191,6 +191,8 @@ html.mo .oppbars .bar{transform-origin:0 50%}
 .ecore input{width:22px;height:22px;accent-color:var(--blue);margin:0;flex:none}
 .ecomsg{border-left:4px solid var(--blue);background:var(--bg);border-radius:0 12px 12px 0;padding:10px 12px;margin:10px 0 0;font-size:1rem}
 .ecomsg b{display:block}
+.ecom b.reval{font-size:1.15rem}
+.ecom .enote.renote{font-size:.875rem;line-height:1.6}
 .ecosim{font-size:1rem;color:var(--sub);margin:8px 0 0}
 /* ---- v1.11 体験4 避難の判断ゲーム ---- */
 .fglv{position:absolute;left:10px;top:10px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;max-width:calc(100% - 20px);background:rgba(15,20,30,.82);color:#fff;border-radius:10px;padding:6px 10px;font-size:1rem;line-height:1.4;pointer-events:none}
@@ -467,8 +469,8 @@ h1,h2,h3{overflow-wrap:anywhere}
       <div><div class="lab"><span>熱中症の危険度</span><b id="ecoR" class="risk-high">高い</b></div><p class="enote" id="ecoRn"></p><p class="warn" id="ecoW" hidden></p></div>
       <div><div class="lab"><span>このままひと夏使うと出るCO₂</span><b id="ecoC">0kg</b></div><div class="bar"><i id="ecoCb"></i></div><p class="enote" id="ecoCn"></p></div>
     </div>
-    <label class="ecore"><input type="checkbox" role="switch" id="ecoRe"><span>電気を再エネのプランにすると</span></label>
-    <div class="ecomsg" id="ecoMsg" hidden><b>暑さから身を守ることと、CO₂を減らすことは両立できる。選ぶのは電気の契約。</b><span id="ecoMsg2"></span></div>
+    <label class="ecore"><input type="checkbox" role="switch" id="ecoRe"><span>実質再エネ100%（CO₂ゼロ）の電気プランにすると</span></label>
+    <div class="ecomsg" id="ecoMsg" hidden><b>暑さから身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りながら排出を減らす方向に進める。</b><span id="ecoMsg2"></span></div>
     <p class="ecosim" id="ecoSim"></p>
   </div>
   <p class="tx" id="txElder"></p>
@@ -476,7 +478,7 @@ h1,h2,h3{overflow-wrap:anywhere}
   <p id="elderText" style="margin-top:12px"></p>
   <div class="pair"><div><span>熱中症で亡くなった人のうち65歳以上</span><b>85%</b><span>2024年（人口動態統計）</span></div><div><span>東京23区で熱中症で亡くなった人のうち屋内</span><b>約9割</b><span>2020年夏（東京都監察医務院）</span></div></div>
   <div class="hint"><b>変えられること</b>年を取ったあなたが暮らす部屋の暑さは、これから世界で積み上がる排出の量で変わります。あなたの選択もその一部で、未来の自分を守ることにつながります。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">暑さから身を守るにはエアコンが必要。でも、その電気がCO₂を出す。再エネの電気を選べば、身を守ることと排出を減らすことは両立できる。</p><p class="ln2"><span>次の体験へ</span>ここまでをふまえて、あなたが選べることは？</p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">暑さから身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りながら排出を減らす方向に進める。</p><p class="ln2"><span>次の体験へ</span>ここまでをふまえて、あなたが選べることは？</p></div>
 </section>
 
 <div class="door d7" id="door-s7" data-ch="体験のあと" role="group" aria-label="体験のあとのはじまり">
@@ -504,7 +506,7 @@ h1,h2,h3{overflow-wrap:anywhere}
   </div>
 </section>
 
-<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
+<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）／「実質」の表示＝経済産業省「電力の小売営業に関する指針」（非化石証書による「実質」の表示、閲覧日2026-11-09）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
 </div>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -1002,9 +1004,9 @@ reveal(); updateGen(); drawFuture(); drawElder();
       $e('ecoRn').textContent=E.fan&&t<=R.fanLimitC?'扇風機で体感は少し下がりますが、危険度の段階は変わりません。':'';
       const w=$e('ecoW'); w.hidden=!(E.fan&&t>R.fanLimitC); w.textContent='扇風機だけでは熱中症を防ぎきれないおそれがあります（WHO）';
       const kw=(E.ac?R.kW.ac:0)+(E.fan?R.kW.fan:0), kg=kgOf(kw);
-      if(E.re){ $e('ecoC').textContent='実質ゼロ'; $e('ecoCb').style.transform='scaleX(0)'; $e('ecoCn').textContent=kw?`再エネのプランなら、約${fkg(kg)}kg（6畳間 約${frm(rooms(kg))}部屋分）が実質ゼロになります。`:'電気を使っていません。'; }
+      if(E.re){ $e('ecoC').textContent='契約上のCO₂：実質ゼロ'; $e('ecoCb').style.transform='scaleX(0)'; $e('ecoCn').textContent='電力会社が非化石証書などで、使った電気と同じ量のCO₂ゼロの価値を調達した場合の計算です。家に届く電気そのものは送電網で混ざっており、発電設備をつくるときなどの排出は含みません。再エネの割合はプランによって違うので、契約前に電源構成を確かめましょう。'; }
       else { $e('ecoC').textContent=kw?`約${fkg(kg)}kg`:'0kg'; $e('ecoCb').style.transform=`scaleX(${(kg/maxKg).toFixed(3)})`; $e('ecoCn').textContent=kw?`6畳間 約${frm(rooms(kg))}部屋分（1日${R.hoursPerDay}時間×${R.days}日）`:'電気を使っていません。'; }
-      $e('ecoMsg').hidden=!E.re; }
+      $e('ecoMsg').hidden=!E.re; $e('ecoCn').classList.toggle('renote',E.re); $e('ecoC').classList.toggle('reval',E.re); }
     document.querySelectorAll('[data-dev]').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.dev; E[k]=!E[k]; b.setAttribute('aria-pressed',E[k]?'true':'false');
       if(k!=='fan') setTemp(roomByDevices()); else drawElder(); update(); }));
     $e('ecoRe').addEventListener('change',e=>{ E.re=e.target.checked; update(); });
@@ -1012,7 +1014,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
     $e('ecoMsg2').textContent=`体験のあとの「${CH[1][0]}」から選べます。`;
     $e('ecoSim').textContent=`部屋の温度はシミュレーション（目安）です。CO₂は、エアコン${R.kW.ac}kW・扇風機${R.kW.fan}kWを1日${R.hoursPerDay}時間×${R.days}日、電気1kWhあたり${R.kgCO2PerKWh}kgで計算しています。`;
     const acKg=kgOf(R.kW.ac);
-    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、カーテンを閉めて日差しを遮ると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ますが、電気を再エネのプランにすると実質ゼロになります。`;
+    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、カーテンを閉めて日差しを遮ると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ます。実質再エネ100%（CO₂ゼロ）の電気プランにすると、契約上のCO₂は実質ゼロになります（電力会社が非化石証書などで、使った電気と同じ量のCO₂ゼロの価値を調達した場合の計算です。家に届く電気そのものは送電網で混ざっており、発電設備をつくるときなどの排出は含みません。再エネの割合はプランによって違うので、契約前に電源構成を確かめましょう）。`;
     $e('eco').hidden=false; update(); }
   // ---------- 体験4：祖母と一緒に、いつ避難するか（v1.11） ----------
   (function(){ const G=window.FGAME, $g=id=>document.getElementById(id); if(!$g('fgame')) return;
