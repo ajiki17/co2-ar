@@ -964,6 +964,12 @@
    "label": "浸水時に歩ける深さの目安（札幌市・明和町の防災資料）",
    "url": "https://www.city.sapporo.jp/kikikanri/aramasi/documents/sin_sapporo_bosai-6huusuigai.pdf",
    "accessed": "2026-11-08"
+  },
+  {
+   "id": "meti_retail_guideline",
+   "label": "経済産業省 電力の小売営業に関する指針（非化石証書による「実質」の表示）",
+   "url": "https://www.egc.meti.go.jp/activity/emsc/pdf/084_03_01.pdf",
+   "accessed": "2026-11-09"
   }
  ],
  "room6": {
