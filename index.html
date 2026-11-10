@@ -2,7 +2,12 @@
 <html lang="ja"><head><meta charset="utf-8">
 <script>
 // スクロール演出（v1.8）：視差効果を減らす設定でなければ有効
-try{ if(!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('mo'); }catch(e){}
+// v1.21：新しい見た目と演出（FX）。?fx=off ですべて切れて v1.20 の見た目に戻る。?lite=1 または性能の低い端末では軽量モード。
+try{ (function(){ var q=new URLSearchParams(location.search), h=document.documentElement, st=false;
+  window.FX=q.get('fx')!=='off'; try{ st=window.FX&&sessionStorage.getItem('co2still')==='1'; }catch(e){}
+  window.STILL=st; window.LITE=window.FX&&(q.get('lite')==='1'||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2));
+  if(window.FX) h.classList.add('fx'); if(window.LITE) h.classList.add('lite'); if(st) h.classList.add('still'); if(q.get('mode')==='text') h.classList.add('txm'); })(); }catch(e){ window.FX=false; }
+try{ if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!window.STILL) document.documentElement.classList.add('mo'); }catch(e){}
 // v1.20：審査員版（?mode=judge、または審査員用の近道 ?start=ar）
 try{ const q=new URLSearchParams(location.search); window.JUDGE=q.get('mode')==='judge'||q.get('start')==='ar'; if(window.JUDGE) document.documentElement.classList.add('judge'); }catch(e){ window.JUDGE=false; }
 // アプリ内ブラウザの判定（ARが使えない）。LINE は openExternalBrowser=1 を付けて外部ブラウザで開き直す
@@ -277,6 +282,176 @@ html.judge #s1 .seg[aria-label="期間"],html.judge .reveal>div:first-child,html
 html.judge .reveal{grid-template-columns:1fr}
 .judge-end{margin:24px 0 8px}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
+/* ===================== v1.21 FX：新しい見た目と演出（?fx=off ですべて無効） ===================== */
+html.fx{--stage:#0B1020;--stage2:#141B33;--co2:#4F8CFF;--heat:#FF7A3D;--water:#19A7A0;--acc:#4F8CFF;--acci:#1F5FBF;
+ --ez:cubic-bezier(.2,.8,.2,1);--r1:10px;--r2:16px;--r3:22px;
+ --sh1:0 1px 2px rgba(11,16,32,.06),0 6px 18px rgba(11,16,32,.07);--sh2:0 2px 4px rgba(11,16,32,.08),0 14px 34px rgba(11,16,32,.13);--mk:rgba(255,205,60,.72)}
+html.fx [data-atmo=air],html.fx [data-atmo=paper],html.fx .d1,html.fx .d2{--acc:#4F8CFF;--acci:#1F5FBF}
+html.fx [data-atmo=time],html.fx .d3{--acc:#7C7CF2;--acci:#4548B8}
+html.fx [data-atmo=sun]{--acc:#D2688F;--acci:#A0375F}
+html.fx [data-atmo=night],html.fx [data-atmo=sea],html.fx .d4{--acc:#19A7A0;--acci:#0B6E69}
+html.fx [data-atmo=storm],html.fx .d5{--acc:#F08A4B;--acci:#A64E18}
+html.fx [data-atmo=heat],html.fx .d6{--acc:#FF7A3D;--acci:#B04A12}
+html.fx #s7,html.fx .d7{--acc:#2FAE6B;--acci:#1B6A41}
+@media (prefers-color-scheme: dark){html.fx:not([data-theme="light"]){--mk:rgba(255,205,60,.3);--sh1:0 1px 2px rgba(0,0,0,.4),0 6px 18px rgba(0,0,0,.35);--sh2:0 2px 4px rgba(0,0,0,.45),0 14px 34px rgba(0,0,0,.5)}
+ html.fx:not([data-theme="light"]) [data-atmo],html.fx:not([data-theme="light"]) #s7,html.fx:not([data-theme="light"]) #s0,html.fx:not([data-theme="light"]){--acci:var(--acc)}}
+html.fx body{line-height:1.8}
+html.fx .atmo{display:none}
+html.fx .kicker{color:var(--acci);letter-spacing:.04em}
+html.fx h2{letter-spacing:.01em}
+html.fx .big,html.fx .reveal b,html.fx .pair b,html.fx .gen b{font-variant-numeric:tabular-nums}
+html.fx section.ch{border-top-color:transparent}
+/* --- 部品：押したときの反応・フォーカス --- */
+html.fx :is(.btn,.seg button,.likert button,.choice,.pick button,.slegend button,.ecobtns button,.fgbtns button){transition:transform .2s var(--ez),background-color .2s var(--ez),color .2s var(--ez),border-color .2s var(--ez),box-shadow .2s var(--ez)}
+html.fx :is(.btn,.seg button,.likert button,.choice,.pick button,.slegend button,.ecobtns button,.fgbtns button):active{transform:scale(.97)}
+html.fx :is(button,input,select,a,summary,[tabindex]):focus-visible{outline:3px solid var(--acc);outline-offset:3px}
+html.fx .btn{border-radius:var(--r2);background:var(--acci);box-shadow:var(--sh1)}
+html.fx .btn.ghost{background:transparent;box-shadow:none;border-color:var(--line)}
+html.fx .btn:active{box-shadow:none}
+html.fx .field,html.fx .map,html.fx .eco,html.fx .fgame{border-radius:var(--r3);padding:20px 18px}
+html.fx .pcard,html.fx .detail,html.fx .pair div,html.fx .reveal div,html.fx .result div{border-radius:var(--r2)}
+html.fx .seg{border:0;background:var(--soft);padding:4px;gap:4px;border-radius:var(--r2)}
+html.fx .seg button{border-radius:12px;background:transparent}
+html.fx .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);box-shadow:var(--sh1)}
+html.fx .likert button{border-radius:12px}
+html.fx .likert button[aria-pressed=true],html.fx .ecobtns button[aria-pressed=true]{background:var(--acci);border-color:var(--acci);color:var(--on-blue);box-shadow:var(--sh1)}
+html.fx .ecobtns button,html.fx .fgbtns button:not([data-fg=wait]){border-color:var(--acci);color:var(--acci)}
+html.fx .ecobtns button[aria-pressed=true]{color:var(--on-blue)}
+html.fx .choice{border-radius:var(--r2)}
+html.fx .choice[aria-pressed=true]{border-color:var(--acci);box-shadow:var(--sh1)}
+html.fx .choice .box{transition:transform .25s var(--ez),background-color .2s var(--ez),border-color .2s var(--ez)}
+html.fx .choice[aria-pressed=true] .box{background:var(--acci);border-color:var(--acci);transform:scale(1.12)}
+html.fx .pick button[aria-pressed=true]{box-shadow:var(--sh1)}
+html.fx .slegend button{border-radius:12px}
+html.fx .slegend button[aria-pressed=true]{border-color:var(--acci);box-shadow:inset 0 0 0 1px var(--acci),var(--sh1)}
+html.fx .checks label{border-radius:10px;padding:2px 6px;margin:0 -6px}
+html.fx .checks input,html.fx .ecore input{accent-color:var(--acci)}
+html.fx .hint{border-left-color:var(--acc);border-radius:0 var(--r2) var(--r2) 0}
+html.fx .hint b{color:var(--acci)}
+html.fx .life{border-radius:var(--r3);background:linear-gradient(150deg,#16213f,#0B1020);color:#eef2fa}
+html.fx .life .big{color:#fff}
+html.fx .reveal div.real{background:linear-gradient(150deg,#16213f,#0B1020);color:#fff}
+html.fx input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
+html.fx input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--acci) var(--p,50%),var(--line) var(--p,50%))}
+html.fx input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;background:#fff;border:3px solid var(--acci);box-shadow:var(--sh1);transition:transform .2s var(--ez)}
+html.fx input[type=range]:active::-webkit-slider-thumb{transform:scale(1.12)}
+html.fx input[type=range]::-moz-range-track{height:8px;border-radius:4px;background:var(--line)}
+html.fx input[type=range]::-moz-range-progress{height:8px;border-radius:4px;background:var(--acci)}
+html.fx input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:3px solid var(--acci);box-shadow:var(--sh1)}
+/* --- 現れる演出は600ms以内 --- */
+html.fx.mo .rv,html.fx.mo .popt,html.fx .fade{transition-duration:.5s;transition-timing-function:var(--ez)}
+/* --- 劇場：3D・ARの場面は深い紺（B群には無い） --- */
+html.fx:not(.txm) :is(#pin1,#pin4,.arbox){--bg:#0B1020;--ink:#EEF2FA;--sub:#B9C3D8;--soft:#161E38;--line:#2B3556;--acci:var(--acc);--on-blue:#0B1020;color:var(--ink);background:var(--stage);box-shadow:0 0 0 100vmax var(--stage);clip-path:inset(0 -100vmax);padding:20px 0;margin:22px 0}
+html.fx:not(.txm) .pin+.arbox{margin-top:-22px;padding-top:4px}
+html.fx:not(.txm) .arbox h3{margin-top:8px}
+html.fx:not(.txm) :is(#scSea,#scElder){box-shadow:0 0 0 100vmax var(--stage);clip-path:inset(-20px -100vmax);margin:34px 0!important}
+html.fx .scene{background:var(--stage2);isolation:isolate;border-radius:var(--r3)}
+html.fx .scene::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.5;background:center/min(60%,250px) no-repeat url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150' fill='none' stroke='%23fff' stroke-opacity='.55' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M100 14 184 46v62l-84 32-84-32V46z M100 78 184 46 M100 78 16 46 M100 78v62'/%3E%3C/svg%3E")}
+html.fx.mo:not(.lite) .scene:not(.ready)::before{animation:fxbreath 2.6s ease-in-out infinite alternate}
+html.fx .scene.ready:not(.nogl)::before{opacity:0}
+html.fx .scene canvas{animation:fxfade .5s var(--ez) both}
+html.fx model-viewer{border-radius:var(--r3)!important}
+html.fx model-viewer:not(.ready){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150' fill='none' stroke='%23fff' stroke-opacity='.4' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M100 30 150 50v50l-50 20-50-20V50z M100 70 150 50 M100 70 50 50 M100 70v50'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:min(50%,200px)!important}
+html.fx .scene.nogl canvas{display:none}
+html.fx #scSize:not(.nogl) .cap{color:#4c5462!important}
+html.fx .wrap{padding-bottom:120px}
+html.fx .fxfig{position:absolute;inset:0;width:100%;height:100%}
+@keyframes fxbreath{from{opacity:.25}to{opacity:.6}}
+@keyframes fxfade{from{opacity:0}to{opacity:1}}
+/* --- 章のとびら --- */
+html.fx .door{overflow:hidden;isolation:isolate;background:var(--stage)}
+html.fx .door::before{content:"";position:absolute;inset:-25%;z-index:-1;background:radial-gradient(55% 45% at 80% 16%,var(--dg1) 0,transparent 70%),radial-gradient(65% 55% at 10% 92%,var(--dg2) 0,transparent 72%),linear-gradient(165deg,var(--db) 0,#0B1020 82%)}
+html.fx.mo:not(.lite) .door::before{animation:fxdrift 26s ease-in-out infinite alternate}
+@keyframes fxdrift{from{transform:translate3d(-4%,-3%,0) rotate(0deg)}to{transform:translate3d(4%,3%,0) rotate(7deg)}}
+html.fx .d1{--db:#1f4e8c;--dg1:rgba(79,140,255,.38);--dg2:rgba(79,140,255,.2)}
+html.fx .d2{--db:#1d4f96;--dg1:rgba(79,140,255,.34);--dg2:rgba(124,124,242,.24)}
+html.fx .d3{--db:#3d3a8e;--dg1:rgba(124,124,242,.38);--dg2:rgba(210,104,143,.22)}
+html.fx .d4{--db:#0d5a5c;--dg1:rgba(25,167,160,.36);--dg2:rgba(79,140,255,.2)}
+html.fx .d5{--db:#5a3a2a;--dg1:rgba(240,138,75,.32);--dg2:rgba(25,167,160,.18)}
+html.fx .d6{--db:#8a3418;--dg1:rgba(255,122,61,.38);--dg2:rgba(240,138,75,.22)}
+html.fx .d7{--db:#1f6b42;--dg1:rgba(47,174,107,.34);--dg2:rgba(79,140,255,.2)}
+html.fx .door .dn:not(.dn-s){color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.92);letter-spacing:0}
+@supports not (-webkit-text-stroke:1px #fff){html.fx .door .dn:not(.dn-s){color:#fff}}
+html.fx .door .dname{letter-spacing:.06em}
+html.fx .door .ddo b,html.fx .subdoor .ddo b{background:rgba(0,0,0,.3)}
+html.fx.mo .door .dq.rv,html.fx.mo .subdoor .dq{opacity:1;transform:none}
+html.fx .ml{display:block;overflow:hidden}
+html.fx .ml>span{display:block}
+html.fx.mo .ml>span{transform:translateY(108%);transition:transform .6s var(--ez)}
+html.fx.mo .fxin .ml>span{transform:none}
+html.fx .subdoor{border-radius:var(--r3);background:linear-gradient(160deg,var(--acci),#0B1020 130%)!important;box-shadow:var(--sh1)}
+/* --- 上部の帯：進み具合の線と、章ごとの目盛り（B群には無い） --- */
+html.fx .ticker{border-bottom-color:transparent}
+html.fx .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--line);overflow:visible}
+html.fx .prog i{position:absolute;inset:0;overflow:hidden;transform:translateX(-100%)}
+html.fx .prog em{position:absolute;inset:0;background:linear-gradient(90deg,var(--co2),#7C7CF2 35%,var(--water) 60%,var(--heat));transform:translateX(100%)}
+html.fx .prog .tick{position:absolute;top:-4px;width:2px;height:10px;margin-left:-1px;border-radius:1px;background:var(--ink);opacity:.5}
+/* --- 山場の数字：下線がすっと引かれる --- */
+html.fx :is(#volText b,#s2 .num,#oppText b,#tnN,#rainN,.pair b,#lifeT){background:linear-gradient(var(--acc),var(--acc)) no-repeat 0 100%/0 .13em;padding-bottom:.06em}
+html.fx.mo :is(#volText b,#s2 .num,#oppText b,#tnN,#rainN,.pair b,#lifeT){transition:background-size .5s var(--ez) .15s,opacity .5s var(--ez),transform .5s var(--ez)}
+html.fx :is(#volText b,#s2 .num,#oppText b,#tnN,#rainN,.pair b,#lifeT).on,html.fx:not(.mo) :is(#volText b,#s2 .num,#oppText b,#tnN,#rainN,.pair b,#lifeT),html.fx.still :is(#volText b,#s2 .num,#oppText b,#tnN,#rainN,.pair b,#lifeT){background-size:100% .13em}
+html.fx .pair b,html.fx #lifeT{display:inline-block}
+html.fx .pair div>b{display:table}
+/* --- この体験でわかったこと：紙が1枚めくれるように現れ、要の言葉にマーカー --- */
+html.fx .learn{background:var(--bg);border:1px solid var(--line);border-left:6px solid var(--acc);border-radius:4px var(--r2) var(--r2) 4px;box-shadow:var(--sh2);padding:20px 18px 16px;margin:30px 0 10px;transform-origin:50% 0}
+html.fx .learn .lt{color:var(--acci);letter-spacing:.04em}
+html.fx.mo .learn{transition:opacity .45s var(--ez),transform .55s var(--ez)}
+html.fx.mo .learn.fxpre{opacity:0;transform:perspective(900px) rotateX(-52deg) translateY(-6px)}
+html.fx mark.mk{color:inherit;background:linear-gradient(transparent 56%,var(--mk) 56%) no-repeat 0 0/100% 100%;padding:0 .06em}
+html.fx.mo .learn.fxpre mark.mk{background-size:0 100%}
+html.fx.mo .learn mark.mk{transition:background-size .5s var(--ez) .3s}
+/* --- 図（A群だけ）：流れ図・浴槽・点・計器 --- */
+html.fx:not(.txm) .stack,html.fx:not(.txm) .gen,html.fx:not(.txm) .oppbars,html.fx:not(.txm) .ecom .bar{display:none}
+html.fx .fxflow{margin:6px 0 4px}
+html.fx .fxflow svg{display:block;width:100%;overflow:visible;-webkit-tap-highlight-color:transparent}
+html.fx .fxflow text{font-family:inherit;fill:var(--ink)}
+html.fx .fxflow .t1{font-size:15px;font-weight:700}
+html.fx .fxflow .t2{font-size:14px;fill:var(--sub)}
+html.fx .fxflow g.rb{cursor:pointer;transition:opacity .3s var(--ez)}
+html.fx .fxflow.has-sel g.rb:not(.sel){opacity:.3}
+html.fx .fxflow g.rb.sel path{filter:drop-shadow(0 0 7px var(--acc))}
+html.fx.mo .fxflow.pre g.rb{opacity:0;transform:translateX(-14px)}
+html.fx.mo .fxflow g.rb{transition:opacity .45s var(--ez),transform .5s var(--ez)}
+html.fx .fxtub{margin:6px 0 10px}
+html.fx .fxtub svg{display:block;width:100%}
+html.fx .fxtub .air{fill:var(--bg)}
+html.fx .fxtub .rim{fill:none;stroke:var(--ink);stroke-width:4;stroke-linejoin:round}
+html.fx .fxtub .foot{stroke:var(--ink);stroke-width:4;stroke-linecap:round}
+html.fx .fxtub .mark{stroke:var(--ink);stroke-width:2;stroke-dasharray:6 5;opacity:.7}
+html.fx .fxtub ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
+html.fx .fxtub li{display:flex;align-items:center;gap:10px;font-size:.9375rem;line-height:1.5}
+html.fx .fxtub li span{flex:1}
+html.fx .fxtub li b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;min-width:3.2em;text-align:right}
+html.fx .fxtub i{flex:none;width:22px;height:22px;border-radius:6px;background:#2F5FD0}
+html.fx .fxtub i.k1{background:repeating-linear-gradient(135deg,#17306F 0 4px,#2748A0 4px 8px)}
+html.fx .fxtub i.k2{background:#8DB6FF}
+html.fx .fxdots{display:grid;gap:16px;margin:16px 0}
+html.fx .fxdots p{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px;font-size:.9375rem;font-weight:700}
+html.fx .fxdots p b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
+html.fx .fxdots canvas{display:block;width:100%}
+html.fx:not(.txm) .ecom>div{display:grid;grid-template-columns:56px 1fr;column-gap:12px;align-items:center}
+html.fx:not(.txm) .ecom>div>*{grid-column:2}
+html.fx:not(.txm) .ecom>div>.ins{grid-column:1;grid-row:1/span 5;align-self:center}
+html.fx .ins svg{display:block;width:56px;height:64px}
+html.fx .ins .mv{transition:transform .55s var(--ez);transform-box:fill-box}
+html.fx .ins .liq{transform-origin:50% 100%}
+html.fx .ins .ndl{transform-box:view-box;transform-origin:28px 44px}
+html.fx .ins .st{fill:none;stroke:var(--ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+/* --- 宣言カード --- */
+html.fx:not(.txm) #summary.fxc .card{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+html.fx .fxcard{margin:16px 0}
+html.fx .fxcard img{display:block;width:100%;aspect-ratio:4/5;border-radius:var(--r3);box-shadow:var(--sh2);background:var(--stage)}
+html.fx.mo .fxcard img{animation:fxfade .6s var(--ez) both}
+html.fx .fxcard .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
+html.fx .fxcard .row span{font-size:.875rem;color:var(--sub)}
+html.fx .card{border-radius:var(--r3);background:linear-gradient(155deg,var(--acci),#0B1020 120%);color:#fff;box-shadow:var(--sh2);padding:26px 22px}
+/* --- 動きを止める --- */
+html.fx .fxstill{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(11,16,32,.18);background:rgba(255,255,255,.94);color:#1a1d23;font:inherit;font-size:.875rem;font-weight:700;line-height:1.2;box-shadow:var(--sh1);cursor:pointer}
+html.fx.still *,html.fx.still *::before,html.fx.still *::after{animation:none!important;transition:none!important}
+html.fx.still :is(.rv,.popt,.fade,.learn,.hero h1 .ln,.herotick,#heroT,#heroTick,.ml>span,.fxflow g.rb){opacity:1!important;transform:none!important}
+html.fx.still .learn mark.mk{background-size:100% 100%!important}
+html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
+@media (prefers-reduced-motion: reduce){html.fx .door::before,html.fx .scene::before,html.fx .scene canvas,html.fx .fxcard img{animation:none!important}html.fx .fxstill{display:none}}
 </style></head>
 <body>
 <div class="atmo" aria-hidden="true"><i data-k="air"></i><i data-k="paper"></i><i data-k="time"></i><i data-k="sun"></i><i data-k="night"></i><i data-k="sea"></i><i data-k="storm"></i><i data-k="heat"></i></div>
@@ -547,7 +722,7 @@ const CUM={"1868": 0.0, "1869": 0.0, "1870": 0.0, "1871": 0.1, "1872": 0.1, "187
 const PERCAP=7.772, DENS=1.84, ROOM={w:3.6,d:2.7,h:2.4}, ROOMV=ROOM.w*ROOM.d*ROOM.h;
 const dayKg=PERCAP*1000/365, dayV=dayKg/DENS, yearV=PERCAP*1000/DENS, yearRooms=Math.round(yearV/ROOMV);
 const LIK=['まったく\n思わない','あまり\n思わない','どちらとも\nいえない','ややそう\n思う','そう思う'];
-const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let RM=matchMedia('(prefers-reduced-motion: reduce)').matches||!!window.STILL;   // v1.21：「動きを止める」で実行中に true にできる
 const ans={pre:null,post:null,ipre:null,ipost:null}; let age=20, guess=0.6; const t0=performance.now();
 const gps=PERCAP*1e6/(365*24*3600);
 const tickBig=document.getElementById('tickBig');
@@ -680,7 +855,7 @@ const CTR=[['アメリカ',14.197],['中国',8.658],['日本（あなた）',7.7
 $('txCtr').textContent='一人当たりの年間排出量は、'+CTR.map(([n,v])=>`${n}${v.toFixed(1)}t`).join('、')+'です。';   // B群：棒グラフと同じ値・同じ順
 CTR.forEach(([n,v])=>{const r=document.createElement('div');r.className='cbar'+(n.startsWith('日本')?' jp':'');r.innerHTML=`<span>${n}</span><span class="t"><i></i></span><span class="v">${v.toFixed(1)}t</span>`;$('countries').appendChild(r);});
 function genVals(){const pw=CUMW[String(birth()-1)]||0, pj=CUM[String(birth()-1)]||0; const b=Math.round(pw/CUMW['2024']*100), bj=Math.round(pj/CUM['2024']*100); return [b,100-b,bj];}
-function updateGen(){const [b,a]=genVals(); const l3=$('lrn3'); if(l3) l3.textContent=b; $('txGen').textContent=`生まれる前に積み上がっていた：${b}%、生まれてから加わった：${a}%。`;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
+function updateGen(){const [b,a]=genVals(); if(window.FXgen) setTimeout(()=>FXgen(),0); const l3=$('lrn3'); if(l3) l3.textContent=b; $('txGen').textContent=`生まれる前に積み上がっていた：${b}%、生まれてから加わった：${a}%。`;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
 function fitGen(){ [...$('gen').children].forEach(d=>{ d.classList.toggle('tight',d.clientWidth<96); d.classList.toggle('tiny',d.clientWidth<52); }); }
 $('gen').addEventListener('transitionend',fitGen); addEventListener('resize',fitGen);
 let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);} setTimeout(fitGen,60); setTimeout(fitGen,1300);[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
@@ -994,7 +1169,7 @@ document.querySelectorAll('[data-sv]').forEach(b=>b.addEventListener('click',()=
 document.querySelectorAll('[data-surge]').forEach(b=>b.addEventListener('click',()=>{slSurge=+b.dataset.surge;press('data-surge',b.dataset.surge);drawSea();}));
 
 function updateAll(){ drawElder6Head(); updateGen(); if(genGrown) growGen(); drawFuture(); if(S1&&spanMode==='life') setSpan('life'); }
-if(window.THREE){ makeTextures(); initSize(); initFlood(); initSea(); initElder(); }
+if(window.THREE){ try{ makeTextures(); initSize(); initFlood(); initSea(); initElder(); }catch(e){ window.NOGL=true; console.warn('3D を初期化できませんでした',e); } }
 $('txSize').textContent=`1日分のCO₂は約${dayKg.toFixed(0)}kgで、体積は約${dayV.toFixed(1)}m³、一辺約${Math.cbrt(dayV).toFixed(2)}mの立方体になります。`;   // ?mode=text 用
 reveal(); updateGen(); drawFuture(); drawElder();
 </script><script>
@@ -1023,6 +1198,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
     document.getElementById('oppText').innerHTML=`${mine}今の15歳（2011年生まれ）は<b>${young.days}日</b>でした。外での運動が原則中止になる暑さの日数が、生まれた年でこれだけ違います。${extra?`<br><small style="color:var(--sub)">${extra}</small>`:''}`;
     const mx=Math.max(me.days,young.days,1);
     document.getElementById('oppBars').innerHTML=`<div class="row"><span>あなた（${by}年生まれ）</span><div class="bar me" style="width:${me.days/mx*100}%"></div></div><div class="row"><span>今の15歳</span><div class="bar young" style="width:${young.days/mx*100}%"></div></div>`;
+    if(window.FXopp) FXopp({by,me:me.days,young:young.days,max:mx});
   }
   fetch('data.json').then(r=>r.json()).then(d=>{D=d;drawOpportunity(); try{ initEco(d); }catch(e){ console.error(e); } }).catch(()=>{document.getElementById('oppText').textContent='データを読み込めませんでした。';});
   // ---------- 体験6：エアコン・扇風機・窓（v1.9）。数値は data.json の room6 ----------
@@ -1042,7 +1218,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
       const kw=(E.ac?R.kW.ac:0)+(E.fan?R.kW.fan:0), kg=kgOf(kw);
       if(E.re){ $e('ecoC').textContent='契約上のCO₂：実質ゼロ'; $e('ecoCb').style.transform='scaleX(0)'; $e('ecoCn').textContent='電力会社が非化石証書などで、使った電気と同じ量のCO₂ゼロの価値を調達した場合の計算です。家に届く電気そのものは送電網で混ざっており、発電設備をつくるときなどの排出は含みません。再エネの割合はプランによって違うので、契約前に電源構成を確かめましょう。'; }
       else { $e('ecoC').textContent=kw?`約${fkg(kg)}kg`:'0kg'; $e('ecoCb').style.transform=`scaleX(${(kg/maxKg).toFixed(3)})`; $e('ecoCn').textContent=kw?`6畳間 約${frm(rooms(kg))}部屋分（1日${R.hoursPerDay}時間×${R.days}日）`:'電気を使っていません。'; }
-      $e('ecoMsg').hidden=!E.re; $e('ecoCn').classList.toggle('renote',E.re); $e('ecoC').classList.toggle('reval',E.re); }
+      $e('ecoMsg').hidden=!E.re; $e('ecoCn').classList.toggle('renote',E.re); $e('ecoC').classList.toggle('reval',E.re); if(window.FXeco) FXeco({t,lo:24,hi:36,r1:R.riskCautionC,r2:R.riskHighC,kg:E.re?0:kg,maxKg}); }
     document.querySelectorAll('[data-dev]').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.dev; E[k]=!E[k]; b.setAttribute('aria-pressed',E[k]?'true':'false');
       if(k!=='fan') setTemp(roomByDevices()); else drawElder(); update(); }));
     $e('ecoRe').addEventListener('change',e=>{ E.re=e.target.checked; update(); });
@@ -1165,7 +1341,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   const anims=[]; let animRun=false;
   const animLoop=now=>{ for(let i=anims.length-1;i>=0;i--){ const a=anims[i], t=clamp((now-a.t0)/a.d); render(a.parts,ease(t)); if(t>=1) anims.splice(i,1); } animRun=anims.length>0; if(animRun) requestAnimationFrame(animLoop); };
   const fire=c=>{ let parts=c.armed&&c.armed.every(x=>x.n.isConnected)?c.armed:parse(c.el); if(!parts.length) return false;
-    anims.push({parts,t0:performance.now(),d:1300}); c.el.classList.add('on'); if(!animRun){ animRun=true; requestAnimationFrame(animLoop); } return true; };
+    anims.push({parts,t0:performance.now(),d:window.STILL?1:(window.FX?1100:1300)}); c.el.classList.add('on'); if(!animRun){ animRun=true; requestAnimationFrame(animLoop); } return true; };
   const arm=c=>{ const parts=parse(c.el); if(!parts.length) return; c.armed=parts; render(parts,0); c.el._armedText=c.el.textContent; };
   const checkCounts=()=>{ cnt=cnt.filter(c=>{ if(!c.el.isConnected){ const n=document.querySelector(c.q); if(!n) return false; c.el=n; c.armed=null; }
       const r=c.el.getBoundingClientRect(); if(!r.width&&!r.height) return true;               // 非表示（B群の3D部分など）
@@ -1189,13 +1365,13 @@ reveal(); updateGen(); drawFuture(); drawElder();
   if(!TEXT&&window.THREE&&!window.JUDGE){ M.s1=0; mkPin('pin1',.9,p=>{ M.s1=ease(clamp(p/.8)); }); }   // 立方体（気体）が床からせり上がる
   if(!TEXT){ M.pinGen=true; $('gen').classList.add('scrub'); }
   if(!TEXT) mkPin('pin3',.8,p=>{ const [b,a]=genVals(), e=ease(clamp(p/.85)), g=$('gen').children, B=Math.max(b,8), A=Math.max(a,8);  // 積み上がりの棒が伸びる
-    g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; fitGen(); });
+    g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; fitGen(); if(window.FXgen) FXgen(e); });
   if(!TEXT&&window.THREE) mkPin('pin4',.7,null);                                                   // 浸水：止まって見せ、水は入口で1回だけ上がる
   const TOPMIN=(document.querySelector('.ticker')||{offsetHeight:48}).offsetHeight+8;
   const sizePins=()=>pins.forEach(o=>{ const h=o.s.offsetHeight; o.top=Math.max(TOPMIN,Math.round((VH-h)/2)); o.s.style.top=o.top+'px'; o.w.style.height=(h+VH*o.extra)+'px'; o.last=-1; });
   const ro=new ResizeObserver(sizePins); pins.forEach(o=>ro.observe(o.s));
   const doPins=()=>pins.forEach(o=>{ const r=o.w.getBoundingClientRect(), tot=o.w.offsetHeight-o.s.offsetHeight, p=tot>0?clamp((o.top-r.top)/tot):1;
-    if(o.fn&&Math.abs(p-o.last)>.001){ o.last=p; o.fn(p); } });
+    if(o.fn&&Math.abs(p-o.last)>.001){ o.last=p; o.fn(window.STILL?1:p); } });
 
   // 体験3-2：世代比較の棒グラフが、スクロールに合わせて伸びる
   const opp=document.getElementById('oppBars');
@@ -1212,6 +1388,156 @@ reveal(); updateGen(); drawFuture(); drawElder();
   if(opp) new MutationObserver(req).observe(opp,{childList:true});
   sizePins(); req();
   }catch(err){ document.documentElement.classList.remove('mo'); window.MOTION={s1:1,pinGen:false}; console.error(err); }
+})();
+</script>
+<script>
+// ---------- v1.21 FX：新しい見た目と演出（?fx=off で無効。失敗しても質問と保存には影響しない） ----------
+(function(){ if(!window.FX) return;
+ const H=document.documentElement, TEXT=document.body.classList.contains('text-mode'), $=id=>document.getElementById(id);
+ const sysRM=()=>{ try{ return matchMedia('(prefers-reduced-motion: reduce)').matches; }catch(e){ return false; } };
+ const moving=()=>!RM&&!window.STILL, anim=()=>moving()&&!window.LITE;
+ const NS='http://www.w3.org/2000/svg';
+ const S=(t,a,p)=>{ const e=document.createElementNS(NS,t); for(const k in a) e.setAttribute(k,a[k]); if(p) p.appendChild(e); return e; };
+ const D=(t,c,p,h)=>{ const e=document.createElement(t); if(c) e.className=c; if(h!=null) e.innerHTML=h; if(p) p.appendChild(e); return e; };
+ const once=(t,fn,m)=>{ if(!('IntersectionObserver' in window)){ fn(); return; } const io=new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ io.disconnect(); fn(); } }),{rootMargin:m||'0px 0px -8% 0px'}); io.observe(t); };
+ const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)), ease=t=>1-Math.pow(1-t,3);
+ const safe=(name,fn)=>{ try{ fn(); }catch(e){ console.warn('FX:'+name,e); } };
+ const layouts=[];   // 幅が変わったとき（実証の入力後に表示されたときも）に描き直すもの
+
+ // --- スライダーの塗り
+ safe('range',()=>document.querySelectorAll('input[type=range]').forEach(r=>{ const f=()=>r.style.setProperty('--p',((r.value-r.min)/(r.max-r.min)*100)+'%'); r.addEventListener('input',f); r._fxp=f; f(); }));
+
+ // --- 章のとびら：問いが1行ずつ現れる
+ safe('door',()=>{ const split=q=>{ if(q._fx||!anim()||!q.offsetHeight) return; const txt=q.textContent; q.textContent=''; const sp=[...txt].map(ch=>D('span','',q,null)); sp.forEach((s,i)=>s.textContent=[...txt][i]);
+     const lines=[]; let top=null; sp.forEach(s=>{ const t=s.offsetTop; if(top===null||Math.abs(t-top)>4){ lines.push(''); top=t; } lines[lines.length-1]+=s.textContent; });
+     q.textContent=''; lines.forEach((l,i)=>{ const o=D('span','ml',q), n=D('span','',o); n.textContent=l; n.style.transitionDelay=(i*60)+'ms'; }); q._fx=txt; };
+   const unsplit=()=>document.querySelectorAll('.dq').forEach(q=>{ if(q._fx){ q.textContent=q._fx; q._fx=null; } });
+   document.querySelectorAll('.door,.subdoor').forEach(d=>{ const q=d.querySelector('.dq'); if(!q) return;
+     once(d,()=>split(q),'0px 0px 70% 0px'); once(d,()=>requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('fxin'))),'0px 0px -6% 0px'); });
+   let w=innerWidth; addEventListener('resize',()=>{ if(innerWidth!==w){ w=innerWidth; unsplit(); } }); window.FXunsplit=unsplit; });
+
+ // --- 上部の帯：進み具合の線と章の目盛り（B群は文字だけ）
+ if(!TEXT) safe('prog',()=>{ const tk=document.querySelector('.ticker'); if(!tk) return; const pr=D('span','prog',tk,'<i><em></em></i>'); pr.setAttribute('aria-hidden','true'); const fill=pr.firstChild, inner=fill.firstChild; let lastH=0;
+   const place=()=>{ const max=H.scrollHeight-innerHeight; lastH=H.scrollHeight; pr.querySelectorAll('.tick').forEach(x=>x.remove()); if(max<=0) return;
+     document.querySelectorAll('.door').forEach(d=>{ if(!d.offsetHeight) return; const t=D('span','tick',pr); t.style.left=clamp((d.getBoundingClientRect().top+scrollY)/max)*100+'%'; }); };
+   let tick=false; const upd=()=>{ tick=false; if(Math.abs(H.scrollHeight-lastH)>40) place(); const max=H.scrollHeight-innerHeight, p=max>0?clamp(scrollY/max):0; fill.style.transform=`translateX(${-(1-p)*100}%)`; inner.style.transform=`translateX(${(1-p)*100}%)`; };
+   addEventListener('scroll',()=>{ if(!tick){ tick=true; requestAnimationFrame(upd); } },{passive:true}); layouts.push(()=>{ place(); upd(); }); place(); upd(); });
+
+ // --- この体験でわかったこと：めくれて現れる＋要の言葉にマーカー
+ safe('learn',()=>{ const KEY=['約21kg','一辺約2.26m','16%','84%','「何を選ぶか」','すでに積み上がっていた','機会格差','今の排出で決まる','約41km²','約3.3倍','すでに始まっている','CO₂の少ない電気を選べば'];
+   document.querySelectorAll('.learn .lb').forEach(lb=>{ const w=document.createTreeWalker(lb,NodeFilter.SHOW_TEXT), ns=[]; let n; while((n=w.nextNode())) ns.push(n);
+     ns.forEach(node=>{ let rest=node; for(;;){ const t=rest.nodeValue; let bi=-1,bk=''; KEY.forEach(k=>{ const i=t.indexOf(k); if(i>=0&&(bi<0||i<bi)){ bi=i; bk=k; } }); if(bi<0) break;
+         const mid=rest.splitText(bi), after=mid.splitText(bk.length), m=document.createElement('mark'); m.className='mk'; mid.parentNode.insertBefore(m,mid); m.appendChild(mid); rest=after; } }); });
+   if(H.classList.contains('mo')) document.querySelectorAll('.learn').forEach(c=>{ c.classList.add('fxpre'); once(c,()=>c.classList.remove('fxpre'),'0px 0px -10% 0px'); }); });
+
+ // --- 3D場面：下絵（スケルトン）から入れ替え。WebGL が使えない・失われたときは静止の図
+ if(!TEXT) safe('scene',()=>{ const FIG={
+     scSize:()=>'<path d="M60 150 160 190 260 150 260 60 160 30 60 60z M160 100 260 60 M160 100 60 60 M160 100v90" /><path class="w" d="M60 150 160 190 260 150 260 108 160 148 60 108z" fill="#4F8CFF" fill-opacity=".45" stroke="none"/><circle cx="118" cy="118" r="7" fill="#fff" stroke="none"/><path d="M118 126v34" stroke-width="7"/>',
+     scFlood:()=>{ const f=clamp((typeof wd==='number'?wd:.5)/2.4), y=150-f*90; return `<path d="M60 150 160 190 260 150 260 60 160 30 60 60z M160 100 260 60 M160 100 60 60 M160 100v90"/><path d="M60 150 160 190 260 150 260 ${y} 160 ${y+40} 60 ${y}z" fill="#8a7550" fill-opacity=".7" stroke="none"/><text x="160" y="214" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="none">水位 ${(typeof wd==='number'?wd:.5).toFixed(1)}m</text>`; },
+     scSea:()=>{ const lv=(typeof slBase==='number'?slBase:0)+(typeof slSurge==='number'?slSurge:0), y=150-lv*18; return `<path d="M200 40v150h70V40z" fill="#3a4258"/><path d="M20 ${y}h180v${190-y}H20z" fill="#19A7A0" fill-opacity=".6" stroke="none"/><path d="M20 ${150-3.29*18}h180" stroke="#9fe0ff" stroke-dasharray="6 5"/><text x="110" y="214" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="none">水位 +${lv.toFixed(2)}m</text>`; },
+     scElder:()=>`<path d="M60 150 160 190 260 150 260 60 160 30 60 60z M160 100 260 60 M160 100 60 60 M160 100v90"/><text x="160" y="214" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="none">室温 ${typeof temp==='number'?temp:''}℃</text>` };
+   const fall=sc=>{ sc.classList.add('nogl','ready'); let v=sc.querySelector('.fxfig'); if(!v){ v=S('svg',{class:'fxfig',viewBox:'0 0 320 224',fill:'none',stroke:'#fff','stroke-opacity':'.75','stroke-width':'2','stroke-linejoin':'round','aria-hidden':'true'}); sc.insertBefore(v,sc.firstChild);
+       const cap=sc.querySelector('.cap'); if(cap){ cap.textContent='この端末では3Dを表示できないため、図で示しています'; cap.style.color='#fff'; cap.id=''; } }
+     v.innerHTML=(FIG[sc.id]||FIG.scSize)(); };
+   const redraw=()=>setTimeout(()=>document.querySelectorAll('.scene.nogl').forEach(fall),0);
+   document.querySelectorAll('.scene').forEach(sc=>{ const cv=sc.querySelector('canvas'); if(cv){ requestAnimationFrame(()=>requestAnimationFrame(()=>sc.classList.add('ready'))); cv.addEventListener('webglcontextlost',e=>{ e.preventDefault(); fall(sc); }); } else fall(sc); });
+   document.addEventListener('click',e=>{ if(e.target.closest&&e.target.closest('[data-wd],[data-sl],[data-surge],[data-dev],[data-fg]')) redraw(); }); const tp=$('temp'); if(tp) tp.addEventListener('input',redraw);
+   document.querySelectorAll('model-viewer').forEach(m=>{ const ok=()=>m.classList.add('ready'); m.addEventListener('load',ok); m.addEventListener('error',ok); setTimeout(ok,12000); if(m.loaded) ok(); }); });
+
+ // --- 体験2：生活の場面から各部門へ流れるリボン
+ if(!TEXT) safe('flow',()=>{ const stack=$('stack'); if(!stack||typeof SECT==='undefined') return; const host=D('div','fxflow'); stack.parentNode.insertBefore(host,stack);
+   const LIFE=['照明・冷暖房','スマホ・家電・車','人と物の移動','コンビニ・学校','発電所・製油所'];   // 各部門の説明文にある言葉
+   let W=0, shown=false; const sync=()=>{ const k=[...stack.children].findIndex(x=>x.classList.contains('sel')); host.classList.toggle('has-sel',k>=0); host.querySelectorAll('g.rb').forEach((g,i)=>g.classList.toggle('sel',i===k)); };
+   const draw=()=>{ const w=host.clientWidth; if(!w||w===W) return; W=w; host.textContent=''; const HL=250, lw=14, rx=Math.round(Math.min(w*.4,170)), rw=14, gap=10; let ly=6, ry=6; const rows=SECT.map(([n,v,c])=>{ const h=v/100*HL, nh=Math.max(h,46), o={n,v,c,h,nh,ly,ry}; ly+=h; ry+=nh+gap; return o; });
+     const Ht=Math.max(ly,ry)+2, svg=S('svg',{viewBox:`0 0 ${w} ${Ht}`,height:Ht,'aria-hidden':'true'},host), defs=S('defs',{},svg);
+     rows.forEach((r,i)=>{ const gid='fxg'+i, lg=S('linearGradient',{id:gid,x1:0,x2:1,y1:0,y2:0},defs); S('stop',{offset:0,'stop-color':r.c,'stop-opacity':.95},lg); S('stop',{offset:1,'stop-color':r.c,'stop-opacity':.55},lg);
+       const g=S('g',{class:'rb'},svg); g.style.transitionDelay=(i*60)+'ms'; const t=r.ry+(r.nh-r.h)/2, b=t+r.h, x0=lw, x1=rx, m=(x0+x1)/2;
+       S('path',{d:`M${x0} ${r.ly}C${m} ${r.ly} ${m} ${t} ${x1} ${t}L${x1} ${b}C${m} ${b} ${m} ${r.ly+r.h} ${x0} ${r.ly+r.h}Z`,fill:`url(#${gid})`},g);
+       S('rect',{x:0,y:r.ly,width:lw,height:Math.max(r.h-1,1),rx:2,fill:r.c},g); S('rect',{x:rx,y:t,width:rw,height:r.h,rx:2,fill:r.c,stroke:'rgba(128,128,128,.5)','stroke-width':.5},g);
+       const tx=rx+rw+10, cy=r.ry+r.nh/2; S('text',{x:tx,y:cy-4,class:'t1'},g).textContent=`${r.n} ${r.v}%`; S('text',{x:tx,y:cy+16,class:'t2'},g).textContent=LIFE[i]||'';
+       S('rect',{x:rx,y:r.ry,width:w-rx,height:r.nh,fill:'transparent'},g); g.addEventListener('click',()=>stack.children[i]&&stack.children[i].click()); });
+     if(!shown&&H.classList.contains('mo')){ host.classList.add('pre'); once(host,()=>{ shown=true; host.classList.remove('pre'); }); } else shown=true; sync(); };
+   new MutationObserver(sync).observe(stack,{attributes:true,subtree:true,attributeFilter:['class']}); layouts.push(draw); draw(); });
+
+ // --- 体験3：浴槽の水が、波打ちながら満ちていく
+ if(!TEXT) safe('tub',()=>{ const gen=$('gen'); if(!gen||typeof genVals!=='function') return; const host=D('div','fxtub'); gen.parentNode.insertBefore(host,gen);
+   let W=0, cover=null, mark=null, e0=(window.MOTION&&MOTION.pinGen)?0:1, ph=0, vis=false, geo=null; const lis=D('ul','',null,'<li><i class="k1"></i><span>生まれる前に積み上がっていた</span><b></b></li><li><i class="k2"></i><span>生まれてから加わった</span><b></b></li>');
+   const set=()=>{ if(!geo) return; const [b,a]=genVals(), e=window.STILL?1:e0, y=geo.bot-e*geo.full; cover.setAttribute('transform',`translate(${-ph} ${y})`); mark.setAttribute('y1',geo.bot-b/100*geo.full); mark.setAttribute('y2',geo.bot-b/100*geo.full);
+     geo.before.setAttribute('y',geo.bot-b/100*geo.full); geo.before.setAttribute('height',b/100*geo.full+40); const bs=lis.querySelectorAll('b'); bs[0].textContent=Math.round(b*e)+'%'; bs[1].textContent=Math.round(a*e)+'%'; };
+   const draw=()=>{ const w=host.clientWidth; if(!w||w===W) return; W=w; host.textContent=''; const Ht=178, L=14, R=w-14, top=14, bot=150, full=bot-top-22, lam=64, svg=S('svg',{viewBox:`0 0 ${w} ${Ht}`,height:Ht,'aria-hidden':'true'},host), defs=S('defs',{},svg);
+     const shape=`M${L} ${top}V${bot-28}Q${L} ${bot} ${L+28} ${bot}H${R-28}Q${R} ${bot} ${R} ${bot-28}V${top}`; const cp=S('clipPath',{id:'fxtubc'},defs); S('path',{d:shape+'Z'},cp);
+     const pt=S('pattern',{id:'fxhat',width:8,height:8,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'},defs); S('rect',{width:8,height:8,fill:'#17306F'},pt); S('rect',{width:4,height:8,fill:'#2748A0'},pt);
+     const g=S('g',{'clip-path':'url(#fxtubc)'},svg); S('rect',{x:0,y:0,width:w,height:Ht,fill:'#8DB6FF'},g); const before=S('rect',{x:0,y:bot,width:w,height:40,fill:'url(#fxhat)'},g);
+     let d=`M${-lam} -400H${w+lam*2}V0`; for(let x=w+lam*2;x>-lam;x-=lam) d+=`q${-lam/4} 7 ${-lam/2} 0t${-lam/2} 0`; cover=S('path',{d:d+'Z',class:'air'},g);
+     mark=S('line',{x1:L,x2:R,y1:bot,y2:bot,class:'mark'},svg); S('path',{d:shape,class:'rim'},svg); S('path',{d:`M${L+34} ${bot+4}v14M${R-34} ${bot+4}v14`,class:'foot'},svg); S('path',{d:`M${L-10} ${top}h14M${R-4} ${top}h14`,class:'foot'},svg);
+     host.appendChild(lis); geo={bot,full,before,lam}; set(); };
+   window.FXgen=e=>{ if(typeof e==='number') e0=e; set(); };
+   if('IntersectionObserver' in window) new IntersectionObserver(es=>es.forEach(x=>{ vis=x.isIntersecting; if(vis) loop(); })).observe(host);
+   let run=false; const loop=()=>{ if(run) return; run=true; const f=()=>{ if(!vis||!anim()||!geo){ run=false; return; } ph=(ph+.45)%geo.lam; set(); requestAnimationFrame(f); }; requestAnimationFrame(f); };
+   layouts.push(draw); draw(); });
+
+ // --- 体験3-2：1つの点＝猛暑日1日
+ if(!TEXT) safe('dots',()=>{ const bars=$('oppBars'); if(!bars) return; const host=D('div','fxdots'); bars.parentNode.insertBefore(host,bars.nextSibling); host.setAttribute('aria-hidden','true');
+   let data=null, prog=0, played=false, raf=0; const cs=[];
+   const paint=()=>{ if(!data) return; const dpr=Math.min(2,devicePixelRatio||1), css=getComputedStyle(H), line=css.getPropertyValue('--line').trim()||'#dde2ea';
+     cs.forEach((c,k)=>{ const w=c.clientWidth; if(!w) return; const d=7, g=3, cols=Math.max(1,Math.floor((w+g)/(d+g))), n=k?data.young:data.me, rows=Math.ceil(Math.max(data.max,1)/cols), h=rows*(d+g)-g; c.style.height=h+'px';
+       if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){ c.width=Math.round(w*dpr); c.height=Math.round(h*dpr); } const x=c.getContext('2d'); x.setTransform(dpr,0,0,dpr,0,0); x.clearRect(0,0,w,h);
+       const lit=Math.round(n*prog); for(let i=0;i<data.max;i++){ const cx=(i%cols)*(d+g)+d/2, cy=Math.floor(i/cols)*(d+g)+d/2; x.beginPath(); x.arc(cx,cy,d/2-(i<lit?0:.8),0,7);
+         if(i<lit){ x.fillStyle=k?'#FF7A3D':'#4F8CFF'; x.fill(); } else if(i<n||true){ x.strokeStyle=line; x.lineWidth=1.2; x.stroke(); } } }); };
+   const play=()=>{ cancelAnimationFrame(raf); if(!anim()){ prog=1; paint(); return; } const t0=performance.now(); const f=t=>{ prog=ease(clamp((t-t0)/1300)); paint(); if(prog<1) raf=requestAnimationFrame(f); }; raf=requestAnimationFrame(f); };
+   window.FXopp=o=>{ data=o; if(!cs.length){ ['',''].forEach((_,k)=>{ const b=D('div','dg',host,'<p><span></span><b></b></p>'); cs.push(D('canvas','',b)); }); once(host,()=>{ played=true; play(); },'0px 0px -12% 0px'); }
+     const ps=host.querySelectorAll('p'); ps[0].firstChild.textContent=`あなた（${o.by}年生まれ）`; ps[0].lastChild.textContent=o.me+'日'; ps[1].firstChild.textContent='今の15歳'; ps[1].lastChild.textContent=o.young+'日';
+     if(played){ cancelAnimationFrame(raf); prog=1; } paint(); };
+   layouts.push(()=>{ if(played&&prog>=1) paint(); else paint(); }); window.FXdotsFinal=()=>{ if(played){ cancelAnimationFrame(raf); prog=1; paint(); } }; });
+
+ // --- 体験6：計器（温度計・危険度の針・CO₂のタンク）
+ if(!TEXT) safe('eco',()=>{ let built=null; const build=()=>{ const cards=document.querySelectorAll('.ecom>div'); if(cards.length<3) return null; const mk=(c,inner)=>{ const d=D('div','ins'); d.setAttribute('aria-hidden','true'); d.innerHTML=`<svg viewBox="0 0 56 64">${inner}</svg>`; c.insertBefore(d,c.firstChild); return d; };
+     const a=mk(cards[0],'<rect x="22" y="5" width="12" height="42" rx="6" class="st"/><rect class="mv liq" id="fxT" x="25" y="8" width="6" height="38" rx="3" fill="#E5533D"/><circle cx="28" cy="52" r="9" fill="#E5533D" stroke="none"/><circle cx="28" cy="52" r="9" class="st"/><path d="M38 18h5M38 30h5" class="st" stroke-width="1.5"/>');
+     const b=mk(cards[1],'<path d="M8 44a20 20 0 0 1 10-17.3" stroke="#2FAE6B" stroke-width="7" fill="none"/><path d="M18 26.7a20 20 0 0 1 20 0" stroke="#E0A21B" stroke-width="7" fill="none" stroke-dasharray="3 2"/><path d="M38 26.7a20 20 0 0 1 10 17.3" stroke="#E5533D" stroke-width="7" fill="none"/><g class="mv ndl" id="fxN"><path d="M28 44V24" class="st" stroke-width="3"/></g><circle cx="28" cy="44" r="4" fill="var(--ink)"/>');
+     const c=mk(cards[2],'<rect class="mv liq" id="fxC" x="12" y="12" width="32" height="44" fill="#7C8AA5"/><path d="M12 12v44q16 6 32 0V12" class="st"/><ellipse cx="28" cy="12" rx="16" ry="5" class="st" fill="var(--bg)"/><path d="M46 24h4M46 40h4" class="st" stroke-width="1.5"/>');
+     return {T:a.querySelector('#fxT'),N:b.querySelector('#fxN'),C:c.querySelector('#fxC')}; };
+   window.FXeco=o=>{ if(!built) built=build(); if(!built) return; const f=clamp((o.t-o.lo)/(o.hi-o.lo)); built.T.style.transform=`scaleY(${Math.max(.04,f).toFixed(3)})`; built.N.style.transform=`rotate(${(f*180-90).toFixed(1)}deg)`; built.C.style.transform=`scaleY(${clamp(o.maxKg?o.kg/o.maxKg:0).toFixed(3)})`;
+     const tp=$('temp'); if(tp&&tp._fxp) tp._fxp(); }; });
+
+ // --- 宣言カード：回答から模様が決まる1枚。画像として保存できる
+ if(!TEXT) safe('card',()=>{ const fin=$('finish'), sum=$('summary'); if(!fin||!sum) return; let made=false;
+   const wrap=(x,t,maxW)=>{ const out=[]; let l=''; for(const ch of [...t]){ if(x.measureText(l+ch).width>maxW&&l&&!'、。）」？！%₂'.includes(ch)){ out.push(l); l=ch; } else l+=ch; } if(l) out.push(l); return out; };
+   const make=async()=>{ const card=sum.querySelector('.card'); if(!card) return; const box=D('div','fxcard'); const img=D('img','',box); img.alt=($('cA').textContent||'')+' '+($('cT').textContent||''); const row=D('div','row',box), btn=D('button','btn ghost',row), msg=D('span','',row); btn.type='button'; btn.textContent='画像として保存'; msg.setAttribute('aria-live','polite');
+     card.parentNode.insertBefore(box,card); sum.classList.add('fxc');
+     try{ if(document.fonts&&document.fonts.load) await Promise.race([Promise.all([document.fonts.load('900 60px "Noto Sans JP"',$('cA').textContent),document.fonts.load('500 30px "Noto Sans JP"',$('cT').textContent)]),new Promise(r=>setTimeout(r,1500))]); }catch(e){}
+     const K=window.LITE?.6667:1, Wd=Math.round(1080*K), Hd=Math.round(1350*K), c=document.createElement('canvas'); c.width=Wd; c.height=Hd; const x=c.getContext('2d'); x.scale(K,K);
+     const a=(typeof age==='number'?age:20), pick=(typeof chosen==='number'&&chosen!==null)?chosen:-1, sel=[...document.querySelectorAll('#choices button')].map((b,i)=>b.getAttribute('aria-pressed')==='true'?i:-1).filter(i=>i>=0);
+     let seed=(a*7919+(pick+2)*104729+sel.reduce((s,i)=>s+(1<<i),0)*31)>>>0; const rnd=()=>{ seed=(seed+0x6D2B79F5)>>>0; let t=seed; t=Math.imul(t^t>>>15,t|1); t^=t+Math.imul(t^t>>>7,t|61); return ((t^t>>>14)>>>0)/4294967296; };
+     const PAL=[['#4F8CFF','#19A7A0'],['#FFD166','#2FAE6B'],['#19A7A0','#7C7CF2'],['#FF7A3D','#D2688F'],['#4F8CFF','#FF7A3D']][pick<0?4:pick%4];
+     const bg=x.createLinearGradient(0,0,1080,1350); bg.addColorStop(0,'#16213f'); bg.addColorStop(1,'#0B1020'); x.fillStyle=bg; x.fillRect(0,0,1080,1350);
+     // 模様：年齢の数だけの点が渦を描き、選んだ行動の数だけ輪が重なる
+     const cx=760+rnd()*120, cy=330+rnd()*120; x.globalAlpha=.16; for(let i=0;i<3+sel.length*2;i++){ x.beginPath(); x.arc(cx,cy,170+i*(70+rnd()*26),0,7); x.strokeStyle=PAL[i%2]; x.lineWidth=2+rnd()*10; x.stroke(); }
+     x.globalAlpha=1; const rot=rnd()*6.28; for(let i=0;i<a;i++){ const r=40*Math.sqrt(i+1)+12, th=i*2.39996+rot, px=cx+Math.cos(th)*r, py=cy+Math.sin(th)*r; x.beginPath(); x.arc(px,py,9+((i*37+a)%5)*2.2,0,7); x.fillStyle=PAL[(i+pick+8)%2]; x.globalAlpha=.55+((i*13)%10)/22; x.fill(); }
+     x.globalAlpha=1; const fade=x.createLinearGradient(0,520,0,1350); fade.addColorStop(0,'rgba(11,16,32,0)'); fade.addColorStop(.35,'rgba(11,16,32,.86)'); fade.addColorStop(1,'rgba(11,16,32,.96)'); x.fillStyle=fade; x.fillRect(0,520,1080,830);
+     const F='"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif'; x.textBaseline='top'; x.fillStyle='#fff';
+     x.font='900 40px '+F; x.fillStyle=PAL[0]; x.fillText('わたしの宣言',80,84); x.fillStyle='#fff';
+     x.font='900 66px '+F; const ls=wrap(x,$('cA').textContent||'',920); x.font='500 32px '+F; const lt=wrap(x,$('cT').textContent||'',920), lm=wrap(x,$('cM').textContent||'',920);
+     let y=Math.max(560,1200-(ls.length*92+56+(lt.length+lm.length)*48+10)); x.font='900 66px '+F; x.fillStyle='#fff'; ls.forEach(l=>{ x.fillText(l,80,y); y+=92; });
+     x.fillStyle=PAL[0]; x.fillRect(80,y+10,120,8); y+=56; x.fillStyle='#D5DCEB'; x.font='500 32px '+F; lt.forEach(l=>{ x.fillText(l,80,y); y+=48; }); y+=10; lm.forEach(l=>{ x.fillText(l,80,y); y+=48; });
+     x.fillStyle='#8FA0C0'; x.font='700 28px '+F; x.fillText('そのCO₂のつけは、誰が払う？',80,1262);
+     try{ img.src=c.toDataURL('image/png'); }catch(e){ box.remove(); sum.classList.remove('fxc'); return; }
+     btn.addEventListener('click',()=>{ const fail=()=>{ msg.textContent='保存できないときは、画像を長押しして保存してください。'; };
+       try{ c.toBlob(async bl=>{ if(!bl){ fail(); return; } const file=new File([bl],'co2-sengen.png',{type:'image/png'});
+           try{ if(navigator.canShare&&navigator.canShare({files:[file]})){ await navigator.share({files:[file]}); return; } }catch(e){ if(e&&e.name==='AbortError') return; }
+           try{ const u=URL.createObjectURL(bl), l=document.createElement('a'); l.href=u; l.download='co2-sengen.png'; document.body.appendChild(l); l.click(); l.remove(); setTimeout(()=>URL.revokeObjectURL(u),4000); msg.textContent='保存しました。保存できないときは、画像を長押ししてください。'; }catch(e){ fail(); } },'image/png'); }catch(e){ fail(); } }); };
+   fin.addEventListener('click',()=>{ if(made||sum.hidden) return; made=true; make().catch(e=>console.warn('FX:card',e)); }); });
+
+ // --- 幅が変わったら描き直す（実証の入力のあとに表示されたときも）
+ let lw=-1; const relayout=()=>layouts.forEach(f=>safe('layout',f)); addEventListener('resize',()=>requestAnimationFrame(relayout)); addEventListener('load',relayout); setTimeout(relayout,600);
+
+ // --- 動きを止める（いつでも）
+ if(!sysRM()) safe('still',()=>{ const b=D('button','fxstill',document.body); b.type='button';
+   const set=v=>{ window.STILL=v; RM=v||sysRM(); H.classList.toggle('still',v); b.textContent=v?'動きを再開':'動きを止める'; b.setAttribute('aria-pressed',v?'true':'false'); try{ sessionStorage.setItem('co2still',v?'1':'0'); }catch(e){}
+     if(v){ if(window.MOTION) MOTION.s1=1; if(window.FXunsplit) FXunsplit(); if(window.FXdotsFinal) FXdotsFinal(); document.querySelectorAll('.learn.fxpre').forEach(c=>c.classList.remove('fxpre')); } if(window.FXgen) FXgen(); };
+   b.addEventListener('click',()=>set(!window.STILL)); set(!!window.STILL); });
+
+ // --- 性能の低い端末：最初の1秒の描画回数が少なければ軽量モードに
+ safe('fps',()=>{ if(window.LITE||!moving()) return; let n=0; const t0=performance.now(); const f=t=>{ n++; if(t-t0<1000) requestAnimationFrame(f); else if(n<24){ window.LITE=true; H.classList.add('lite'); } }; requestAnimationFrame(f); });
 })();
 </script>
 </body></html>
