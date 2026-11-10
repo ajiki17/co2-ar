@@ -7,7 +7,7 @@
 - `data/data.json` … 数値と出典（`tools/export_data.py` で作る）
 - `models/` … ARのモデル95個（立方体：1日分・1年分・人生分10〜99歳、浸水：0.5m・1.0m・3.0m）
 - `tools/` … `export_data.py`（data.json作成）、`make_models.py`（モデル作成）、`hotdays.py`（気象庁の猛暑日データ）、`patch_demo.py`（デモ→index.html の変換）
-- `gas/Code.gs` … 匿名の保存と集計（Google Apps Script）
+- `Code.gs` … 回答の保存と「みんなの結果」の集計（Google Apps Script の控え。ファイルはすべて一番上の階層に置く）
 - `demo_original.html` … 変換前のデモ（比較用）
 
 ## 公開のしかた（GitHub Pages）
@@ -17,8 +17,28 @@
 
 ## URLの切り替え
 - `?start=ar` … 体験1のARの場所から始まる（審査員用）
-- `?g=A` / `?g=B` … 実証の群を保存データに記録
+- `?g=A` / `?g=B` … 実証の群を保存データに記録（A群・B群はメールアドレスの入力あり。保存先は pilot シート）
+- `?g=J` … 審査員の回答として記録（保存先は judge シート）
 - `?mode=text` … 3DとARを隠す（実証のB群用）
+
+## 回答の保存先（Google Apps Script）
+回答は1つのスプレッドシートに、種類ごとにシートを分けて保存する（`Code.gs`）。
+
+| シート | 入る回答 | 補足 |
+|---|---|---|
+| `responses` | 通常のデモ（group が空欄） | 「みんなの結果」はこのシートだけを集計する |
+| `pilot` | 実証のA群・B群（`?g=A`・`?mode=text&g=B`） | 同じ idh・同じ群は上書き。同じ idh で違う群に答えたら行を足し、その idh の全行の dup に「両群」 |
+| `judge` | 審査員（`?g=J`） | |
+
+見出し（1行目）：ts, group, ageBand, region, pre, post, ipre, ipost, choices, chosen, sec, cpre, cpost, quiz, idh, dup（idh・dup は最後に追加した列）。idh はメールアドレスを変換した文字列で、アドレスそのものは保存しない。
+
+### Code.gs を更新したときの手順
+1. 保存先のスプレッドシートを開き、「拡張機能 → Apps Script」を開く。
+2. エディタの `Code.gs` の中身を、このリポジトリの `Code.gs` の中身にすべて置き換えて保存する。
+3. 上の関数の選択で `setupSheets` を選び、「実行」を押す（初回は権限の確認が出る。触れるのはこのスプレッドシート1つだけ）。`responses`・`pilot`・`judge` の3枚がそろい、見出しが入る。今の `responses` は、既存の行はそのままで、右端に idh・dup が足される。
+4. 「デプロイ → デプロイを管理」で今のデプロイの鉛筆マークを押し、バージョンを「新バージョン」にして「デプロイ」を押す（「新しいデプロイ」は使わない。URL が変わってしまう）。URL は変わらないので、`index.html` の `const API=` はそのままでよい。
+5. 動作を確かめる：パラメータなしで1回答 → `responses` に1行。`?g=A` でメールアドレスを入れて1回答 → `pilot` に1行。同じアドレスでもう1回 → 同じ行が上書き。同じアドレスで `?mode=text&g=B` → `pilot` に行が足され、その2行の dup が「両群」。`?g=J` → `judge` に1行。
+6. 確かめたら、テストで入れた行を各シートから消しておく（実証の前に）。
 
 ## 数値を直すとき
 `python tools/export_data.py owid-co2-data.csv` → `cd models && python ../tools/make_models.py ../data/data.json`
@@ -50,3 +70,4 @@
 - v1.16（2026-11-10）：B群（?mode=text）から図・グラフ・表・アイコンを外し、同じ数値を同じ順の文章に（体験2の帯と凡例の色見本・「私」のアイコン→部門別の内訳の文、体験3の積み上がりの帯→割合の文、世界の一人分の棒グラフ→国別の文、体験3-2の棒・体験4のカレンダー・体験5の100年の点と色の箱→既存の文や文章、集計の表→文章、背景の色の切り替えもなし）。B群では帯の代わりに部門の名前を押して説明を見る。体験3のピン留めはB群では行わない。A群は変更なし。
 - v1.17（2026-11-10）：体験4の3D場面の左上に、判断ゲームを始める前から空の黒い札（警戒レベルの表示）が出ていた不具合を修正（v1.12 の display:flex が hidden を上書きしていた）。
 - v1.18（2026-11-10）：実証のデータ収集。A群・B群（?g=A／?mode=text&g=B）だけ、「はじめに」の最初にメールアドレスの入力欄（入力しないと先へ進めない）を置き、アドレスは保存も送信もせず、前後の空白を除いて小文字にし「co2-ar-2026-pacho」を先頭に付けた SHA-256（16進数64文字）を idh として送る。A群・B群の冒頭の説明文を差し替え。Code.gs：保存先を group で分ける（空欄→responses、A・B→pilot、J→judge）、列の最後に idh・dup、pilot では同じ idh・同じ群は上書き、違う群は追加して「両群」、setupSheets() で3枚と見出しをそろえる、doGet は responses だけ。通常のデモは変更なし（送る項目に空の idh が加わるだけ）。
+- v1.19（2026-11-10）：保存先の振り分け（v1.18 で実装済み：空欄→responses、A・B→pilot、J→judge、idh・dup、pilot の上書きと「両群」、setupSheets、doGet は responses だけ）を模擬テストで再確認。README に保存先のシートの説明と、Code.gs を更新したときの Apps Script の手順を追加。ファイルの場所の記載（gas/Code.gs → Code.gs）を実際に合わせた。コードの変更はなし。
