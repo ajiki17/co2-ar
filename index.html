@@ -3,6 +3,8 @@
 <script>
 // スクロール演出（v1.8）：視差効果を減らす設定でなければ有効
 try{ if(!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('mo'); }catch(e){}
+// v1.20：審査員版（?mode=judge、または審査員用の近道 ?start=ar）
+try{ const q=new URLSearchParams(location.search); window.JUDGE=q.get('mode')==='judge'||q.get('start')==='ar'; if(window.JUDGE) document.documentElement.classList.add('judge'); }catch(e){ window.JUDGE=false; }
 // アプリ内ブラウザの判定（ARが使えない）。LINE は openExternalBrowser=1 を付けて外部ブラウザで開き直す
 (function(){ var ua=navigator.userAgent||'', n='';
   if(/\bLine\//i.test(ua)) n='LINE'; else if(/Instagram/i.test(ua)) n='Instagram'; else if(/FBAN|FBAV|FB_IAB|FBIOS/i.test(ua)) n='Facebook';
@@ -252,8 +254,8 @@ h1,h2,h3{overflow-wrap:anywhere}
 .learn .lt{font-size:.9375rem;font-weight:900;color:var(--blue);margin:0 0 6px}
 .learn .lb{font-size:1.0625rem;font-weight:700;line-height:1.75;margin:0 0 12px}
 .learn .ln2{margin:0;padding-top:10px;border-top:1px solid var(--line);font-size:1rem;line-height:1.6}
-.learn .ln2 span{display:block;font-size:.875rem;font-weight:700;color:var(--sub)}
-.learn .ln2 span::after{content:" →"}
+.learn .ln2>span:first-child{display:block;font-size:.875rem;font-weight:700;color:var(--sub)}
+.learn .ln2>span:first-child::after{content:" →"}
 .txi{display:none}body.text-mode .txi{display:inline}
 /* v1.16：B群（?mode=text）は文字と数字だけ。図・グラフ・表・アイコン・色の見本は出さず、同じ数値を文章で示す */
 body.text-mode .atmo,body.text-mode body>svg,body.text-mode .me .dot,body.text-mode .stack,body.text-mode .slegend i,body.text-mode .gen,body.text-mode #countries,body.text-mode .oppbars,body.text-mode #cal,body.text-mode .years,body.text-mode .verdict{display:none!important}
@@ -268,6 +270,12 @@ body.text-mode .slegend button{gap:6px}
 .gate .gmsg.err{color:#a5281b}
 .gate .btn[disabled]{opacity:.45;cursor:not-allowed}
 body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:not(header):not(#s0){display:none!important}
+/* ---- v1.20 審査員版：体験1（立方体）と体験4（浸水）だけ ---- */
+.jdg{display:none}html.judge .jdg{display:inline}html.judge .jdg-b{display:block}html.judge .no-jdg{display:none!important}.jdg-b{display:none}
+html.judge #map,html.judge .jhide,html.judge #door-s2,html.judge #s2,html.judge #door-s3,html.judge #s3,html.judge #s3b,html.judge #s4b,html.judge #door-s5,html.judge #s5,html.judge #door-s6,html.judge #s6,html.judge #door-s7,html.judge #fgame{display:none!important}
+html.judge #s1 .seg[aria-label="期間"],html.judge .reveal>div:first-child,html.judge #rvMsg{display:none!important}
+html.judge .reveal{grid-template-columns:1fr}
+.judge-end{margin:24px 0 8px}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
 </style></head>
 <body>
@@ -288,11 +296,12 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
   <h1 id="heroT"><span class="ln">その<span class="nw">CO<span class="sub2">2</span></span>のつけは、</span><span class="ln">誰が払う？</span></h1>
   <div class="herotick" id="heroTick" aria-hidden="true"><span>このページを開いてから出た、あなたの分のCO₂</span><b><span id="tickBig">0.0</span><small>g</small></b></div>
   <p class="lead">見えない排出を、見える形に。下へスクロールしながら、あなたの1日から、その上流、世代をまたぐ積み重なり、そして気温が上がった先の暮らしまでをたどります。</p>
+  <p class="judge-note jdg-b">審査員の方へ：約3分で、1日分のCO₂の立方体と浸水を、実物大で体験できます。はじめに2つの質問に答えてから、下へ進んでください。</p>
   <p class="note no-tx">3Dの場面のうち2つ（体験1の立方体、体験4の浸水）は、スマホのカメラ越しに自分の部屋へ重ねるARで見られます。</p>
 </header>
 
 <section class="ch" id="s0" data-ch="">
-  <h2>はじめに、3つだけ教えてください</h2>
+  <h2>はじめに、<span class="no-jdg">3</span><span class="jdg">2</span>つだけ教えてください</h2>
   <p id="consent" style="font-size:.875rem;color:var(--sub)"></p>
   <div class="field gate" id="gate" hidden>
     <label class="q" for="email">メールアドレス（必須）</label>
@@ -301,15 +310,15 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
     <button type="button" class="btn" id="gateGo" disabled>次へ</button>
   </div>
   <div class="field"><label class="q" for="age">あなたの年齢</label><span class="big" id="ageOut">20</span><span> 歳</span><input id="age" type="range" min="15" max="90" value="20"></div>
-  <div class="field"><label class="q" for="gs">あなたが1日に出しているCO₂は、何kgくらいだと思いますか</label><span class="big" id="gsOut">0.6</span><span> kg</span><input id="gs" type="range" min="0" max="100" value="30"><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">直感で大丈夫です。</p></div>
-  <div class="field"><label class="q" for="reg">住んでいる地域（任意）</label>
+  <div class="field jhide"><label class="q" for="gs">あなたが1日に出しているCO₂は、何kgくらいだと思いますか</label><span class="big" id="gsOut">0.6</span><span> kg</span><input id="gs" type="range" min="0" max="100" value="30"><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">直感で大丈夫です。</p></div>
+  <div class="field jhide"><label class="q" for="reg">住んでいる地域（任意）</label>
     <select id="reg" style="width:100%;font:inherit;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)">
       <option value="">選ばない</option><option value="hokkaido">北海道</option><option value="tohoku">東北</option><option value="kanto">関東甲信</option><option value="hokuriku">北陸</option><option value="tokai">東海</option><option value="kinki">近畿</option><option value="chugoku">中国</option><option value="shikoku">四国</option><option value="kyushu_n">九州北部（山口県を含む）</option><option value="kyushu_s">九州南部</option><option value="amami">奄美</option><option value="okinawa">沖縄</option>
     </select><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">選ぶと、体験4であなたの地域の将来予測が出ます。</p></div>
   <div class="field"><span class="q" id="q1">日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q1" data-q="pre"></div></div>
-  <div class="field"><span class="q" id="qi1">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi1" data-q="ipre"></div></div>
-  <div class="field"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、現在、取り組んでいることは何かありますか。（○はいくつでも）</span><div class="checks" data-cq="q6"></div></div>
-  <div class="field"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち上の質問で回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7pre"></div></div>
+  <div class="field jhide"><span class="q" id="qi1">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi1" data-q="ipre"></div></div>
+  <div class="field jhide"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、現在、取り組んでいることは何かありますか。（○はいくつでも）</span><div class="checks" data-cq="q6"></div></div>
+  <div class="field jhide"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち上の質問で回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7pre"></div></div>
   <div class="map" id="map">
     <h3>これから6つの体験をします</h3>
     <ol><li><b>1</b><span>見えないCO₂を、見える大きさにする</span></li><li><b>2</b><span>その排出が、どこで出ているかをたどる</span></li><li><b>3</b><span>生まれる前から積み上がっていた量と、生まれ年で変わる夏を知る</span></li><li><b>4</b><span>このままの未来を、自分の部屋に重ねる</span></li><li><b>5</b><span>すでに起きていることを見る</span></li><li><b>6</b><span>80歳になったあなたの夏を体験する</span></li></ol>
@@ -319,7 +328,7 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
 </section>
 
 <div class="door d1" id="door-s1" data-ch="体験1／6 見えないを見せる" role="group" aria-label="体験1のはじまり">
-  <div class="din"><p class="dn" data-rv>01</p><p class="dname" data-rv>体験1　見えないを見せる</p><p class="dq" data-rv>毎日、どれくらいのCO₂を出しているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">予想と答え合わせをして、1日分のCO₂を実物大の立方体で見る（ARなら自分の部屋に置く）</span><span class="txi">予想と答え合わせをして、1日分のCO₂の大きさを文章と数字で読む</span></p></div>
+  <div class="din"><p class="dn" data-rv><span class="no-jdg">01</span><span class="jdg">1／2</span></p><p class="dname" data-rv><span class="no-jdg">体験1</span><span class="jdg">審査員版 1</span>　見えないを見せる</p><p class="dq" data-rv>毎日、どれくらいのCO₂を出しているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">予想と答え合わせをして、1日分のCO₂を実物大の立方体で見る（ARなら自分の部屋に置く）</span><span class="jdg">1日分のCO₂を実物大の立方体で見て、ARで自分の部屋に置く</span></span><span class="txi">予想と答え合わせをして、1日分のCO₂の大きさを文章と数字で読む</span></p></div>
 </div>
 <section class="ch fade" id="s1" data-ch="体験1／6 見えないを見せる" data-atmo="air" data-scene="size">
   <p class="kicker">体験1　見えないを見せる</p>
@@ -341,7 +350,7 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
     <p id="arMsg" style="font-size:.875rem;color:var(--sub);margin-top:8px">読み込み中…</p>
     <details style="font-size:.875rem;color:var(--sub)"><summary style="padding:11px 0;cursor:pointer">うまく表示されないとき（診断情報）</summary><p id="arDiag" style="margin:6px 0 0;word-break:break-all"></p></details>
   </div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">日本人1人の1日分のCO₂は約21kg。気体にすると一辺約2.26mの立方体になる。目に見えないだけで、毎日これだけ出している。</p><p class="ln2"><span>次の体験へ</span>そのCO₂は、どこで出ているのか？</p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">日本人1人の1日分のCO₂は約21kg。気体にすると一辺約2.26mの立方体になる。目に見えないだけで、毎日これだけ出している。</span><span class="jdg">1日分のCO₂は約21kg。一辺約2.26mの立方体になる。</span></p><p class="ln2"><span>次の体験へ</span><span class="no-jdg">そのCO₂は、どこで出ているのか？</span><span class="jdg">このまま気温が上がると、あなたの部屋はどうなるのか？</span></p></div>
 </section>
 
 <div class="door d2" id="door-s2" data-ch="体験2／6 分散をたどる" role="group" aria-label="体験2のはじまり">
@@ -392,7 +401,7 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
 
 <aside class="field" role="note" style="margin-top:24px"><b>この先について</b><p style="margin:6px 0 10px;font-size:.92rem">このあと、浸水や猛暑の場面を<span class="no-tx">3Dで</span>表示します。災害を経験された方など、見るのがつらい場合は読み飛ばせます。</p><a href="#s7" class="btn ghost" style="display:inline-block;text-decoration:none;padding:10px 16px;font-size:.9rem">体験のあとへ進む</a></aside>
 <div class="door d4" id="door-s4" data-ch="体験4／6 このままの未来" role="group" aria-label="体験4のはじまり">
-  <div class="din"><p class="dn" data-rv>04</p><p class="dname" data-rv>体験4　このままの未来</p><p class="dq" data-rv>このまま気温が上がると、あなたの部屋はどうなるのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">2℃と4℃の未来を比べ、浸水を自分の部屋に重ね、祖母と一緒にいつ避難するかを決める</span><span class="txi">2℃と4℃の未来を比べ、浸水と避難のしかたを文章と数字で読む</span></p></div>
+  <div class="din"><p class="dn" data-rv><span class="no-jdg">04</span><span class="jdg">2／2</span></p><p class="dname" data-rv><span class="no-jdg">体験4</span><span class="jdg">審査員版 2</span>　このままの未来</p><p class="dq" data-rv>このまま気温が上がると、あなたの部屋はどうなるのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">2℃と4℃の未来を比べ、浸水を自分の部屋に重ね、祖母と一緒にいつ避難するかを決める</span><span class="jdg">2℃と4℃の未来を比べ、浸水を自分の部屋に重ねる（ARなら実物大で）</span></span><span class="txi">2℃と4℃の未来を比べ、浸水と避難のしかたを文章と数字で読む</span></p></div>
 </div>
 <section class="ch fade" id="s4" data-ch="体験4／6 このままの未来" data-atmo="night" data-scene="flood">
   <p class="kicker">体験4　このままの未来</p>
@@ -427,7 +436,7 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
   </div>
   <p style="font-size:.9rem">あなたの家が大雨でどれくらい浸水する想定になっているかは、国土交通省の<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で住所から調べられます。</p>
   <div class="hint"><b>変えられること</b>2℃になるか4℃になるかは、これから世界で積み上がる排出の量で決まります。2℃と4℃では、熱帯夜の増え方が数倍ちがいます。その差を生むのは、一人ひとりの選択の積み重ねです。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">気温が上がるほど、熱帯夜と激しい雨が増え、浸水の危険も高まる。2℃で止めるか4℃まで進むかは、今の排出で決まる。</p><p class="ln2"><span>次の体験へ</span>海面が上がると、大阪の街はどうなるのか？</p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">気温が上がるほど、熱帯夜と激しい雨が増え、浸水の危険も高まる。2℃で止めるか4℃まで進むかは、今の排出で決まる。</span><span class="jdg">気温が上がるほど激しい雨が増え、浸水の危険も高まる。2℃で止めるか4℃まで進むかは、今の排出で決まる。</span></p><p class="ln2"><span>次の体験へ</span><span class="no-jdg">海面が上がると、大阪の街はどうなるのか？</span><span class="jdg">ここまでをふまえて、あなたが選べることは？</span></p></div>
 </section>
 
 
@@ -507,14 +516,14 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
 </div>
 <section class="ch fade" id="s7" data-ch="体験のあと">
   <p class="kicker">体験のあと</p>
-  <h2>84%の側に、あなたが関われる選択</h2>
+  <h2><span class="no-jdg">84%の側に、</span><span class="jdg"></span>あなたが関われる選択</h2>
   <p>やってみたいものを選んでください（いくつでも）。</p>
   <div id="choices"></div>
   <div class="field"><span class="q" id="qc">その中から、まず1つ決めるなら</span><div class="pick" id="pick" role="group" aria-labelledby="qc"><span style="color:var(--sub);font-size:.875rem">上で選ぶと、ここに出てきます</span></div></div>
   <div class="field"><span class="q" id="q2">あらためて。日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q2" data-q="post"></div></div>
-  <div class="field"><span class="q" id="qi2">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi2" data-q="ipost"></div></div>
-  <div class="field"><span class="q">理解度クイズ（3問）：体験の内容から、あてはまるものを1つずつ選んでください。</span><div id="quizBox"></div></div>
-  <div class="field"><span class="q">体験を終えて、あらためて。「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち最初の質問で「現在、取り組んでいる」と回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7post"></div></div>
+  <div class="field jhide"><span class="q" id="qi2">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi2" data-q="ipost"></div></div>
+  <div class="field jhide"><span class="q">理解度クイズ（3問）：体験の内容から、あてはまるものを1つずつ選んでください。</span><div id="quizBox"></div></div>
+  <div class="field jhide"><span class="q">体験を終えて、あらためて。「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち最初の質問で「現在、取り組んでいる」と回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7post"></div></div>
   <p style="font-size:.875rem;color:var(--sub)">回答は、体験の効果を確かめるために匿名で集計します。<span class="saveItems">保存するのは、年代・地域・前後の回答・企業の商品選択の前後・理解度クイズの正答数・選んだ選択肢・かかった時間・実証の群・送信した日時だけです。名前やメールアドレスは保存しません。</span></p>
   <button class="btn" id="finish">宣言カードをつくる</button>
   <div id="summary" hidden>
@@ -525,6 +534,7 @@ body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:n
     <p style="font-size:.875rem;color:var(--sub)">全国では、対策に取り組む企業の商品やサービスを選んでいる人は10.5%、今後そうしたい人は26.3%です（内閣府、令和7年9月）。</p>
     <div id="agg" class="field" hidden></div>
   </div>
+  <div class="judge-end jdg-b"><a class="btn" id="fullLink" href="./">全体の体験（約15分）はこちら</a></div>
 </section>
 
 <p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）／「実質」の表示＝経済産業省「電力の小売営業に関する指針」（非化石証書による「実質」の表示、閲覧日2026-11-09）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
@@ -827,7 +837,7 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
 
 // ---------- 回答の保存と集計 (db) ----------
 const API='https://script.google.com/macros/s/AKfycbwUBvNo37f7Y0D1jM7PqMLqdTgLMQPrgf8wDgdq3aXf7OEz4jLBtYy1ot3br_YtqdAdKQ/exec'; // Google Apps Script のウェブアプリURL（gas/Code.gs）
-const GROUP=(new URLSearchParams(location.search).get('g')||'').slice(0,2);
+const GROUP=window.JUDGE?'J':(new URLSearchParams(location.search).get('g')||'').slice(0,2);   // v1.20：審査員版は J（judge シート）
 const pct=(n,d)=>d?Math.round(n/d*100)+'%':'―';
 async function saveAndAggregate(chosenIdxs, chosenOne){
   const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:.88rem;color:var(--sub)"';
@@ -997,7 +1007,8 @@ reveal(); updateGen(); drawFuture(); drawElder();
     if(big&&window.IntersectionObserver) new IntersectionObserver(es=>es.forEach(e=>tk.classList.toggle('tk-hide',e.isIntersecting)),{threshold:0}).observe(big);
     // v1.14：画面の中ほどにある体験（とびら・場面）を「体験2／6 分散をたどる」のように表示
     const tc=document.getElementById('tkCh');
-    if(tc&&window.IntersectionObserver){ const cio=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; const c=e.target.dataset.ch||''; tc.textContent=c; tc.hidden=!c; tk.classList.toggle('has-ch',!!c); }),{rootMargin:'-45% 0px -54% 0px'});
+    if(tc&&window.JUDGE){ tc.textContent='審査員版（約3分）'; tc.hidden=false; tk.classList.add('has-ch'); }
+    else if(tc&&window.IntersectionObserver){ const cio=new IntersectionObserver(es=>es.forEach(e=>{ if(!e.isIntersecting) return; const c=e.target.dataset.ch||''; tc.textContent=c; tc.hidden=!c; tk.classList.toggle('has-ch',!!c); }),{rootMargin:'-45% 0px -54% 0px'});
       document.querySelectorAll('[data-ch]').forEach(x=>cio.observe(x)); } })();            // 実証のB群用：3DとARを隠す
   let D=null;
   const nine=(by,series)=>{ let days=0,years=0; for(let y=by+6;y<=by+14;y++) if(series[y]!=null){days+=series[y];years++;} return {days,years}; };
@@ -1100,7 +1111,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   const CONTACT='worketcluke@gmail.com', DELETE_DATE='2027年3月31日';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
   document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。回答は匿名で集計します。'+SAVE_ITEMS+'途中でやめても問題ありません。'+(DELETE_DATE?`データは${DELETE_DATE}に削除します。`:'')+(CONTACT?`問い合わせ：${CONTACT}`:'');
   // v1.18：実証（?g=A・?g=B）だけ。メールアドレスは保存も送信もせず、SHA-256 に変換した文字列（idh）だけを送る
-  const PILOT=['A','B'].includes((qs.get('g')||'').slice(0,2));
+  const PILOT=!window.JUDGE&&['A','B'].includes((qs.get('g')||'').slice(0,2));
   if(PILOT){
     document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。はじめにメールアドレスを入力してもらいますが、同じ人の回答が重ならないようにするためだけに使い、アドレスそのものは保存しません（元に戻せない形に変換した文字列だけを保存します）。保存するのは、年代・地域・前後の回答・企業の商品選択の前後・クイズの正答数・選んだ選択肢・かかった時間・実証の群と、その変換した文字列だけです。同じメールアドレスで2回以上回答した場合は、最後の回答だけを使います。途中でやめても問題ありません。データは2027年3月31日に削除します。問い合わせ：worketcluke@gmail.com';
     const gate=document.getElementById('gate'), em=document.getElementById('email'), msg=document.getElementById('emailMsg'), go=document.getElementById('gateGo');
@@ -1115,12 +1126,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
       msg.className='gmsg'; msg.textContent='確認しました。下へ進んでください。'; go.hidden=true; document.body.classList.remove('gate-locked'); dispatchEvent(new Event('resize')); };
     go.addEventListener('click',unlock); em.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); unlock(); } });
   }
-  if(qs.get('start')==='ar'){                                                        // 審査員用の近道
-    const s1=document.getElementById('s1'), note=document.createElement('p');
-    note.className='judge-note';
-    note.textContent='審査員の方へ：下の「ARで自分の部屋に置く」で、日本人1人の1日分のCO₂（21.3kg、一辺約2.26m）を床に実物大で置けます。全体の体験は上から約10分です。';
-    s1.prepend(note); s1.classList.add('in'); setTimeout(()=>s1.scrollIntoView(),300);
-  }
+  if(window.JUDGE){ const fl=document.getElementById('fullLink'); if(fl) fl.href=location.origin+location.pathname; }   // v1.20：審査員版（?mode=judge・?start=ar）。全体の体験はパラメータなしのURL
 })();
 </script>
 <script>
@@ -1180,7 +1186,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
   // ピン留め（体験1・体験3・体験4。いずれも画面1.5枚分以内）。CSS の sticky を使い、スクロールの速さは変えない
   const pins=[];
   const mkPin=(id,extra,fn)=>{ const w=document.getElementById(id); if(!w) return; w.classList.add('on'); pins.push({w,s:w.firstElementChild,extra,fn,last:-1}); };
-  if(!TEXT&&window.THREE&&Q.get('start')!=='ar'){ M.s1=0; mkPin('pin1',.9,p=>{ M.s1=ease(clamp(p/.8)); }); }   // 立方体（気体）が床からせり上がる
+  if(!TEXT&&window.THREE&&!window.JUDGE){ M.s1=0; mkPin('pin1',.9,p=>{ M.s1=ease(clamp(p/.8)); }); }   // 立方体（気体）が床からせり上がる
   if(!TEXT){ M.pinGen=true; $('gen').classList.add('scrub'); }
   if(!TEXT) mkPin('pin3',.8,p=>{ const [b,a]=genVals(), e=ease(clamp(p/.85)), g=$('gen').children, B=Math.max(b,8), A=Math.max(a,8);  // 積み上がりの棒が伸びる
     g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; fitGen(); });
