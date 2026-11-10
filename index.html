@@ -261,6 +261,13 @@ body.text-mode .slegend button{gap:6px}
 .ticker .tkt{display:flex;flex-direction:column;min-width:0}
 .ticker .tkc{font-size:.9375rem;font-weight:900;color:var(--ink)}
 @media (max-width:400px){.ticker.has-ch .tkl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
+/* ---- v1.18 実証（?g=A・?g=B）だけ：メールアドレスの入力 ---- */
+.gate input{width:100%;font:inherit;font-size:1rem;min-height:48px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
+.gate input[aria-invalid=true]{border-color:#c0392b}
+.gate .gmsg{font-size:.9375rem;margin:6px 0 10px;min-height:1.5em}
+.gate .gmsg.err{color:#a5281b}
+.gate .btn[disabled]{opacity:.45;cursor:not-allowed}
+body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:not(header):not(#s0){display:none!important}
 .tx{display:none}body.text-mode .tx{display:block;background:var(--soft);border-radius:12px;padding:12px 14px;margin:12px 0 0;font-size:1rem}
 </style></head>
 <body>
@@ -287,6 +294,12 @@ body.text-mode .slegend button{gap:6px}
 <section class="ch" id="s0" data-ch="">
   <h2>はじめに、3つだけ教えてください</h2>
   <p id="consent" style="font-size:.875rem;color:var(--sub)"></p>
+  <div class="field gate" id="gate" hidden>
+    <label class="q" for="email">メールアドレス（必須）</label>
+    <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="例：name@example.com" aria-describedby="emailMsg">
+    <p class="gmsg" id="emailMsg" aria-live="polite"></p>
+    <button type="button" class="btn" id="gateGo" disabled>次へ</button>
+  </div>
   <div class="field"><label class="q" for="age">あなたの年齢</label><span class="big" id="ageOut">20</span><span> 歳</span><input id="age" type="range" min="15" max="90" value="20"></div>
   <div class="field"><label class="q" for="gs">あなたが1日に出しているCO₂は、何kgくらいだと思いますか</label><span class="big" id="gsOut">0.6</span><span> kg</span><input id="gs" type="range" min="0" max="100" value="30"><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">直感で大丈夫です。</p></div>
   <div class="field"><label class="q" for="reg">住んでいる地域（任意）</label>
@@ -820,7 +833,7 @@ async function saveAndAggregate(chosenIdxs, chosenOne){
   const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:.88rem;color:var(--sub)"';
   if(!API){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>このページでは、回答は保存されません。</p>`; return; }
   box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計しています…</p>`;
-  const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:ans.ipre, ipost:ans.ipost, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
+  const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={idh:window.IDH||'', region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:ans.ipre, ipost:ans.ipost, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
   let saved=true; try{ await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(doc)}); }catch(e){ saved=false; }   // 失敗しても体験は止めない
   let a=null; try{ a=await (await fetch(API)).json(); }catch(e){}
   if(!a){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計を読み込めませんでした。</p>`; return; }
@@ -1086,6 +1099,22 @@ reveal(); updateGen(); drawFuture(); drawElder();
   const SAVE_ITEMS=document.querySelector('.saveItems').textContent;   // 保存項目の説明（体験のあとと同じ文。Code.gs の COLS に合わせる）
   const CONTACT='worketcluke@gmail.com', DELETE_DATE='2027年3月31日';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
   document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。回答は匿名で集計します。'+SAVE_ITEMS+'途中でやめても問題ありません。'+(DELETE_DATE?`データは${DELETE_DATE}に削除します。`:'')+(CONTACT?`問い合わせ：${CONTACT}`:'');
+  // v1.18：実証（?g=A・?g=B）だけ。メールアドレスは保存も送信もせず、SHA-256 に変換した文字列（idh）だけを送る
+  const PILOT=['A','B'].includes((qs.get('g')||'').slice(0,2));
+  if(PILOT){
+    document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。はじめにメールアドレスを入力してもらいますが、同じ人の回答が重ならないようにするためだけに使い、アドレスそのものは保存しません（元に戻せない形に変換した文字列だけを保存します）。保存するのは、年代・地域・前後の回答・企業の商品選択の前後・クイズの正答数・選んだ選択肢・かかった時間・実証の群と、その変換した文字列だけです。同じメールアドレスで2回以上回答した場合は、最後の回答だけを使います。途中でやめても問題ありません。データは2027年3月31日に削除します。問い合わせ：worketcluke@gmail.com';
+    const gate=document.getElementById('gate'), em=document.getElementById('email'), msg=document.getElementById('emailMsg'), go=document.getElementById('gateGo');
+    gate.hidden=false; document.body.classList.add('gate-locked');
+    const norm=v=>v.trim().toLowerCase(), ok=v=>/^[^\s@]+@[^\s@.]+(\.[^\s@.]+)+$/.test(v);
+    const check=final=>{ const v=norm(em.value), good=ok(v); go.disabled=!good;
+      const bad=v!==''&&!good&&(final||v.includes('@')&&/\.[^.]*$/.test(v.split('@')[1]||'')||/\s/.test(em.value.trim()));
+      em.setAttribute('aria-invalid',bad?'true':'false'); msg.className='gmsg'+(bad?' err':''); msg.textContent=bad?'メールアドレスの形式が正しくないようです。もう一度確かめてください。':(good?'':'入力すると、次へ進めます。'); return good; };
+    em.addEventListener('input',()=>check(false)); em.addEventListener('blur',()=>check(true)); check(false);
+    async function hash(v){ try{ const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode('co2-ar-2026-pacho'+v)); return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,'0')).join(''); }catch(e){ return ''; } }
+    const unlock=async()=>{ if(!check(true)) return; go.disabled=true; window.IDH=await hash(norm(em.value)); em.readOnly=true; em.value=''; em.placeholder='入力済み（アドレスは保存していません）';
+      msg.className='gmsg'; msg.textContent='確認しました。下へ進んでください。'; go.hidden=true; document.body.classList.remove('gate-locked'); dispatchEvent(new Event('resize')); };
+    go.addEventListener('click',unlock); em.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); unlock(); } });
+  }
   if(qs.get('start')==='ar'){                                                        // 審査員用の近道
     const s1=document.getElementById('s1'), note=document.createElement('p');
     note.className='judge-note';
