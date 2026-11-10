@@ -254,6 +254,9 @@ h1,h2,h3{overflow-wrap:anywhere}
 .learn .ln2 span{display:block;font-size:.875rem;font-weight:700;color:var(--sub)}
 .learn .ln2 span::after{content:" →"}
 .txi{display:none}body.text-mode .txi{display:inline}
+/* v1.16：B群（?mode=text）は文字と数字だけ。図・グラフ・表・アイコン・色の見本は出さず、同じ数値を文章で示す */
+body.text-mode .atmo,body.text-mode body>svg,body.text-mode .me .dot,body.text-mode .stack,body.text-mode .slegend i,body.text-mode .gen,body.text-mode #countries,body.text-mode .oppbars,body.text-mode #cal,body.text-mode .years,body.text-mode .verdict{display:none!important}
+body.text-mode .slegend button{gap:6px}
 .ticker .tkt{display:flex;flex-direction:column;min-width:0}
 .ticker .tkc{font-size:.9375rem;font-weight:900;color:var(--ink)}
 @media (max-width:400px){.ticker.has-ch .tkl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
@@ -328,16 +331,17 @@ h1,h2,h3{overflow-wrap:anywhere}
 </section>
 
 <div class="door d2" id="door-s2" data-ch="体験2／6 分散をたどる" role="group" aria-label="体験2のはじまり">
-  <div class="din"><p class="dn" data-rv>02</p><p class="dname" data-rv>体験2　分散をたどる</p><p class="dq" data-rv>そのCO₂は、どこで出ているのか？</p><p class="ddo" data-rv><b>やること</b>帯をタップして、排出が生活のどこにつながっているかをたどる</p></div>
+  <div class="din"><p class="dn" data-rv>02</p><p class="dname" data-rv>体験2　分散をたどる</p><p class="dq" data-rv>そのCO₂は、どこで出ているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップして、排出が生活のどこにつながっているかをたどる</p></div>
 </div>
 <section class="ch fade" id="s2" data-ch="体験2／6 分散をたどる" data-atmo="paper">
   <p class="kicker">体験2　分散をたどる</p>
   <h2>家の中で出ているのは、16%だけ</h2>
-  <p>日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分は16%。残り<span class="num">84%</span>は、工場や物流、お店やオフィスなど家の外で出ています（その一部は輸出品をつくる分です）。帯をタップして、それぞれがあなたの毎日のどこにつながっているかを見てください。</p>
+  <p>日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分は16%。残り<span class="num">84%</span>は、工場や物流、お店やオフィスなど家の外で出ています（その一部は輸出品をつくる分です）。<span class="no-tx">帯</span><span class="txi">下の部門の名前</span>をタップして、それぞれがあなたの毎日のどこにつながっているかを見てください。</p>
   <div class="me"><div class="dot">私</div><div><b>7.77トン／年</b><br><span style="color:var(--sub);font-size:.875rem">日本の一人当たり（2024年）</span></div></div>
   <div class="stack" id="stack" role="group" aria-label="部門別の内訳"></div>
   <div class="slegend" id="slegend" role="group" aria-label="部門別の内訳（凡例）"></div>
-  <div class="detail" id="detail" aria-live="polite"><b>帯をタップしてください</b><span style="color:var(--sub)">それぞれが、あなたの生活のどこにつながっているかが出てきます。</span></div>
+  <p class="tx" id="txSect"></p>
+  <div class="detail" id="detail" aria-live="polite"><b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップしてください</b><span style="color:var(--sub)">それぞれが、あなたの生活のどこにつながっているかが出てきます。</span></div>
   <p id="seenMsg" style="margin-top:14px"></p>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">家の中で出ているのは16%だけ。残りの84%は、電気をつくる発電所や商品をつくる工場など、家の外で出ている。だから節電だけでなく「何を選ぶか」が効く。</p><p class="ln2"><span>次の体験へ</span>あなたが生まれたとき、CO₂はどれだけ積み上がっていたのか？</p></div>
 </section>
@@ -349,6 +353,7 @@ h1,h2,h3{overflow-wrap:anywhere}
   <p class="kicker">体験3　時間差を越える</p>
   <div class="pin" id="pin3"><div class="stick">
   <h2 id="h3x" class="hlong"></h2>
+  <p class="tx" id="txGen"></p>
   <div class="gen" id="gen"><div class="before"><b id="gB">0%</b><span>生まれる前に積み上がっていた</span></div><div class="after"><b id="gA">0%</b><span>生まれてから加わった</span></div></div>
   <p style="font-size:.875rem;color:var(--sub)" id="genNote"></p>
   </div></div>
@@ -357,6 +362,7 @@ h1,h2,h3{overflow-wrap:anywhere}
   <div class="hint" style="margin-top:0"><b>知っておきたいこと</b>IPCCは2021年の報告書で、人間の活動が地球を温暖化させてきたことには「疑う余地がない」と、初めて断定しました。この積み重なりは、自然の変化ではありません。</div>
   <h3>世界の一人分と並べると</h3>
   <div id="countries"></div>
+  <p class="tx" id="txCtr"></p>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">あなたが生まれた時点で、世界のCO₂の<span id="lrn3"></span>%がすでに積み上がっていた。気温の上昇は積み上がった量で決まるので、後から生まれた世代ほど、その影響を背負う。</p><p class="ln2"><span>次の体験へ</span>生まれた年で、子どもの頃の夏はどれだけ違うのか？</p></div>
 </section>
 
@@ -441,6 +447,7 @@ h1,h2,h3{overflow-wrap:anywhere}
   <p style="margin:14px 0 0">実際の世界の100年（約7回）</p><div class="years real" id="yYes"></div>
   <p style="font-size:.875rem;color:var(--sub)">50年に1度＝100年に約2回として、3.3倍を丸めて表示</p>
   <div class="pcard" style="margin-top:22px"><b>2025年夏　記録的な高温</b><p style="margin:6px 0 0">気象研究所などの解析では、温暖化がなければ、この夏の高温は発生し得なかったとされています。</p></div>
+  <p class="tx">温暖化のない世界：起こり得なかった。実際の世界：起きた。</p>
   <div class="verdict"><div class="no">温暖化のない世界<br><span style="font-size:.9rem;font-weight:700">起こり得なかった</span></div><div class="yes">実際の世界<br><span style="font-size:.9rem;font-weight:700">起きた</span></div></div>
   <div class="hint"><b>変えられること</b>この2つの出来事は、すでに積み上がった排出の結果です。これから先の起きやすさは、これから積み上がる分で変わります。</div>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西日本豪雨のような大雨は、温暖化によって約3.3倍起きやすくなっていた。影響は未来の話ではなく、すでに始まっている。</p><p class="ln2"><span>次の体験へ</span>80歳になったあなたの夏は、どうなっているのか？</p></div>
@@ -639,15 +646,17 @@ SECT.forEach(([n,v,c,d],i)=>{const el=document.createElement('div');el.style.bac
   const lg=document.createElement('button');lg.type='button';lg.setAttribute('aria-pressed','false');lg.innerHTML=`<i style="background:${c}"></i><span>${n}</span><b>${v}%</b>`;
   const show=()=>{[...stack.children].forEach(x=>x.classList.remove('sel'));el.classList.add('sel');[...slegend.children].forEach(x=>x.setAttribute('aria-pressed',x===lg?'true':'false'));seen.add(i);$('detail').innerHTML=`<b>${n}　${v}%</b>${d}`;$('seenMsg').textContent=seen.size>=SECT.length?'どの部門も、あなたの毎日のどこかにつながっていました。家の外の84%の多くも、あなたが使う物やサービスを通じて、あなたの暮らしとつながっています。':`${seen.size}/${SECT.length} を確認しました。`;};
   el.addEventListener('click',show);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}});stack.appendChild(el); lg.addEventListener('click',show); slegend.appendChild(lg);});
+$('txSect').textContent='部門別の内訳は、'+SECT.map(([n,v])=>`${n}${v}%`).join('、')+'です。';   // B群：帯と同じ値・同じ順
 function fitStack(){ [...stack.children].forEach(d=>{ const sp=d.firstElementChild, room=d.clientWidth-10; sp.textContent=d.dataset.full; if(sp.scrollWidth>room){ sp.textContent=d.dataset.short; if(sp.scrollWidth>room) sp.textContent=''; } }); }
 stack.addEventListener('transitionend',fitStack); addEventListener('resize',fitStack);
 function growStack(){[...stack.children].forEach(d=>d.style.flexGrow=d.dataset.v); fitStack(); setTimeout(fitStack,1100);}
 
 // ---------- 体験3 ----------
 const CTR=[['アメリカ',14.197],['中国',8.658],['日本（あなた）',7.772],['ドイツ',6.769],['世界全体',4.729],['インド',2.201],['バングラデシュ',0.624],['エチオピア',0.135]];
+$('txCtr').textContent='一人当たりの年間排出量は、'+CTR.map(([n,v])=>`${n}${v.toFixed(1)}t`).join('、')+'です。';   // B群：棒グラフと同じ値・同じ順
 CTR.forEach(([n,v])=>{const r=document.createElement('div');r.className='cbar'+(n.startsWith('日本')?' jp':'');r.innerHTML=`<span>${n}</span><span class="t"><i></i></span><span class="v">${v.toFixed(1)}t</span>`;$('countries').appendChild(r);});
 function genVals(){const pw=CUMW[String(birth()-1)]||0, pj=CUM[String(birth()-1)]||0; const b=Math.round(pw/CUMW['2024']*100), bj=Math.round(pj/CUM['2024']*100); return [b,100-b,bj];}
-function updateGen(){const [b,a]=genVals(); const l3=$('lrn3'); if(l3) l3.textContent=b;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
+function updateGen(){const [b,a]=genVals(); const l3=$('lrn3'); if(l3) l3.textContent=b; $('txGen').textContent=`生まれる前に積み上がっていた：${b}%、生まれてから加わった：${a}%。`;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
 function fitGen(){ [...$('gen').children].forEach(d=>{ d.classList.toggle('tight',d.clientWidth<96); d.classList.toggle('tiny',d.clientWidth<52); }); }
 $('gen').addEventListener('transitionend',fitGen); addEventListener('resize',fitGen);
 let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);} setTimeout(fitGen,60); setTimeout(fitGen,1300);[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
@@ -815,9 +824,11 @@ async function saveAndAggregate(chosenIdxs, chosenOne){
   let a=null; try{ a=await (await fetch(API)).json(); }catch(e){}
   if(!a){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計を読み込めませんでした。</p>`; return; }
   box.innerHTML=`<b>みんなの結果（${a.n}人）</b>${saved?'':'<p style="font-size:.875rem;color:var(--sub);margin:4px 0">※あなたの回答は保存できませんでした</p>'}
-   <div class="aggrow" style="margin-top:10px"><span></span><span style="font-size:.875rem;color:var(--sub)">体験前</span><span style="font-size:.875rem;color:var(--sub)">体験後</span>
+   ${document.body.classList.contains('text-mode')
+     ? `<p style="margin:10px 0 0">自分も関わっていると思う：体験前 <b>${pct(a.preInv,a.bothN)}</b>、体験後 <b>${pct(a.postInv,a.bothN)}</b>。</p><p style="margin:6px 0 0">IPCCの断定を知っている：体験前 <b>${pct(a.preKnow,a.ibN)}</b>、体験後 <b>${pct(a.postKnow,a.ibN)}</b>（全国 34.5%）。</p>`
+     : `<div class="aggrow" style="margin-top:10px"><span></span><span style="font-size:.875rem;color:var(--sub)">体験前</span><span style="font-size:.875rem;color:var(--sub)">体験後</span>
    <span>自分も関わっていると思う</span><b>${pct(a.preInv,a.bothN)}</b><b>${pct(a.postInv,a.bothN)}</b>
-   <span>IPCCの断定を知っている<br><small style="color:var(--sub)">全国 34.5%</small></span><b>${pct(a.preKnow,a.ibN)}</b><b>${pct(a.postKnow,a.ibN)}</b></div>
+   <span>IPCCの断定を知っている<br><small style="color:var(--sub)">全国 34.5%</small></span><b>${pct(a.preKnow,a.ibN)}</b><b>${pct(a.postKnow,a.ibN)}</b></div>`}
    <p style="margin:10px 0 0;font-size:.9rem">「対策に取り組む企業の商品やサービスを選びたい」を選んだ人：<b>${pct(a.sel0,a.n)}</b>　<span style="font-size:.875rem;color:var(--sub)">全国 36.8%（実践中＋今後）</span></p>
    <p style="margin:8px 0 0;font-size:.875rem;color:var(--sub)">「関わっていると思う」は「ややそう思う」「そう思う」の合計。前後の両方に答えた人で集計。</p>`;
 }
@@ -1140,8 +1151,8 @@ reveal(); updateGen(); drawFuture(); drawElder();
   const pins=[];
   const mkPin=(id,extra,fn)=>{ const w=document.getElementById(id); if(!w) return; w.classList.add('on'); pins.push({w,s:w.firstElementChild,extra,fn,last:-1}); };
   if(!TEXT&&window.THREE&&Q.get('start')!=='ar'){ M.s1=0; mkPin('pin1',.9,p=>{ M.s1=ease(clamp(p/.8)); }); }   // 立方体（気体）が床からせり上がる
-  M.pinGen=true; $('gen').classList.add('scrub');
-  mkPin('pin3',.8,p=>{ const [b,a]=genVals(), e=ease(clamp(p/.85)), g=$('gen').children, B=Math.max(b,8), A=Math.max(a,8);  // 積み上がりの棒が伸びる
+  if(!TEXT){ M.pinGen=true; $('gen').classList.add('scrub'); }
+  if(!TEXT) mkPin('pin3',.8,p=>{ const [b,a]=genVals(), e=ease(clamp(p/.85)), g=$('gen').children, B=Math.max(b,8), A=Math.max(a,8);  // 積み上がりの棒が伸びる
     g[0].style.flexGrow=(B*e).toFixed(2); g[1].style.flexGrow=(A+B*(1-e)).toFixed(2); $('gB').textContent=Math.round(b*e)+'%'; $('gA').textContent=Math.round(a*e)+'%'; fitGen(); });
   if(!TEXT&&window.THREE) mkPin('pin4',.7,null);                                                   // 浸水：止まって見せ、水は入口で1回だけ上がる
   const TOPMIN=(document.querySelector('.ticker')||{offsetHeight:48}).offsetHeight+8;
