@@ -783,6 +783,8 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
  // ===== 体験4：水面（角度で変わる反射・ゆれる法線・壁ぎわの泡）、床にゆらめく光、窓を流れる雨、水位とともに沈む光
  flood:safe('flood',o=>{ const s=o.scene, U={t:{value:0},q:{value:1},a:{value:0}};
    const lights=[]; s.traverse(c=>{ if(c.isLight) lights.push([c,c.intensity]); });
+   const sink=lv=>{ const f=1-.5*clamp(lv/2.4); lights.forEach(([c,b])=>c.intensity=b*f); };
+   if(lo()){ o.fx=lv=>sink(lv); return; }   // 軽量モード：新しいシェーダーは作らず、水面は v1.20 の描き方のまま（光が沈む演出だけ）
    const wg=new THREE.PlaneGeometry(3.58,2.68,1,1); wg.rotateX(-Math.PI/2);
    const water=new THREE.Mesh(wg,new THREE.ShaderMaterial({transparent:true,side:THREE.DoubleSide,uniforms:U,vertexShader:VS,fragmentShader:`uniform float t,q; varying vec2 vU; varying vec3 vW; ${NOISE}
      void main(){ vec2 p=vW.xz; float h1=n2(p*3.+vec2(t*.35,t*.22)), h2=n2(p*7.-vec2(t*.3,-t*.4)), h3=n2(p*3.+9.-vec2(t*.25,t*.3));
@@ -803,7 +805,7 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
    const chk=guard(o,revert);
    o.water.visible=false; o.body.material.opacity=.42;
    o.fx=lv=>{ const mv=moving(); if(mv) U.t.value=now(); U.q.value=lo()?0:1; water.position.y=lv; caus.visible=rain.visible=!lo();
-     U.a.value=clamp(lv/.04)*(1-clamp((lv-.25)/1.1))*.55; const f=1-.5*clamp(lv/2.4); lights.forEach(([c,b])=>c.intensity=b*f); o.st.auto=mv?Math.sin(now()*.13)*.07:0; chk(); }; }),
+     U.a.value=clamp(lv/.04)*(1-clamp((lv-.25)/1.1))*.55; sink(lv); o.st.auto=mv?Math.sin(now()*.13)*.07:0; chk(); }; }),
 
  // ===== 体験4-2：時間帯で変わる太陽の高さと色、高潮のときに岸壁で上がるしぶき（水は岸壁を越えない：+3.97m は天端 5.0m より低い）
  sea:safe('sea',o=>{ const s=o.scene, hr=new Date().getHours()+new Date().getMinutes()/60, el=clamp(Math.sin((hr-6)/12*Math.PI),.1,1);   // 6時〜18時で昇って沈む。夜は低い位置のまま
