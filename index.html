@@ -328,9 +328,9 @@ html.fx .checks label{border-radius:10px;padding:2px 6px;margin:0 -6px}
 html.fx .checks input,html.fx .ecore input{accent-color:var(--acci)}
 html.fx .hint{border-left-color:var(--acc);border-radius:0 var(--r2) var(--r2) 0}
 html.fx .hint b{color:var(--acci)}
-html.fx .life{border-radius:var(--r3);background:linear-gradient(150deg,#16213f,#0B1020);color:#eef2fa}
+html.fx .life{border-radius:var(--r3);background:#0B1020 linear-gradient(150deg,#16213f,#0B1020);color:#eef2fa}
 html.fx .life .big{color:#fff}
-html.fx .reveal div.real{background:linear-gradient(150deg,#16213f,#0B1020);color:#fff}
+html.fx .reveal div.real{background:#0B1020 linear-gradient(150deg,#16213f,#0B1020);color:#fff}
 html.fx input[type=range]{-webkit-appearance:none;appearance:none;background:transparent}
 html.fx input[type=range]::-webkit-slider-runnable-track{height:8px;border-radius:4px;background:linear-gradient(90deg,var(--acci) var(--p,50%),var(--line) var(--p,50%))}
 html.fx input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:28px;height:28px;margin-top:-10px;border-radius:50%;background:#fff;border:3px solid var(--acci);box-shadow:var(--sh1);transition:transform .2s var(--ez)}
@@ -361,7 +361,7 @@ html.fx .fxfig{position:absolute;inset:0;width:100%;height:100%}
 /* --- 章のとびら --- */
 html.fx .door{overflow:hidden;isolation:isolate;background:var(--stage)}
 html.fx .door::before{content:"";position:absolute;inset:-25%;z-index:-1;background:radial-gradient(55% 45% at 80% 16%,var(--dg1) 0,transparent 70%),radial-gradient(65% 55% at 10% 92%,var(--dg2) 0,transparent 72%),linear-gradient(165deg,var(--db) 0,#0B1020 82%)}
-html.fx.mo:not(.lite) .door::before{animation:fxdrift 26s ease-in-out infinite alternate}
+html.fx.mo:not(.lite) .door.fxlive::before{animation:fxdrift 26s ease-in-out infinite alternate}
 @keyframes fxdrift{from{transform:translate3d(-4%,-3%,0) rotate(0deg)}to{transform:translate3d(4%,3%,0) rotate(7deg)}}
 html.fx .d1{--db:#1f4e8c;--dg1:rgba(79,140,255,.38);--dg2:rgba(79,140,255,.2)}
 html.fx .d2{--db:#1d4f96;--dg1:rgba(79,140,255,.34);--dg2:rgba(124,124,242,.24)}
@@ -379,7 +379,7 @@ html.fx .ml{display:block;overflow:hidden}
 html.fx .ml>span{display:block}
 html.fx.mo .ml>span{transform:translateY(108%);transition:transform .6s var(--ez)}
 html.fx.mo .fxin .ml>span{transform:none}
-html.fx .subdoor{border-radius:var(--r3);background:linear-gradient(160deg,var(--acci),#0B1020 130%)!important;box-shadow:var(--sh1)}
+html.fx .subdoor{border-radius:var(--r3);background:#0B1020 linear-gradient(160deg,var(--acci),#0B1020 130%)!important;box-shadow:var(--sh1)}
 /* --- 上部の帯：進み具合の線と、章ごとの目盛り（B群には無い） --- */
 html.fx .ticker{border-bottom-color:transparent}
 html.fx .prog{position:absolute;left:0;right:0;bottom:0;height:3px;background:var(--line);overflow:visible}
@@ -444,7 +444,7 @@ html.fx .fxcard img{display:block;width:100%;aspect-ratio:4/5;border-radius:var(
 html.fx.mo .fxcard img{animation:fxfade .6s var(--ez) both}
 html.fx .fxcard .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
 html.fx .fxcard .row span{font-size:.875rem;color:var(--sub)}
-html.fx .card{border-radius:var(--r3);background:linear-gradient(155deg,var(--acci),#0B1020 120%);color:#fff;box-shadow:var(--sh2);padding:26px 22px}
+html.fx .card{border-radius:var(--r3);background:#0B1020 linear-gradient(155deg,var(--acci),#0B1020 120%);color:#fff;box-shadow:var(--sh2);padding:26px 22px}
 /* --- 動きを止める --- */
 html.fx .fxstill{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(11,16,32,.18);background:rgba(255,255,255,.94);color:#1a1d23;font:inherit;font-size:.875rem;font-weight:700;line-height:1.2;box-shadow:var(--sh1);cursor:pointer}
 html.fx.still *,html.fx.still *::before,html.fx.still *::after{animation:none!important;transition:none!important}
@@ -1414,6 +1414,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
    const unsplit=()=>document.querySelectorAll('.dq').forEach(q=>{ if(q._fx){ q.textContent=q._fx; q._fx=null; } });
    document.querySelectorAll('.door,.subdoor').forEach(d=>{ const q=d.querySelector('.dq'); if(!q) return;
      once(d,()=>split(q),'0px 0px 70% 0px'); once(d,()=>requestAnimationFrame(()=>requestAnimationFrame(()=>d.classList.add('fxin'))),'0px 0px -6% 0px'); });
+   if('IntersectionObserver' in window){ const lio=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('fxlive',e.isIntersecting))); document.querySelectorAll('.door').forEach(d=>lio.observe(d)); }   // 背景は画面に入っている間だけ動かす
    let w=innerWidth; addEventListener('resize',()=>{ if(innerWidth!==w){ w=innerWidth; unsplit(); } }); window.FXunsplit=unsplit; });
 
  // --- 上部の帯：進み具合の線と章の目盛り（B群は文字だけ）
@@ -1438,7 +1439,9 @@ reveal(); updateGen(); drawFuture(); drawElder();
      scElder:()=>`<path d="M60 150 160 190 260 150 260 60 160 30 60 60z M160 100 260 60 M160 100 60 60 M160 100v90"/><text x="160" y="214" text-anchor="middle" font-size="16" font-weight="700" fill="#fff" stroke="none">室温 ${typeof temp==='number'?temp:''}℃</text>` };
    const fall=sc=>{ sc.classList.add('nogl','ready'); let v=sc.querySelector('.fxfig'); if(!v){ v=S('svg',{class:'fxfig',viewBox:'0 0 320 224',fill:'none',stroke:'#fff','stroke-opacity':'.75','stroke-width':'2','stroke-linejoin':'round','aria-hidden':'true'}); sc.insertBefore(v,sc.firstChild);
        const cap=sc.querySelector('.cap'); if(cap){ cap.textContent='この端末では3Dを表示できないため、図で示しています'; cap.style.color='#fff'; cap.id=''; } }
-     v.innerHTML=(FIG[sc.id]||FIG.scSize)(); };
+     v.innerHTML=(FIG[sc.id]||FIG.scSize)();
+     const vt=$('volText'); if(sc.id==='scSize'&&vt&&!vt.textContent&&typeof dayKg==='number') vt.innerHTML=`1日分は約<b>${dayKg.toFixed(0)}kg</b>。気体にすると約<b>${dayV.toFixed(0)}m³</b>で、6畳間の半分ほどが埋まります。`;   // 3Dが無いときも、体験1の文は出す（既存の文と同じ）
+   };
    const redraw=()=>setTimeout(()=>document.querySelectorAll('.scene.nogl').forEach(fall),0);
    document.querySelectorAll('.scene').forEach(sc=>{ const cv=sc.querySelector('canvas'); if(cv){ requestAnimationFrame(()=>requestAnimationFrame(()=>sc.classList.add('ready'))); cv.addEventListener('webglcontextlost',e=>{ e.preventDefault(); fall(sc); }); } else fall(sc); });
    document.addEventListener('click',e=>{ if(e.target.closest&&e.target.closest('[data-wd],[data-sl],[data-surge],[data-dev],[data-fg]')) redraw(); }); const tp=$('temp'); if(tp) tp.addEventListener('input',redraw);
