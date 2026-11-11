@@ -2,10 +2,18 @@
 <html lang="ja"><head><meta charset="utf-8">
 <script>
 // スクロール演出（v1.8）：視差効果を減らす設定でなければ有効
-// v1.21：新しい見た目と演出（FX）。?fx=off ですべて切れて v1.20 の見た目に戻る。?lite=1 または性能の低い端末では軽量モード。
-try{ (function(){ var q=new URLSearchParams(location.search), h=document.documentElement, st=false;
-  window.FX=q.get('fx')!=='off'; try{ st=window.FX&&sessionStorage.getItem('co2still')==='1'; }catch(e){}
-  window.STILL=st; window.LITE=window.FX&&(q.get('lite')==='1'||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2));
+// ============================================================================================
+// ★ 表示の切り替え（実証の当日に不具合が出たら、この1行を書き換えて push する）
+//    'full' … 新しい見た目と演出をすべて使う（v1.21〜）
+//    'lite' … 重い効果（3Dの粒・シェーダー・影、動く背景など）を切る
+//    'off'  … v1.20 相当の見た目に戻す
+//    URL の ?fx=off ・ ?lite=1 は、この設定より優先する（確認用に ?fx=full ・ ?fx=lite も使える）
+const FX_DEFAULT = 'full';
+// ============================================================================================
+try{ (function(){ var q=new URLSearchParams(location.search), h=document.documentElement, st=false, f=q.get('fx'), l=q.get('lite');
+  var mode = f==='off'?'off' : (l==='1'||f==='lite')?'lite' : (f==='full'||l==='0')?'full' : (['full','lite','off'].indexOf(FX_DEFAULT)>=0?FX_DEFAULT:'full');
+  window.FXMODE=mode; window.FX=mode!=='off'; try{ st=window.FX&&sessionStorage.getItem('co2still')==='1'; }catch(e){}
+  window.STILL=st; window.LITE=window.FX&&(mode==='lite'||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2));
   if(window.FX) h.classList.add('fx'); if(window.LITE) h.classList.add('lite'); if(st) h.classList.add('still'); if(q.get('mode')==='text') h.classList.add('txm'); })(); }catch(e){ window.FX=false; }
 try{ if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&!window.STILL) document.documentElement.classList.add('mo'); }catch(e){}
 // v1.20：審査員版（?mode=judge、または審査員用の近道 ?start=ar）
@@ -353,7 +361,10 @@ html.fx .scene canvas{animation:fxfade .5s var(--ez) both}
 html.fx model-viewer{border-radius:var(--r3)!important}
 html.fx model-viewer:not(.ready){background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 150' fill='none' stroke='%23fff' stroke-opacity='.4' stroke-width='2' stroke-linejoin='round'%3E%3Cpath d='M100 30 150 50v50l-50 20-50-20V50z M100 70 150 50 M100 70 50 50 M100 70v50'/%3E%3C/svg%3E")!important;background-repeat:no-repeat!important;background-position:center!important;background-size:min(50%,200px)!important}
 html.fx .scene.nogl canvas{display:none}
-html.fx #scSize:not(.nogl) .cap{color:#4c5462!important}
+html.fx:not(.txm) #scSize .cap{color:#B9C3D8!important}
+html.fx:not(.txm) .scene:not(.nogl)::after{content:"";position:absolute;inset:0;pointer-events:none;z-index:1;background:radial-gradient(ellipse at 50% 45%,transparent 52%,rgba(5,8,18,.36) 100%),url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .07 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+html.fx.lite:not(.txm) .scene:not(.nogl)::after{background:radial-gradient(ellipse at 50% 45%,transparent 52%,rgba(5,8,18,.36) 100%)}
+html.fx .scene>:is(.cap,.meters,.fglv,.fgsit,.under,.sealevel){z-index:2}
 html.fx .wrap{padding-bottom:120px}
 html.fx .fxfig{position:absolute;inset:0;width:100%;height:100%}
 @keyframes fxbreath{from{opacity:.25}to{opacity:.6}}
@@ -717,6 +728,115 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
+// ---------- v1.22 FX3D：3D場面の演出（FX が有効なときだけ。失敗したら v1.20 の描き方のまま動く） ----------
+(function(){ if(!window.FX||!window.THREE) return;
+ const q0=new URLSearchParams(location.search), forced=q0.get('gfx'), mem=navigator.deviceMemory, hc=navigator.hardwareConcurrency||4, H=document.documentElement;
+ // 性能の3段階：高（画素比2）・中（1.5）・低（1。影・粒・シェーダーの効果なし）。3Dの描画が遅ければ自動で1段ずつ下げる（上げない）
+ let tier=['high','mid','low'].includes(forced)?forced : window.LITE?'low' : (mem&&mem>=8&&hc>=8)?'high':'mid';
+ const G=window.GFX={ get tier(){ return tier; }, list:[], cap:()=>({high:2,mid:1.5,low:1}[tier]),
+   down(){ if(tier==='low') return; tier=tier==='high'?'mid':'low'; G.apply(); },
+   apply(){ G.list.forEach(o=>{ try{ o.r.setPixelRatio(Math.min(G.cap(),devicePixelRatio||1)); o.r.setSize(o.el.clientWidth,o.el.clientHeight,false);
+       if(tier==='low'&&o.r.shadowMap.enabled){ o.r.shadowMap.enabled=false; o.scene.traverse(m=>{ if(m.material) [].concat(m.material).forEach(x=>x.needsUpdate=true); }); } }catch(e){} });
+     if(tier==='low'){ window.LITE=true; H.classList.add('lite'); } H.dataset.gfx=tier; } };
+ H.dataset.gfx=tier;
+ if(!forced){ let n=0,t0=0,bad=0; const mon=t=>{ requestAnimationFrame(mon); const on=typeof vis!=='undefined'&&(vis.size||vis.flood||vis.sea||vis.elder)&&!document.hidden; if(!on||tier==='low'){ t0=0; return; } if(!t0){ t0=t; n=0; return; } n++;
+     if(t-t0>=1500){ const fps=n*1000/(t-t0); bad=fps<26?bad+1:0; if(bad>=2){ G.down(); bad=0; } t0=t; n=0; } }; requestAnimationFrame(mon); }
+ const moving=()=>!RM, lo=()=>tier==='low', clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v)), ease=t=>1-Math.pow(1-t,3), now=()=>performance.now()/1000;
+ const NOISE='float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);} float n2(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(hash(i),hash(i+vec2(1.,0.)),f.x),mix(hash(i+vec2(0.,1.)),hash(i+vec2(1.,1.)),f.x),f.y);}';
+ const VS='varying vec2 vU; varying vec3 vW; void main(){ vU=uv; vec4 w=modelMatrix*vec4(position,1.); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }';
+ // シェーダーが端末で動かなかったら、その場面の新しい部品を外して元の描き方に戻す
+ const guard=(o,revert)=>{ let n=0; return ()=>{ if(n<0) return; if(++n>20){ n=-1; try{ if((o.r.info.programs||[]).some(p=>p.diagnostics&&p.diagnostics.runnable===false)) revert(); }catch(e){} } }; };
+ const safe=(name,fn)=>function(o){ try{ fn(o); }catch(e){ console.warn('FX3D:'+name,e); o.fx=null; } };
+ const soft=()=>tex(64,64,(g,w,h)=>{ const r=g.createRadialGradient(w/2,h/2,0,w/2,h/2,w/2); r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(.4,'rgba(255,255,255,.45)'); r.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=r; g.fillRect(0,0,w,h); });
+ const label=txt=>{ const t=tex(256,84,(g,w,h)=>{ g.fillStyle='rgba(11,16,32,.82)'; g.beginPath(); const r=22; g.moveTo(r,0); g.arcTo(w,0,w,h,r); g.arcTo(w,h,0,h,r); g.arcTo(0,h,0,0,r); g.arcTo(0,0,w,0,r); g.fill(); g.fillStyle='#fff'; g.font='bold 42px "Noto Sans JP",sans-serif'; g.textAlign='center'; g.textBaseline='middle'; g.fillText(txt,w/2,h/2+2); });
+   const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:t,transparent:true,depthTest:false})); sp.renderOrder=30; return sp; };
+
+ window.FX3D={
+ // ===== 体験1：CO₂を、ゆっくり漂うやわらかい粒の雲として描く。1年・人生ではカメラが引き、大きさの比較対象が順に現れる
+ size:safe('size',o=>{ const s=o.scene, L=(m,p)=>new THREE.Mesh(m,new THREE.MeshLambertMaterial(p));
+   o.r.setClearColor(0x0B1020);
+   o.room.children.forEach(c=>{ if(c.isLineSegments) c.material.color.set(0xcfd9ee); else if(c.material&&!c.material.map) c.material.color.set(0xb9c3d8); else if(c.material&&c.material.map) c.material.color.set(0x2a3350); });
+   o.gas.material.color.set(0x4F8CFF); o.gas.material.depthWrite=false;
+   const gh=new THREE.GridHelper(900,90,0x2b3556,0x18203a); gh.position.y=-.03; s.add(gh);
+   const N=1500, pos=new Float32Array(N*3), ph=new Float32Array(N); for(let i=0;i<N;i++){ pos[i*3]=Math.random()-.5; pos[i*3+1]=Math.random(); pos[i*3+2]=Math.random()-.5; ph[i]=Math.random()*6.28; }
+   const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+   const pts=new THREE.Points(pg,new THREE.PointsMaterial({map:soft(),size:.13,color:0x7fb0ff,transparent:true,opacity:.7,blending:THREE.AdditiveBlending,depthWrite:false})); pts.frustumCulled=false; s.add(pts);
+   // 比較対象（大きさはイメージ）：人・バス・25mプール・ビル
+   const cmp=new THREE.Group(); s.add(cmp); cmp.visible=false; const items=[];
+   const add=(obj,x,h,txt)=>{ const g=new THREE.Group(); g.add(obj); const lb=label(txt); g.add(lb); obj.rotation.y=Math.PI/2; g.position.z=-x; g.userData={h,lb}; cmp.add(g); items.push(g); };
+   const man=new THREE.Group(); const mb=L(new THREE.CylinderGeometry(.22,.22,1.3,12),{color:0xe9eef8}); mb.position.y=.65; const mh=L(new THREE.SphereGeometry(.2,12,10),{color:0xe9eef8}); mh.position.y=1.5; man.add(mb); man.add(mh); add(man,0,1.7,'人');
+   const bus=new THREE.Group(); const bb=L(new THREE.BoxGeometry(11,2.9,2.5),{color:0xF0B24A}); bb.position.y=1.75; const bw=L(new THREE.BoxGeometry(10.4,.9,2.54),{color:0x26324f}); bw.position.y=2.3; bus.add(bb); bus.add(bw); add(bus,10,3.2,'バス');
+   const pool=new THREE.Group(); const pr=L(new THREE.BoxGeometry(27,.5,15),{color:0xdfe6ee}); pr.position.y=.25; const pw=L(new THREE.BoxGeometry(25,.52,13),{color:0x4F8CFF}); pw.position.y=.26; pool.add(pr); pool.add(pw); add(pool,33,1,'25mプール');
+   const wt=tex(128,256,(g,w,h)=>{ g.fillStyle='#8f9bb3'; g.fillRect(0,0,w,h); for(let y=10;y<h;y+=24) for(let x=8;x<w;x+=20){ g.fillStyle='#26324f'; g.fillRect(x,y,12,14); } });
+   const bl=L(new THREE.BoxGeometry(18,30,14),{map:wt,color:0xffffff}); bl.position.y=15; add(bl,62,30,'ビル');
+   let cmpT0=0;
+   const place=()=>{ const u=o.grid.userData, n=u&&u.n; if(!n) return; const cols=Math.ceil(Math.sqrt(n)), rows=Math.ceil(n/cols), hw=cols*(ROOM.w+.6)/2, hd=rows*(ROOM.d+.6)/2; cmp.position.set(-hw-13,0,hd-10);   // 箱の左側に、手前から 人・バス・プール・ビル
+     const one=o.grid.children[o.grid.children.length-1]; if(one&&one.material&&!one.isInstancedMesh) one.material.color.set(0xffffff); };
+   const oSpan=window.setSpan; window.setSpan=function(m){ oSpan(m); try{ cmp.visible=m!=='day'; if(cmp.visible){ place(); cmpT0=now(); } }catch(e){} };
+   o.fx=()=>{ const t=now(), mv=moving(), day=o.gas.visible, on=!lo();
+     pts.visible=day&&on; o.gas.material.opacity=pts.visible?.22:.6;
+     if(pts.visible){ pts.scale.set(ROOM.w-.06,Math.max(.001,o.gas.scale.y),ROOM.d-.06); pts.material.size=tier==='high'?.13:.17; pg.setDrawRange(0,tier==='high'?N:700);
+       if(mv){ const a=pg.attributes.position.array, n=tier==='high'?N:700; for(let i=0;i<n;i++){ const k=i*3; a[k]+=Math.sin(ph[i]+t*.35)*.0009; a[k+2]+=Math.cos(ph[i]*1.7+t*.3)*.0009; a[k+1]+=.0007+(i%5)*.00018; if(a[k+1]>1) a[k+1]=0; if(a[k]>.5) a[k]=-.5; else if(a[k]<-.5) a[k]=.5; if(a[k+2]>.5) a[k+2]=-.5; else if(a[k+2]<-.5) a[k+2]=.5; } pg.attributes.position.needsUpdate=true; } }
+     if(cmp.visible){ const K=o.camK; items.forEach((g,i)=>{ const e=mv?ease(clamp((t-cmpT0-i*.3)/.5)):1; g.scale.setScalar(Math.max(.001,e)); const lb=g.userData.lb; lb.position.y=g.userData.h+K*.32+1; lb.scale.set(K*.95,K*.31,1); lb.visible=K<25||i===3; }); }
+     o.st.auto=mv?Math.sin(t*.16)*.22:0; }; }),
+
+ // ===== 体験4：水面（角度で変わる反射・ゆれる法線・壁ぎわの泡）、床にゆらめく光、窓を流れる雨、水位とともに沈む光
+ flood:safe('flood',o=>{ const s=o.scene, U={t:{value:0},q:{value:1},a:{value:0}};
+   const lights=[]; s.traverse(c=>{ if(c.isLight) lights.push([c,c.intensity]); });
+   const sink=lv=>{ const f=1-.5*clamp(lv/2.4); lights.forEach(([c,b])=>c.intensity=b*f); };
+   if(lo()){ o.fx=lv=>sink(lv); return; }   // 軽量モード：新しいシェーダーは作らず、水面は v1.20 の描き方のまま（光が沈む演出だけ）
+   const wg=new THREE.PlaneGeometry(3.58,2.68,1,1); wg.rotateX(-Math.PI/2);
+   const water=new THREE.Mesh(wg,new THREE.ShaderMaterial({transparent:true,side:THREE.DoubleSide,uniforms:U,vertexShader:VS,fragmentShader:`uniform float t,q; varying vec2 vU; varying vec3 vW; ${NOISE}
+     void main(){ vec2 p=vW.xz; float h1=n2(p*3.+vec2(t*.35,t*.22)), h2=n2(p*7.-vec2(t*.3,-t*.4)), h3=n2(p*3.+9.-vec2(t*.25,t*.3));
+       vec3 N=normalize(vec3((h1-.5)*.34+(h2-.5)*.16,1.,(h3-.5)*.34)); vec3 V=normalize(cameraPosition-vW); float fr=.04+.96*pow(1.-max(dot(N,V),0.),4.);
+       vec3 c=mix(mix(vec3(.23,.20,.12),vec3(.43,.38,.25),h1),vec3(.56,.60,.63),fr*.6);
+       vec3 R=reflect(-V,N); c+=vec3(.9,.95,1.)*pow(max(dot(R,normalize(vec3(0.,.35,-1.))),0.),36.)*.45;
+       float e=min(min(vU.x,1.-vU.x),min(vU.y,1.-vU.y)); float foam=q*smoothstep(.04,.0,e-.014*n2(p*14.+t))*(.55+.45*n2(p*22.-t*2.));
+       c=mix(c,vec3(.86,.84,.78),clamp(foam,0.,1.)*.8); gl_FragColor=vec4(c,mix(.74,.96,fr)); }`})); s.add(water);
+   const cg=new THREE.PlaneGeometry(3.56,2.66,1,1); cg.rotateX(-Math.PI/2);
+   const caus=new THREE.Mesh(cg,new THREE.ShaderMaterial({transparent:true,depthWrite:false,blending:THREE.AdditiveBlending,uniforms:U,vertexShader:VS,fragmentShader:`uniform float t,a; varying vec3 vW; ${NOISE}
+     void main(){ vec2 p=vW.xz*5.; float c1=n2(p+vec2(t*.5,0.)), c2=n2(p-vec2(0.,t*.45)+3.); float ca=pow(1.-abs(c1-c2),9.); gl_FragColor=vec4(vec3(.95,.88,.6)*ca*a,1.); }`})); caus.position.y=.014; s.add(caus);
+   const rg=new THREE.PlaneGeometry(1.8,1.2,1,1);
+   const rain=new THREE.Mesh(rg,new THREE.ShaderMaterial({transparent:true,depthWrite:false,uniforms:U,vertexShader:VS,fragmentShader:`uniform float t; varying vec2 vU; ${NOISE}
+     void main(){ float col=floor(vU.x*28.), r=hash(vec2(col,3.)); float y=fract(vU.y+t*(.2+r*.5)+r*7.); float fx=abs(fract(vU.x*28.)-.5);
+       float trail=smoothstep(.45,0.,y)*smoothstep(.16,.02,fx)*step(.4,r); float head=smoothstep(.07,0.,length(vec2(fx,(y-.03)*2.)))*step(.4,r);
+       gl_FragColor=vec4(.86,.91,.96,trail*.3+head*.75); }`})); rain.position.set(0,1.4,-1.335); s.add(rain);
+   const revert=()=>{ water.visible=caus.visible=rain.visible=false; o.water.visible=true; o.fx=null; lights.forEach(([c,b])=>c.intensity=b); };
+   const chk=guard(o,revert);
+   o.water.visible=false; o.body.material.opacity=.42;
+   o.fx=lv=>{ const mv=moving(); if(mv) U.t.value=now(); U.q.value=lo()?0:1; water.position.y=lv; caus.visible=rain.visible=!lo();
+     U.a.value=clamp(lv/.04)*(1-clamp((lv-.25)/1.1))*.55; sink(lv); o.st.auto=mv?Math.sin(now()*.13)*.07:0; chk(); }; }),
+
+ // ===== 体験4-2：時間帯で変わる太陽の高さと色、高潮のときに岸壁で上がるしぶき（水は岸壁を越えない：+3.97m は天端 5.0m より低い）
+ sea:safe('sea',o=>{ const s=o.scene, hr=new Date().getHours()+new Date().getMinutes()/60, el=clamp(Math.sin((hr-6)/12*Math.PI),.1,1);   // 6時〜18時で昇って沈む。夜は低い位置のまま
+   const dir=new THREE.Vector3(-.55,.1+el*.5,-.8).normalize(); o.skyU.sunDir.value.copy(dir); o.waterU.sunDir.value.copy(dir);
+   const base=new THREE.Color(0xfff0d8), low=new THREE.Color(0xffc48a); o.sun.color.copy(base).lerp(low,1-el); const sunBase=.72+.28*el;
+   const N=160, pos=new Float32Array(N*3), life=new Float32Array(N), vel=new Float32Array(N*3); const pg=new THREE.BufferGeometry(); pg.setAttribute('position',new THREE.BufferAttribute(pos,3));
+   const spray=new THREE.Points(pg,new THREE.PointsMaterial({map:soft(),size:1.5,color:0xf2f6fa,transparent:true,opacity:0,depthWrite:false})); spray.frustumCulled=false; s.add(spray);
+   const spawn=i=>{ const k=i*3; pos[k]=(Math.random()-.5)*90; pos[k+1]=o.waterU.lvl.value+Math.random()*.4; pos[k+2]=-2.9-Math.random()*.8; vel[k]=(Math.random()-.5)*.6; vel[k+1]=2.2+Math.random()*3.4; vel[k+2]=-.2-Math.random()*.5; life[i]=Math.random(); };
+   for(let i=0;i<N;i++){ spawn(i); pos[i*3+1]=-50; }
+   let last=now();
+   o.fx=()=>{ const t=now(), dt=Math.min(.05,t-last); last=t; const st=o.waterU.storm.value, mv=moving(); spray.visible=!lo()&&st>.05&&mv; if(typeof slSurge!=='undefined') o.sun.intensity=(slSurge>0?.3:1)*sunBase;
+     if(spray.visible){ spray.material.opacity=st*.55; for(let i=0;i<N;i++){ const k=i*3; life[i]+=dt*.7; if(life[i]>1){ spawn(i); life[i]=0; } vel[k+1]-=6*dt; pos[k]+=vel[k]*dt; pos[k+1]+=vel[k+1]*dt; pos[k+2]+=vel[k+2]*dt; } pg.attributes.position.needsUpdate=true; }
+     o.st.auto=mv?Math.sin(t*.12)*.05:0; }; }),
+
+ // ===== 体験6：窓から差す光の筋、扇風機でゆれるカーテン、エアコンで暖色から寒色へ移る色味（空気のゆらぎは既存。低では切る）
+ elder:safe('elder',o=>{ const s=o.scene, lights=[]; s.traverse(c=>{ if(c.isLight) lights.push([c,c.color.clone()]); });
+   const gt=tex(8,128,(g,w,h)=>{ const r=g.createLinearGradient(0,0,0,h); r.addColorStop(0,'rgba(255,255,255,1)'); r.addColorStop(1,'rgba(255,255,255,0)'); g.fillStyle=r; g.fillRect(0,0,w,h); });
+   const sm=new THREE.MeshBasicMaterial({map:gt,color:0xffe9b8,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false,side:THREE.DoubleSide}), shafts=new THREE.Group(); s.add(shafts);
+   [-.62,-.1,.42].forEach(x=>{ const g=new THREE.BufferGeometry(); g.setAttribute('position',new THREE.BufferAttribute(new Float32Array([x,2,-1.32, x+.34,2,-1.32, x+.75,0,.95, x+.25,0,.55]),3)); g.setAttribute('uv',new THREE.BufferAttribute(new Float32Array([0,1, 1,1, 1,0, 0,0]),2)); g.setIndex([0,1,2,0,2,3]); shafts.add(new THREE.Mesh(g,sm)); });
+   const warm=new THREE.Color(0xffd3a0), cool=new THREE.Color(0xcfe4ff); let w=0, sh=0;
+   const hw=document.getElementById('heatwrap');
+   o.fx=()=>{ const t=now(), mv=moving(), E=window.ECO||{}, heat=clamp((temp-28)/8), k=mv?.04:1;
+     w+=((E.ac?-1:heat)-w)*k; lights.forEach(([c,b])=>c.color.copy(b).lerp(w>0?warm:cool,Math.abs(w)*.5));
+     sh+=(((E.cur?.12:1)*(lo()?0:1))-sh)*k; sm.opacity=sh*(.13+(mv?Math.sin(t*.5)*.015:0)); shafts.visible=sm.opacity>.004;
+     if(typeof curtain!=='undefined'&&curtain) curtain.rotation.z=(E.fan&&!E.cur&&mv)?Math.sin(t*1.7)*.035:0;
+     if(hw){ const f=lo()?'none':'url(#heat)'; if(hw.style.filter!==f) hw.style.filter=f; }
+     o.st.auto=mv?Math.sin(t*.14)*.06:0; }; })
+ };
+})();
+</script>
+<script>
 const CUMW={"1750": 9.0, "1751": 19.0, "1752": 28.0, "1753": 38.0, "1754": 48.0, "1755": 57.0, "1756": 67.0, "1757": 77.0, "1758": 88.0, "1759": 98.0, "1760": 108.0, "1761": 119.0, "1762": 130.0, "1763": 141.0, "1764": 153.0, "1765": 164.0, "1766": 176.0, "1767": 188.0, "1768": 201.0, "1769": 214.0, "1770": 227.0, "1771": 240.0, "1772": 254.0, "1773": 268.0, "1774": 282.0, "1775": 296.0, "1776": 311.0, "1777": 326.0, "1778": 341.0, "1779": 356.0, "1780": 372.0, "1781": 388.0, "1782": 405.0, "1783": 422.0, "1784": 440.0, "1785": 457.0, "1786": 476.0, "1787": 495.0, "1788": 514.0, "1789": 534.0, "1790": 554.0, "1791": 575.0, "1792": 597.0, "1793": 619.0, "1794": 642.0, "1795": 664.0, "1796": 686.0, "1797": 709.0, "1798": 732.0, "1799": 759.0, "1800": 792.0, "1801": 824.0, "1802": 864.0, "1803": 894.0, "1804": 926.0, "1805": 957.0, "1806": 989.0, "1807": 1026.0, "1808": 1061.0, "1809": 1098.0, "1810": 1137.0, "1811": 1177.0, "1812": 1218.0, "1813": 1259.0, "1814": 1301.0, "1815": 1345.0, "1816": 1391.0, "1817": 1440.0, "1818": 1491.0, "1819": 1542.0, "1820": 1593.0, "1821": 1645.0, "1822": 1699.0, "1823": 1755.0, "1824": 1813.0, "1825": 1874.0, "1826": 1935.0, "1827": 2001.0, "1828": 2067.0, "1829": 2134.0, "1830": 2223.0, "1831": 2306.0, "1832": 2388.0, "1833": 2471.0, "1834": 2560.0, "1835": 2657.0, "1836": 2764.0, "1837": 2871.0, "1838": 2976.0, "1839": 3086.0, "1840": 3205.0, "1841": 3327.0, "1842": 3456.0, "1843": 3589.0, "1844": 3731.0, "1845": 3886.0, "1846": 4044.0, "1847": 4214.0, "1848": 4388.0, "1849": 4573.0, "1850": 4770.0, "1851": 4969.0, "1852": 5176.0, "1853": 5393.0, "1854": 5649.0, "1855": 5909.0, "1856": 6187.0, "1857": 6468.0, "1858": 6754.0, "1859": 7056.0, "1860": 7389.0, "1861": 7738.0, "1862": 8094.0, "1863": 8473.0, "1864": 8883.0, "1865": 9318.0, "1866": 9767.0, "1867": 10248.0, "1868": 10742.0, "1869": 11267.0, "1870": 11803.0, "1871": 12373.0, "1872": 13004.0, "1873": 13674.0, "1874": 14303.0, "1875": 14984.0, "1876": 15674.0, "1877": 16378.0, "1878": 17088.0, "1879": 17848.0, "1880": 18706.0, "1881": 19594.0, "1882": 20532.0, "1883": 21530.0, "1884": 22540.0, "1885": 23558.0, "1886": 24591.0, "1887": 25675.0, "1888": 26876.0, "1889": 28078.0, "1890": 29386.0, "1891": 30755.0, "1892": 32136.0, "1893": 33499.0, "1894": 34911.0, "1895": 36407.0, "1896": 37952.0, "1897": 39571.0, "1898": 41278.0, "1899": 43142.0, "1900": 45105.0, "1901": 47131.0, "1902": 49208.0, "1903": 51472.0, "1904": 53763.0, "1905": 56203.0, "1906": 58752.0, "1907": 61657.0, "1908": 64448.0, "1909": 67355.0, "1910": 70405.0, "1911": 73502.0, "1912": 76756.0, "1913": 80281.0, "1914": 83479.0, "1915": 86627.0, "1916": 90027.0, "1917": 93583.0, "1918": 97089.0, "1919": 100131.0, "1920": 103677.0, "1921": 106792.0, "1922": 110057.0, "1923": 113760.0, "1924": 117476.0, "1925": 121217.0, "1926": 124894.0, "1927": 128907.0, "1928": 132903.0, "1929": 137192.0, "1930": 141150.0, "1931": 144689.0, "1932": 147882.0, "1933": 151244.0, "1934": 154901.0, "1935": 158736.0, "1936": 162944.0, "1937": 167441.0, "1938": 171671.0, "1939": 176141.0, "1940": 181025.0, "1941": 186024.0, "1942": 191007.0, "1943": 196082.0, "1944": 201245.0, "1945": 205534.0, "1946": 210143.0, "1947": 215308.0, "1948": 220756.0, "1949": 225960.0, "1950": 231890.0, "1951": 238272.0, "1952": 244739.0, "1953": 251390.0, "1954": 258180.0, "1955": 265624.0, "1956": 273551.0, "1957": 281737.0, "1958": 290154.0, "1959": 299009.0, "1960": 308396.0, "1961": 317811.0, "1962": 327558.0, "1963": 337825.0, "1964": 348650.0, "1965": 359960.0, "1966": 371823.0, "1967": 384060.0, "1968": 396966.0, "1969": 410727.0, "1970": 425626.0, "1971": 441130.0, "1972": 457355.0, "1973": 474432.0, "1974": 491430.0, "1975": 508419.0, "1976": 526281.0, "1977": 544639.0, "1978": 563664.0, "1979": 583172.0, "1980": 602582.0, "1981": 621462.0, "1982": 640192.0, "1983": 659094.0, "1984": 678551.0, "1985": 698696.0, "1986": 719134.0, "1987": 740240.0, "1988": 762159.0, "1989": 784359.0, "1990": 807091.0, "1991": 830297.0, "1992": 852817.0, "1993": 875567.0, "1994": 898541.0, "1995": 922058.0, "1996": 946292.0, "1997": 970672.0, "1998": 994968.0, "1999": 1019805.0, "2000": 1045317.0, "2001": 1071010.0, "2002": 1097275.0, "2003": 1124928.0, "2004": 1153538.0, "2005": 1183137.0, "2006": 1213731.0, "2007": 1245230.0, "2008": 1277280.0, "2009": 1308793.0, "2010": 1342110.0, "2011": 1376591.0, "2012": 1411545.0, "2013": 1446821.0, "2014": 1482287.0, "2015": 1517690.0, "2016": 1553083.0, "2017": 1589058.0, "2018": 1625792.0, "2019": 1662878.0, "2020": 1698037.0, "2021": 1734904.0, "2022": 1772431.0, "2023": 1810525.0, "2024": 1849124.0};
 const CUM={"1868": 0.0, "1869": 0.0, "1870": 0.0, "1871": 0.1, "1872": 0.1, "1873": 0.1, "1874": 0.7, "1875": 2.2, "1876": 3.6, "1877": 4.9, "1878": 6.7, "1879": 9.0, "1880": 11.4, "1881": 13.8, "1882": 16.3, "1883": 19.0, "1884": 22.0, "1885": 25.3, "1886": 28.9, "1887": 33.4, "1888": 38.6, "1889": 44.8, "1890": 51.6, "1891": 59.7, "1892": 67.8, "1893": 76.4, "1894": 87.4, "1895": 99.6, "1896": 112.5, "1897": 126.1, "1898": 143.3, "1899": 160.6, "1900": 180.0, "1901": 203.3, "1902": 228.2, "1903": 254.0, "1904": 283.1, "1905": 313.0, "1906": 345.8, "1907": 380.9, "1908": 418.6, "1909": 456.8, "1910": 496.2, "1911": 540.4, "1912": 589.7, "1913": 644.0, "1914": 702.0, "1915": 754.9, "1916": 813.5, "1917": 880.9, "1918": 952.5, "1919": 1031.7, "1920": 1106.0, "1921": 1172.8, "1922": 1244.2, "1923": 1320.1, "1924": 1399.5, "1925": 1481.5, "1926": 1564.1, "1927": 1653.5, "1928": 1745.9, "1929": 1840.8, "1930": 1927.0, "1931": 2004.9, "1932": 2082.9, "1933": 2174.2, "1934": 2275.4, "1935": 2381.8, "1936": 2498.6, "1937": 2624.1, "1938": 2755.8, "1939": 2883.6, "1940": 3036.8, "1941": 3191.4, "1942": 3339.2, "1943": 3489.8, "1944": 3628.6, "1945": 3705.2, "1946": 3757.9, "1947": 3827.9, "1948": 3916.0, "1949": 4014.4, "1950": 4117.0, "1951": 4240.4, "1952": 4370.7, "1953": 4516.6, "1954": 4659.3, "1955": 4801.3, "1956": 4962.1, "1957": 5150.3, "1958": 5331.8, "1959": 5524.7, "1960": 5757.5, "1961": 6040.7, "1962": 6333.9, "1963": 6659.2, "1964": 7018.5, "1965": 7405.5, "1966": 7825.3, "1967": 8315.2, "1968": 8877.8, "1969": 9531.6, "1970": 10301.4, "1971": 11101.0, "1972": 11962.1, "1973": 12876.4, "1974": 13790.7, "1975": 14660.5, "1976": 15570.0, "1977": 16505.6, "1978": 17410.7, "1979": 18367.8, "1980": 19316.4, "1981": 20246.8, "1982": 21147.5, "1983": 22031.9, "1984": 22972.5, "1985": 23887.7, "1986": 24801.8, "1987": 25704.0, "1988": 26688.7, "1989": 27710.0, "1990": 28864.8, "1991": 30031.4, "1992": 31206.8, "1993": 32376.2, "1994": 33599.3, "1995": 34835.2, "1996": 36083.9, "1997": 37324.9, "1998": 38526.2, "1999": 39764.3, "2000": 41024.5, "2001": 42270.5, "2002": 43545.9, "2003": 44829.7, "2004": 46108.9, "2005": 47395.3, "2006": 48658.7, "2007": 49957.7, "2008": 51186.4, "2009": 52346.6, "2010": 53557.7, "2011": 54818.9, "2012": 56121.0, "2013": 57432.9, "2014": 58693.1, "2015": 59913.1, "2016": 61113.1, "2017": 62297.5, "2018": 63436.0, "2019": 64538.1, "2020": 65575.4, "2021": 66633.9, "2022": 67663.5, "2023": 68650.4, "2024": 69612.3}, PC={"1868": 0.0, "1869": 0.001, "1870": 0.001, "1871": 0.001, "1872": 0.001, "1873": 0.001, "1874": 0.017, "1875": 0.04, "1876": 0.039, "1877": 0.036, "1878": 0.051, "1879": 0.063, "1880": 0.064, "1881": 0.065, "1882": 0.067, "1883": 0.072, "1884": 0.077, "1885": 0.087, "1886": 0.093, "1887": 0.114, "1888": 0.131, "1889": 0.157, "1890": 0.168, "1891": 0.2, "1892": 0.197, "1893": 0.207, "1894": 0.263, "1895": 0.289, "1896": 0.303, "1897": 0.314, "1898": 0.396, "1899": 0.393, "1900": 0.437, "1901": 0.518, "1902": 0.549, "1903": 0.561, "1904": 0.625, "1905": 0.636, "1906": 0.69, "1907": 0.728, "1908": 0.773, "1909": 0.776, "1910": 0.79, "1911": 0.876, "1912": 0.965, "1913": 1.05, "1914": 1.108, "1915": 0.997, "1916": 1.093, "1917": 1.243, "1918": 1.303, "1919": 1.424, "1920": 1.319, "1921": 1.171, "1922": 1.235, "1923": 1.294, "1924": 1.334, "1925": 1.359, "1926": 1.35, "1927": 1.442, "1928": 1.468, "1929": 1.487, "1930": 1.332, "1931": 1.189, "1932": 1.175, "1933": 1.358, "1934": 1.486, "1935": 1.542, "1936": 1.672, "1937": 1.772, "1938": 1.838, "1939": 1.759, "1940": 2.082, "1941": 2.073, "1942": 1.955, "1943": 1.965, "1944": 1.785, "1945": 0.972, "1946": 0.66, "1947": 0.864, "1948": 1.072, "1949": 1.182, "1950": 1.186, "1951": 1.404, "1952": 1.463, "1953": 1.615, "1954": 1.561, "1955": 1.536, "1956": 1.723, "1957": 2.001, "1958": 1.913, "1959": 2.018, "1960": 2.415, "1961": 2.912, "1962": 2.99, "1963": 3.287, "1964": 3.597, "1965": 3.835, "1966": 4.12, "1967": 4.758, "1968": 5.397, "1969": 6.199, "1970": 7.213, "1971": 7.407, "1972": 7.882, "1973": 8.265, "1974": 8.163, "1975": 7.676, "1976": 7.944, "1977": 8.095, "1978": 7.764, "1979": 8.144, "1980": 8.014, "1981": 7.819, "1982": 7.538, "1983": 7.373, "1984": 7.813, "1985": 7.575, "1986": 7.531, "1987": 7.399, "1988": 8.04, "1989": 8.307, "1990": 9.359, "1991": 9.416, "1992": 9.45, "1993": 9.367, "1994": 9.763, "1995": 9.834, "1996": 9.912, "1997": 9.828, "1998": 9.493, "1999": 9.764, "2000": 9.921, "2001": 9.79, "2002": 10.005, "2003": 10.056, "2004": 10.008, "2005": 10.057, "2006": 9.871, "2007": 10.141, "2008": 9.587, "2009": 9.051, "2010": 9.448, "2011": 9.846, "2012": 10.178, "2013": 10.271, "2014": 9.886, "2015": 9.585, "2016": 9.436, "2017": 9.321, "2018": 8.971, "2019": 8.698, "2020": 8.213, "2021": 8.422, "2022": 8.237, "2023": 7.935, "2024": 7.772};
 const PERCAP=7.772, DENS=1.84, ROOM={w:3.6,d:2.7,h:2.4}, ROOMV=ROOM.w*ROOM.d*ROOM.h;
@@ -767,7 +887,7 @@ function thermoTex(t){ return tex(256,256,(g,w,h)=>{g.fillStyle='#fdfdfb';g.fill
 
 // ---------- scene factory ----------
 function baseScene(el, fov){
-  const r=new THREE.WebGLRenderer({antialias:true}); r.setPixelRatio(Math.min(2,devicePixelRatio||1)); r.shadowMap.enabled=true; r.outputEncoding=THREE.sRGBEncoding;
+  const G=window.GFX, r=new THREE.WebGLRenderer({antialias:!G||G.tier!=='low'}); r.setPixelRatio(Math.min(G?G.cap():2,devicePixelRatio||1)); r.shadowMap.enabled=!G||G.tier!=='low'; r.outputEncoding=THREE.sRGBEncoding;
   el.prepend(r.domElement);
   const scene=new THREE.Scene(), cam=new THREE.PerspectiveCamera(fov,1,.02,4000);
   const ro=new ResizeObserver(()=>{const w=el.clientWidth,h=el.clientHeight;r.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();});ro.observe(el);
@@ -775,9 +895,9 @@ function baseScene(el, fov){
   el.addEventListener('pointerdown',e=>{drag=true;px=e.clientX;py=e.clientY;});
   window.addEventListener('pointerup',()=>drag=false);
   el.addEventListener('pointermove',e=>{if(!drag)return;st.yaw+=(e.clientX-px)*.006;st.pitch=Math.max(-.6,Math.min(.5,st.pitch-(e.clientY-py)*.004));px=e.clientX;py=e.clientY;});
-  return {r,scene,cam,st};
+  const o={r,scene,cam,st,el}; if(G) G.list.push(o); return o;
 }
-function lookFrom(o,x,y,z,baseYaw,basePitch){o.cam.position.set(x,y,z);const yaw=baseYaw+o.st.yaw,p=basePitch+o.st.pitch;o.cam.lookAt(x-Math.sin(yaw)*Math.cos(p),y+Math.sin(p),z-Math.cos(yaw)*Math.cos(p));}
+function lookFrom(o,x,y,z,baseYaw,basePitch){o.cam.position.set(x,y,z);const yaw=baseYaw+o.st.yaw+(o.st.auto||0),p=basePitch+o.st.pitch;o.cam.lookAt(x-Math.sin(yaw)*Math.cos(p),y+Math.sin(p),z-Math.cos(yaw)*Math.cos(p));}
 function box(w,h,d,mat,x,y,z,sc){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y,z);m.castShadow=m.receiveShadow=true;sc.add(m);return m;}
 function buildRoom(sc,opt){
   const W=opt.W,D=opt.D,H=opt.H;
@@ -815,10 +935,11 @@ function initSize(){ const el=$('scSize'); if(!window.THREE){$('capSize').textCo
   sc.add(S1.room);
   S1.gas=new THREE.Mesh(new THREE.BoxGeometry(ROOM.w-.02,1,ROOM.d-.02),new THREE.MeshLambertMaterial({color:0x1f5fbf,transparent:true,opacity:.65}));S1.gas.scale.y=.001;sc.add(S1.gas);
   S1.grid=new THREE.Group();sc.add(S1.grid); S1.camK=1; S1.camT=1;
+  if(window.FX3D) FX3D.size(S1);
   setSpan('day');
-  (function loop(){ if(vis.size){ const k=RM?1:.06; S1.gas.scale.y=Math.max(.001,S1.gas.scale.y+(S1.target*s1fill()-S1.gas.scale.y)*k); S1.gas.position.y=S1.gas.scale.y/2; S1.camK+=(S1.camT-S1.camK)*k;
+  (function loop(){ if(vis.size){ if(S1.fx) S1.fx(); const k=RM?1:.06; S1.gas.scale.y=Math.max(.001,S1.gas.scale.y+(S1.target*s1fill()-S1.gas.scale.y)*k); S1.gas.position.y=S1.gas.scale.y/2; S1.camK+=(S1.camT-S1.camK)*k;
       if(S1.grid.userData.mesh){const u=S1.grid.userData;shown=RM?u.n:Math.min(u.n,shown+Math.max(1,Math.ceil(u.n/90)));u.mesh.count=shown;}
-      const r=7.5*S1.camK,y=.7+S1.st.yaw; S1.cam.position.set(Math.sin(y)*r,3.2*S1.camK+1,Math.cos(y)*r); S1.cam.lookAt(0,S1.camK>2?0:1,0); S1.r.render(S1.scene,S1.cam);} requestAnimationFrame(loop); })();
+      const r=7.5*S1.camK,y=.7+S1.st.yaw+(S1.st.auto||0); S1.cam.position.set(Math.sin(y)*r,3.2*S1.camK+1,Math.cos(y)*r); S1.cam.lookAt(0,S1.camK>2?0:1,0); S1.r.render(S1.scene,S1.cam);} requestAnimationFrame(loop); })();
 }
 function buildGrid(n){ const g=S1.grid; while(g.children.length) g.remove(g.children[0]); const cols=Math.ceil(Math.sqrt(n)),gap=.6,geo=new THREE.BoxGeometry(ROOM.w,ROOM.h,ROOM.d);
   const mesh=new THREE.InstancedMesh(geo,new THREE.MeshLambertMaterial({color:0x1f5fbf,transparent:true,opacity:.8}),n);const m=new THREE.Matrix4();
@@ -907,13 +1028,15 @@ function initFlood(){ const el=$('scFlood'); if(!window.THREE){$('capFlood').tex
   const placeHome=()=>{ S4.you.position.set(S4.home.you[0],0,S4.home.you[1]); S4.gma.position.set(S4.home.gma[0],0,S4.home.gma[1]); }; placeHome(); S4.placeHome=placeHome;
   // rain on window
   S4.drops=[]; const dm=new THREE.MeshBasicMaterial({color:0xdfe7ef,transparent:true,opacity:.6}); for(let i=0;i<60;i++){const d=new THREE.Mesh(new THREE.PlaneGeometry(.006,.08),dm);d.position.set(-.85+Math.random()*1.7,.8+Math.random()*1.2,-1.36);s.add(d);S4.drops.push(d);}
+  if(window.FX3D) FX3D.flood(S4);
   (function loop(){ if(vis.flood){ rainT+=.016; const k=RM?1:.02; if(floodIntro<1){ if(vis.floodT0) floodIntro=Math.min(1,(performance.now()-vis.floodT0)/2400); const e=floodIntro<.5?4*floodIntro**3:1-(-2*floodIntro+2)**3/2; wl=floodTarget()*e; } else wl+=(floodTarget()-wl)*k; const lv=Math.max(.002,wl);
-      const a=S4.water.geometry.attributes.position; for(let i=0;i<a.count;i++){const x=S4.base[i*3],z=S4.base[i*3+2]; a.setY(i,lv+(RM?0:Math.sin(x*3+rainT*2.1)*.012+Math.cos(z*4-rainT*1.7)*.01+Math.sin((x+z)*7+rainT*3)*.004));} a.needsUpdate=true; S4.water.geometry.computeVertexNormals();
+      if(S4.water.visible){ const a=S4.water.geometry.attributes.position; for(let i=0;i<a.count;i++){const x=S4.base[i*3],z=S4.base[i*3+2]; a.setY(i,lv+(RM?0:Math.sin(x*3+rainT*2.1)*.012+Math.cos(z*4-rainT*1.7)*.01+Math.sin((x+z)*7+rainT*3)*.004));} a.needsUpdate=true; S4.water.geometry.computeVertexNormals(); }
       if(!RM&&S4.water.material.map){S4.water.material.map.offset.x=rainT*.01;S4.water.material.map.offset.y=Math.sin(rainT*.2)*.02;} S4.body.scale.y=lv; S4.body.position.y=lv/2;
       S4.float.forEach(m=>{const f=m.userData; m.position.y=Math.max(f.h/2, lv+(RM?0:Math.sin(rainT*1.4+f.ph)*.02)); m.rotation.z=RM?0:Math.sin(rainT+f.ph)*.08; m.rotation.x=RM?0:Math.cos(rainT*.8+f.ph)*.06; if(lv>f.h&&!RM){m.position.x+=Math.sin(rainT*.3+f.ph)*.0015;}});
       S4.drops.forEach(d=>{d.position.y-=RM?0:.012; if(d.position.y<.8) d.position.y=2.0;});
       { const G=window.FGAME, on=G.show; S4.you.visible=S4.gma.visible=on; S4.signs.forEach(m=>m.visible=on);
         if(on){ const D=G.dest?S4.dest[G.dest]:S4.home, kk=RM?1:.035; [['you',S4.you],['gma',S4.gma]].forEach(([n,o])=>{ o.position.x+=(D[n][0]-o.position.x)*kk; o.position.z+=(D[n][1]-o.position.z)*kk; }); } }
+      if(S4.fx) S4.fx(lv);
       const eye=1.5, under=lv>eye;
       $('under').style.background= under?'rgba(70,55,30,.78)':'rgba(70,55,30,0)'; $('under').textContent= under?'水面が目の高さを超えました。この部屋にとどまることはできません。':'';
       lookFrom(S4,-.9,eye+(RM?0:Math.sin(rainT*.9)*.01),.9,-.35,-.28); S4.r.render(S4.scene,S4.cam);} requestAnimationFrame(loop); })();
@@ -958,7 +1081,8 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   thermo=new THREE.Mesh(new THREE.PlaneGeometry(.45,.45),new THREE.MeshBasicMaterial({map:thermoTex(temp)}));thermo.position.set(1.795,1.45,-.4);thermo.rotation.y=-Math.PI/2;s.add(thermo);
   // calendar
   const calM=new THREE.Mesh(new THREE.PlaneGeometry(.3,.42),new THREE.MeshBasicMaterial({map:tex(128,180,(g,w,h)=>{g.fillStyle='#fff';g.fillRect(0,0,w,h);g.fillStyle='#c0392b';g.font='bold 34px sans-serif';g.textAlign='center';g.fillText('8月',w/2,40);g.fillStyle='#555';for(let i=0;i<31;i++){g.font='13px sans-serif';g.fillText(i+1,14+(i%7)*17,70+Math.floor(i/7)*22);}})}));calM.position.set(1.795,1.45,.5);calM.rotation.y=-Math.PI/2;s.add(calM);
-  (function loop(){ if(vis.elder){ et+=.016; const E=window.ECO||{}; if(fanBlade&&E.fan&&!RM) fanBlade.rotation.z+=.35;
+  if(window.FX3D) FX3D.elder(S6);
+  (function loop(){ if(vis.elder){ et+=.016; if(S6.fx) S6.fx(); const E=window.ECO||{}; if(fanBlade&&E.fan&&!RM) fanBlade.rotation.z+=.35;
       acFlap.rotation.z=E.ac?-.7:0; acWind.visible=!!E.ac; if(E.ac) acWind.children.forEach(w=>{ const t=RM?.45:(et*.6+w.userData.ph)%1; w.position.set(1.5-t*1.1,1.92-t*.7,w.userData.z); w.material.opacity=.6; });
       { const u=curtain.userData, tgt=E.cur?1:0; u.k=RM?tgt:u.k+(tgt-u.k)*.08; curtain.position.x=1.12-.945*u.k; curtain.scale.x=1+4.9*u.k; if(sun6) sun6.intensity=sun6.userData.base*(1-.6*u.k); }
       const heat=Math.max(0,temp-28), sway=RM?0:(pv==='old'?.004:.0015)*heat;
@@ -1145,7 +1269,8 @@ function initSea(){ const el=$('scSea'); if(!window.THREE){$('capSea').textConte
   // rain
   const rg=new THREE.BufferGeometry(), N=1800, rp=new Float32Array(N*6); for(let i=0;i<N;i++){const x=(Math.random()-.5)*120,y=Math.random()*40,z=-Math.random()*90+10;rp.set([x,y,z,x+.25,y-1.2,z],i*6);} rg.setAttribute('position',new THREE.BufferAttribute(rp,3));
   S7.rain=new THREE.LineSegments(rg,new THREE.LineBasicMaterial({color:0xc9d3de,transparent:true,opacity:.55})); S7.rain.visible=false; sc.add(S7.rain);
-  (function loop(){ if(vis.sea){ seaT+=.016; const storm=slSurge>0, target=slBase+slSurge, k=RM?1:.02; seaLvCur+=(target-seaLvCur)*k;
+  if(window.FX3D) FX3D.sea(S7);
+  (function loop(){ if(vis.sea){ seaT+=.016; if(S7.fx) S7.fx(); const storm=slSurge>0, target=slBase+slSurge, k=RM?1:.02; seaLvCur+=(target-seaLvCur)*k;
       const amp=storm?1.1:.18, sp=storm?1.6:.7; const U=S7.waterU; U.t.value=RM?0:seaT; U.lvl.value=seaLvCur; U.amp.value+=(amp-U.amp.value)*.03; U.sp.value=sp; U.storm.value+=((storm?1:0)-U.storm.value)*.03; S7.skyU.storm.value=U.storm.value; S7.skyU.t.value=seaT;
       const sv=seaView==='street'; S7.col.visible=S7.colLine.visible=S7.gnd.visible=sv; if(sv){ const hh=seaLvCur-LAND; S7.col.scale.y=hh; S7.col.position.y=LAND+hh/2; S7.colLine.position.y=seaLvCur; }
       [0,1].forEach(i=>{const s=S7['ship'+i],c=S7['cab'+i]; if(s){const y=seaLvCur+1.5+(RM?0:Math.sin(seaT*sp+i)*amp*.4); s.position.y=y; c.position.y=y+4.5; s.rotation.z=RM?0:Math.sin(seaT*sp*.8+i)*.03*(storm?3:1);}});
