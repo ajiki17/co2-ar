@@ -62,6 +62,31 @@ input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--blue);curso
 .likert button,.seg button,.pick button{appearance:none;font:inherit;cursor:pointer;color:var(--ink);background:var(--bg)}
 .likert button{font-size:.875rem;line-height:1.3;border:1.5px solid var(--line);border-radius:10px;padding:10px 4px;min-height:58px}
 .likert button[aria-pressed=true]{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+/* v1.24：年齢（数字の入力欄と −・＋）、1タップの選択肢（.opts）、答えたあとの次の質問の印 */
+.agebox{display:flex;align-items:center;gap:10px;margin-top:8px}
+.agebtn{appearance:none;flex:none;width:52px;height:52px;border-radius:12px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:1.6rem;font-weight:700;line-height:1;cursor:pointer;touch-action:manipulation}
+.agebtn:active{background:var(--blue-soft)}
+#age{width:5.2em;min-width:0;height:52px;box-sizing:border-box;border:1.5px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font:inherit;font-size:1.75rem;font-weight:800;text-align:center;padding:0 6px;-moz-appearance:textfield;appearance:textfield}
+#age::-webkit-outer-spin-button,#age::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+#age:focus,.agebtn:focus-visible{outline:3px solid var(--blue);outline-offset:2px}
+.ageu{font-size:1.1rem;font-weight:700}
+.fnote{font-size:1rem;color:var(--sub);margin:8px 0 0;line-height:1.6}
+.q .opt{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:1rem;font-weight:700;color:var(--sub);vertical-align:1px}
+.opts{display:grid;gap:8px;margin-top:10px}
+.opts.c2{grid-template-columns:1fr 1fr}.opts.c3{grid-template-columns:repeat(3,1fr)}
+.opts button{appearance:none;font:inherit;font-size:1rem;line-height:1.4;min-height:52px;padding:10px 14px;text-align:left;cursor:pointer;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:12px;touch-action:manipulation}
+.opts.c2 button,.opts.c3 button{text-align:center;padding:8px 4px}
+.opts button small{display:block;font-size:1rem;line-height:1.3;color:var(--sub)}
+.opts button[aria-pressed=true]{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
+.opts button[aria-pressed=true] small{color:inherit}
+.qz+.qz{margin-top:14px}.qzq{margin:10px 0 0;font-weight:700}
+.fin-h{margin:26px 0 10px}
+.quizres ol{margin:8px 0 0;padding-left:1.3em}.quizres li{margin:8px 0;line-height:1.6}.quizres .ok{color:#1e7a46;font-weight:700}.quizres .ng{color:#b3261e;font-weight:700}
+.field.qnext,.qz.qnext,.map.qnext{animation:qnext 1.2s ease-out}
+@keyframes qnext{0%{box-shadow:0 0 0 3px var(--blue)}100%{box-shadow:0 0 0 3px transparent}}
+@media (prefers-reduced-motion: reduce){.field.qnext,.qz.qnext,.map.qnext{animation:none}}
+html.still .qnext{animation:none!important}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .quizres .ok{color:#6fd39a}:root:not([data-theme="light"]) .quizres .ng{color:#ff8a80}}
 .seg{display:inline-flex;flex-wrap:wrap;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;margin:0 0 12px}
 .seg button{font-weight:700;border:0;padding:9px 16px;min-height:44px}
 .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg)}
@@ -149,7 +174,6 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .oppbars .row{display:grid;grid-template-columns:7.5em 1fr;align-items:center;gap:10px;font-size:.9rem}
 .oppbars .bar{height:22px;border-radius:6px;background:var(--line)}
 .oppbars .bar.me{background:#1f5fbf}.oppbars .bar.young{background:#e8702a}
-.checks{display:grid;gap:6px;margin-top:8px}.checks label{display:flex;gap:8px;align-items:flex-start;font-size:.9rem;line-height:1.5}.checks input{margin-top:5px}.checks label.off{opacity:.4}
 .judge-note{background:var(--soft);border-left:4px solid #e8702a;padding:10px 12px;border-radius:8px;font-size:.92rem}
 .inapp{background:#fff4d6;color:#1a1d23;border-bottom:3px solid #e8702a;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;font-size:1rem;line-height:1.6}.inapp p{margin:0 0 10px;font-weight:700}.inapp .btn{font-size:1rem;padding:10px 16px}.inapp span{display:block;margin-top:8px;font-size:1rem}
 body.text-mode .scene, body.text-mode model-viewer, body.text-mode .arbox, body.text-mode .no-tx{display:none!important}
@@ -236,8 +260,6 @@ h2.hlong{font-size:clamp(1.05rem,.55rem + 3vw,1.6rem)}
 h1,h2,h3{overflow-wrap:anywhere}
 .likert button{font-size:.9375rem}
 @media (max-width:520px){.likert:not(.two){grid-template-columns:1fr}.likert:not(.two) button{min-height:44px;padding:8px 14px;text-align:left}.likert:not(.two) br{display:none}}
-.checks label{min-height:44px;align-items:center;font-size:.9375rem;cursor:pointer;padding:2px 0}.checks input{width:20px;height:20px;margin:0;flex:none;accent-color:var(--blue)}
-.checks label.off{cursor:not-allowed}
 #regBox a{display:inline-block;padding:10px 0}
 .choice small,#agg small{font-size:.875rem}
 .gen div.tight span,.gen div.tiny b{visibility:hidden}
@@ -311,6 +333,7 @@ html.fx .big,html.fx .reveal b,html.fx .pair b,html.fx .gen b{font-variant-numer
 html.fx section.ch{border-top-color:transparent}
 /* --- 部品：押したときの反応・フォーカス --- */
 html.fx :is(.btn,.seg button,.likert button,.choice,.pick button,.slegend button,.ecobtns button,.fgbtns button){transition:transform .2s var(--ez),background-color .2s var(--ez),color .2s var(--ez),border-color .2s var(--ez),box-shadow .2s var(--ez)}
+html.fx :is(.opts button,.agebtn):active{transform:scale(.97)}
 html.fx :is(.btn,.seg button,.likert button,.choice,.pick button,.slegend button,.ecobtns button,.fgbtns button):active{transform:scale(.97)}
 html.fx :is(button,input,select,a,summary,[tabindex]):focus-visible{outline:3px solid var(--acc);outline-offset:3px}
 html.fx .btn{border-radius:var(--r2);background:var(--acci);box-shadow:var(--sh1)}
@@ -322,7 +345,8 @@ html.fx .seg{border:0;background:var(--soft);padding:4px;gap:4px;border-radius:v
 html.fx .seg button{border-radius:12px;background:transparent}
 html.fx .seg button[aria-pressed=true]{background:var(--ink);color:var(--bg);box-shadow:var(--sh1)}
 html.fx .likert button{border-radius:12px}
-html.fx .likert button[aria-pressed=true],html.fx .ecobtns button[aria-pressed=true]{background:var(--acci);border-color:var(--acci);color:var(--on-blue);box-shadow:var(--sh1)}
+html.fx :is(.opts,.agebox) button{border-radius:12px}
+html.fx .likert button[aria-pressed=true],html.fx .opts button[aria-pressed=true],html.fx .ecobtns button[aria-pressed=true]{background:var(--acci);border-color:var(--acci);color:var(--on-blue);box-shadow:var(--sh1)}
 html.fx .ecobtns button,html.fx .fgbtns button:not([data-fg=wait]){border-color:var(--acci);color:var(--acci)}
 html.fx .ecobtns button[aria-pressed=true]{color:var(--on-blue)}
 html.fx .choice{border-radius:var(--r2)}
@@ -332,8 +356,7 @@ html.fx .choice[aria-pressed=true] .box{background:var(--acci);border-color:var(
 html.fx .pick button[aria-pressed=true]{box-shadow:var(--sh1)}
 html.fx .slegend button{border-radius:12px}
 html.fx .slegend button[aria-pressed=true]{border-color:var(--acci);box-shadow:inset 0 0 0 1px var(--acci),var(--sh1)}
-html.fx .checks label{border-radius:10px;padding:2px 6px;margin:0 -6px}
-html.fx .checks input,html.fx .ecore input{accent-color:var(--acci)}
+html.fx .ecore input{accent-color:var(--acci)}
 html.fx .hint{border-left-color:var(--acc);border-radius:0 var(--r2) var(--r2) 0}
 html.fx .hint b{color:var(--acci)}
 html.fx .life{border-radius:var(--r3);background:#0B1020 linear-gradient(150deg,#16213f,#0B1020);color:#eef2fa}
@@ -481,13 +504,13 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
 <header class="hero" id="hero" data-ch="">
   <h1 id="heroT"><span class="ln">その<span class="nw">CO<span class="sub2">2</span></span>のつけは、</span><span class="ln">誰が払う？</span></h1>
   <div class="herotick" id="heroTick" aria-hidden="true"><span>このページを開いてから出た、あなたの分のCO₂</span><b><span id="tickBig">0.0</span><small>g</small></b></div>
-  <p class="lead">見えない排出を、見える形に。下へスクロールしながら、あなたの1日から、その上流、世代をまたぐ積み重なり、そして気温が上がった先の暮らしまでをたどります。</p>
-  <p class="judge-note jdg-b">審査員の方へ：約3分で、1日分のCO₂の立方体と浸水を、実物大で体験できます。はじめに2つの質問に答えてから、下へ進んでください。</p>
-  <p class="note no-tx">3Dの場面のうち2つ（体験1の立方体、体験4の浸水）は、スマホのカメラ越しに自分の部屋へ重ねるARで見られます。</p>
+  <p class="lead">見えない排出を、見える形に。あなたの1日から未来までをたどります。</p>
+  <p class="judge-note jdg-b">審査員の方へ：約3分で、1日分のCO₂の立方体と浸水を実物大で体験できます。</p>
+  <p class="note no-tx">体験1の立方体と体験4の浸水は、ARで自分の部屋に重ねられます。</p>
 </header>
 
 <section class="ch" id="s0" data-ch="">
-  <h2>はじめに、<span class="no-jdg">3</span><span class="jdg">2</span>つだけ教えてください</h2>
+  <h2>はじめに、<span class="no-jdg">4</span><span class="jdg">2</span>つだけ教えてください</h2>
   <p id="consent" style="font-size:.875rem;color:var(--sub)"></p>
   <div class="field gate" id="gate" hidden>
     <label class="q" for="email">メールアドレス（必須）</label>
@@ -495,26 +518,23 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
     <p class="gmsg" id="emailMsg" aria-live="polite"></p>
     <button type="button" class="btn" id="gateGo" disabled>次へ</button>
   </div>
-  <div class="field"><label class="q" for="age">あなたの年齢</label><span class="big" id="ageOut">20</span><span> 歳</span><input id="age" type="range" min="15" max="90" value="20"></div>
-  <div class="field jhide"><label class="q" for="gs">あなたが1日に出しているCO₂は、何kgくらいだと思いますか</label><span class="big" id="gsOut">0.6</span><span> kg</span><input id="gs" type="range" min="0" max="100" value="30"><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">直感で大丈夫です。</p></div>
-  <div class="field jhide"><label class="q" for="reg">住んでいる地域（任意）</label>
-    <select id="reg" style="width:100%;font:inherit;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)">
+  <div class="field" id="ageCtl"><label class="q" for="age">あなたの年齢</label><div class="agebox"><button type="button" class="agebtn" id="ageDn" aria-label="1歳減らす">−</button><input id="age" type="number" inputmode="numeric" pattern="[0-9]*" min="15" max="90" step="1" value="20" autocomplete="off" aria-describedby="ageHint"><span class="ageu">歳</span><button type="button" class="agebtn" id="ageUp" aria-label="1歳増やす">＋</button></div><p class="fnote" id="ageHint">15〜90歳の数字を入れるか、−・＋で1歳ずつ変えられます。</p></div>
+  <div class="field jhide"><span class="q" id="qgs">あなたが1日に出しているCO₂は、何kgくらいだと思いますか（直感で）</span><div class="opts c3" role="group" aria-labelledby="qgs" data-a="gs"><button type="button" data-v="0.1" aria-pressed="false">約0.1kg</button><button type="button" data-v="0.5" aria-pressed="false">約0.5kg</button><button type="button" data-v="1" aria-pressed="false">約1kg</button><button type="button" data-v="5" aria-pressed="false">約5kg</button><button type="button" data-v="20" aria-pressed="false">約20kg</button><button type="button" data-v="50" aria-pressed="false">約50kg</button></div></div>
+  <div class="field jhide"><span class="q" id="qreg">住んでいる地域<span class="opt">任意・選ばなくても進めます</span></span><div class="opts c3 reg" role="group" aria-labelledby="qreg" data-a="reg"><button type="button" data-v="" aria-pressed="true">選ばない</button><button type="button" data-v="hokkaido" aria-pressed="false">北海道</button><button type="button" data-v="tohoku" aria-pressed="false">東北</button><button type="button" data-v="kanto" aria-pressed="false">関東甲信</button><button type="button" data-v="hokuriku" aria-pressed="false">北陸</button><button type="button" data-v="tokai" aria-pressed="false">東海</button><button type="button" data-v="kinki" aria-pressed="false">近畿</button><button type="button" data-v="chugoku" aria-pressed="false">中国</button><button type="button" data-v="shikoku" aria-pressed="false">四国</button><button type="button" data-v="kyushu_n" aria-pressed="false">九州北部<small>山口県を含む</small></button><button type="button" data-v="kyushu_s" aria-pressed="false">九州南部</button><button type="button" data-v="amami" aria-pressed="false">奄美</button><button type="button" data-v="okinawa" aria-pressed="false">沖縄</button></div>
+    <select id="reg" hidden aria-hidden="true" tabindex="-1" style="width:100%;font:inherit;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink)">
       <option value="">選ばない</option><option value="hokkaido">北海道</option><option value="tohoku">東北</option><option value="kanto">関東甲信</option><option value="hokuriku">北陸</option><option value="tokai">東海</option><option value="kinki">近畿</option><option value="chugoku">中国</option><option value="shikoku">四国</option><option value="kyushu_n">九州北部（山口県を含む）</option><option value="kyushu_s">九州南部</option><option value="amami">奄美</option><option value="okinawa">沖縄</option>
-    </select><p style="font-size:.875rem;color:var(--sub);margin:6px 0 0">選ぶと、体験4であなたの地域の将来予測が出ます。</p></div>
+    </select><p class="fnote">選ぶと、体験4に地域の予測が出ます。</p></div>
   <div class="field"><span class="q" id="q1">日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q1" data-q="pre"></div></div>
-  <div class="field jhide"><span class="q" id="qi1">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi1" data-q="ipre"></div></div>
-  <div class="field jhide"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、現在、取り組んでいることは何かありますか。（○はいくつでも）</span><div class="checks" data-cq="q6"></div></div>
-  <div class="field jhide"><span class="q">「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち上の質問で回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7pre"></div></div>
+  <div class="field jhide"><span class="q" id="qk1">地球温暖化への対策に取り組む企業の商品の購入やサービスの利用について、あてはまるものを1つ選んでください。</span><div class="opts" role="group" aria-labelledby="qk1" data-a="cpre"><button type="button" data-v="1" aria-pressed="false">1　現在、取り組んでいる</button><button type="button" data-v="2" aria-pressed="false">2　今は取り組んでいないが、今後取り組んでみたい</button><button type="button" data-v="3" aria-pressed="false">3　どちらでもない</button></div></div>
   <div class="map" id="map">
     <h3>これから6つの体験をします</h3>
-    <ol><li><b>1</b><span>見えないCO₂を、見える大きさにする</span></li><li><b>2</b><span>その排出が、どこで出ているかをたどる</span></li><li><b>3</b><span>生まれる前から積み上がっていた量と、生まれ年で変わる夏を知る</span></li><li><b>4</b><span>このままの未来を、自分の部屋に重ねる</span></li><li><b>5</b><span>すでに起きていることを見る</span></li><li><b>6</b><span>80歳になったあなたの夏を体験する</span></li></ol>
-    <p>最後に、あなたが選べることを考えます</p>
+    <ol><li><b>1</b><span>見えないCO₂を見える大きさに</span></li><li><b>2</b><span>排出がどこで出ているかをたどる</span></li><li><b>3</b><span>積み上がった量と、生まれ年で変わる夏を知る</span></li><li><b>4</b><span>このままの未来を部屋に重ねる</span></li><li><b>5</b><span>すでに起きていることを見る</span></li><li><b>6</b><span>80歳のあなたの夏を体験する</span></li></ol>
+    <p>最後に、選べることを考えます</p>
   </div>
-  <p style="color:var(--sub);font-size:.9rem">答えたら、そのまま下へスクロールしてください。</p>
 </section>
 
 <div class="door d1" id="door-s1" data-ch="体験1／6 見えないを見せる" role="group" aria-label="体験1のはじまり">
-  <div class="din"><p class="dn" data-rv><span class="no-jdg">01</span><span class="jdg">1／2</span></p><p class="dname" data-rv><span class="no-jdg">体験1</span><span class="jdg">審査員版 1</span>　見えないを見せる</p><p class="dq" data-rv>毎日、どれくらいのCO₂を出しているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">予想と答え合わせをして、1日分のCO₂を実物大の立方体で見る（ARなら自分の部屋に置く）</span><span class="jdg">1日分のCO₂を実物大の立方体で見て、ARで自分の部屋に置く</span></span><span class="txi">予想と答え合わせをして、1日分のCO₂の大きさを文章と数字で読む</span></p></div>
+  <div class="din"><p class="dn" data-rv><span class="no-jdg">01</span><span class="jdg">1／2</span></p><p class="dname" data-rv><span class="no-jdg">体験1</span><span class="jdg">審査員版 1</span>　見えないを見せる</p><p class="dq" data-rv>毎日、どれだけCO₂を出している？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">1日分のCO₂を予想し、実物大の立方体で見る</span><span class="jdg">1日分のCO₂の立方体を、ARで部屋に置く</span></span><span class="txi">1日分のCO₂を予想し、大きさを読む</span></p></div>
 </div>
 <section class="ch fade" id="s1" data-ch="体験1／6 見えないを見せる" data-atmo="air" data-scene="size">
   <p class="kicker">体験1　見えないを見せる</p>
@@ -527,7 +547,7 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <p style="margin-top:14px" id="volText"></p></div></div>
   <div class="arbox">
     <h3 style="margin-top:22px">あなたの部屋に、1日分を置いてみる</h3>
-    <p style="font-size:.92rem">スマホで下のボタンを押すと、カメラ越しに、1日分のCO₂（一辺約2.3mの立方体）が実物大で床に現れます。</p>
+    <p style="font-size:.92rem">1日分のCO₂（一辺約2.3mの立方体）を、実物大で床に置けます。</p>
     <p class="safe">周りに人や段差がない、広い場所で使ってください</p>
     <model-viewer id="mv" alt="1日分のCO₂の立方体（一辺約2.3m）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" shadow-intensity="0.6" exposure="1" style="width:100%;height:240px;background:var(--soft);border-radius:16px">
       <button slot="ar-button" class="btn" style="position:absolute;left:12px;bottom:12px">ARで自分の部屋に置く</button>
@@ -536,27 +556,27 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
     <p id="arMsg" style="font-size:.875rem;color:var(--sub);margin-top:8px">読み込み中…</p>
     <details style="font-size:.875rem;color:var(--sub)"><summary style="padding:11px 0;cursor:pointer">うまく表示されないとき（診断情報）</summary><p id="arDiag" style="margin:6px 0 0;word-break:break-all"></p></details>
   </div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">日本人1人の1日分のCO₂は約21kg。気体にすると一辺約2.26mの立方体になる。目に見えないだけで、毎日これだけ出している。</span><span class="jdg">1日分のCO₂は約21kg。一辺約2.26mの立方体になる。</span></p><p class="ln2"><span>次の体験へ</span><span class="no-jdg">そのCO₂は、どこで出ているのか？</span><span class="jdg">このまま気温が上がると、あなたの部屋はどうなるのか？</span></p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">日本人1人の1日分のCO₂は約21kg。一辺約2.26mの立方体になる。見えないだけで、毎日出している。</span><span class="jdg">1日分のCO₂は約21kg。一辺約2.26mの立方体になる。</span></p></div>
 </section>
 
 <div class="door d2" id="door-s2" data-ch="体験2／6 分散をたどる" role="group" aria-label="体験2のはじまり">
-  <div class="din"><p class="dn" data-rv>02</p><p class="dname" data-rv>体験2　分散をたどる</p><p class="dq" data-rv>そのCO₂は、どこで出ているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップして、排出が生活のどこにつながっているかをたどる</p></div>
+  <div class="din"><p class="dn" data-rv>02</p><p class="dname" data-rv>体験2　分散をたどる</p><p class="dq" data-rv>そのCO₂は、どこで出ている？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップして、排出と生活のつながりをたどる</p></div>
 </div>
 <section class="ch fade" id="s2" data-ch="体験2／6 分散をたどる" data-atmo="paper">
   <p class="kicker">体験2　分散をたどる</p>
   <h2>家の中で出ているのは、16%だけ</h2>
-  <p>日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分は16%。残り<span class="num">84%</span>は、工場や物流、お店やオフィスなど家の外で出ています（その一部は輸出品をつくる分です）。<span class="no-tx">帯</span><span class="txi">下の部門の名前</span>をタップして、それぞれがあなたの毎日のどこにつながっているかを見てください。</p>
+  <p>国内でエネルギーから出たCO₂のうち、家庭の電気やガスは16%。残り<span class="num">84%</span>は工場や物流、お店など家の外です（一部は輸出品の分）。<span class="no-tx">帯</span><span class="txi">下の部門の名前</span>をタップしてください。</p>
   <div class="me"><div class="dot">私</div><div><b>7.77トン／年</b><br><span style="color:var(--sub);font-size:.875rem">日本の一人当たり（2024年）</span></div></div>
   <div class="stack" id="stack" role="group" aria-label="部門別の内訳"></div>
   <div class="slegend" id="slegend" role="group" aria-label="部門別の内訳（凡例）"></div>
   <p class="tx" id="txSect"></p>
-  <div class="detail" id="detail" aria-live="polite"><b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップしてください</b><span style="color:var(--sub)">それぞれが、あなたの生活のどこにつながっているかが出てきます。</span></div>
+  <div class="detail" id="detail" aria-live="polite"><b><span class="no-tx">帯</span><span class="txi">部門の名前</span>をタップしてください</b><span style="color:var(--sub)">生活とのつながりが出てきます。</span></div>
   <p id="seenMsg" style="margin-top:14px"></p>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">家の中で出ているのは16%だけ。残りの84%は、電気をつくる発電所や商品をつくる工場など、家の外で出ている。だから節電だけでなく「何を選ぶか」が効く。</p><p class="ln2"><span>次の体験へ</span>あなたが生まれたとき、CO₂はどれだけ積み上がっていたのか？</p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">家の中で出ているのは16%だけ。残りの84%は、発電所や工場など家の外で出ている。だから節電だけでなく「何を選ぶか」が効く。</p></div>
 </section>
 
 <div class="door d3" id="door-s3" data-ch="体験3／6 時間差を越える" role="group" aria-label="体験3のはじまり">
-  <div class="din"><p class="dn" data-rv>03</p><p class="dname" data-rv>体験3　時間差を越える</p><p class="dq" data-rv>あなたが生まれたとき、CO₂はどれだけ積み上がっていたのか？</p><p class="ddo" data-rv><b>やること</b>生まれた年を基準に、世界の排出の積み重なりを見る</p></div>
+  <div class="din"><p class="dn" data-rv>03</p><p class="dname" data-rv>体験3　時間差を越える</p><p class="dq" data-rv>生まれたとき、CO₂はどれだけ積み上がっていた？</p><p class="ddo" data-rv><b>やること</b>生まれた年で、世界の排出の積み重なりを見る</p></div>
 </div>
 <section class="ch fade" id="s3" data-ch="体験3／6 時間差を越える" data-atmo="time">
   <p class="kicker">体験3　時間差を越える</p>
@@ -566,33 +586,33 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <div class="gen" id="gen"><div class="before"><b id="gB">0%</b><span>生まれる前に積み上がっていた</span></div><div class="after"><b id="gA">0%</b><span>生まれてから加わった</span></div></div>
   <p style="font-size:.875rem;color:var(--sub)" id="genNote"></p>
   </div></div>
-  <div class="life"><span style="font-size:.875rem;opacity:.85">生まれてから今日までに、あなたの分として数えられる量</span><div class="big" id="lifeT">0<small>トン</small></div><p style="margin:6px 0 0;font-size:.9rem;opacity:.85">あなたの分も、この積み重なりの上に残ります。</p></div>
+  <div class="life"><span style="font-size:.875rem;opacity:.85">生まれてから今日までの、あなたの分</span><div class="big" id="lifeT">0<small>トン</small></div><p style="margin:6px 0 0;font-size:.9rem;opacity:.85">あなたの分も、積み重なりに残ります。</p></div>
   <div class="pair"><div><span>今年生まれる子が引き継ぐ量</span><b>約1.85兆t</b><span>世界がこれまでに出したすべて（うち日本は約696億t）</span></div><div><span>前例のない熱波にさらされる割合</span><b>52〜92%</b><span>2020年生まれ（1.5℃〜3.5℃の場合）。1960年生まれは16%（世界全体の推計）</span></div></div>
-  <div class="hint" style="margin-top:0"><b>知っておきたいこと</b>IPCCは2021年の報告書で、人間の活動が地球を温暖化させてきたことには「疑う余地がない」と、初めて断定しました。この積み重なりは、自然の変化ではありません。</div>
+  <div class="hint" style="margin-top:0"><b>知っておきたいこと</b>IPCCは2021年、人間の活動による温暖化は「疑う余地がない」と初めて断定しました。</div>
   <h3>世界の一人分と並べると</h3>
   <div id="countries"></div>
   <p class="tx" id="txCtr"></p>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">あなたが生まれた時点で、世界のCO₂の<span id="lrn3"></span>%がすでに積み上がっていた。気温の上昇は積み上がった量で決まるので、後から生まれた世代ほど、その影響を背負う。</p><p class="ln2"><span>次の体験へ</span>生まれた年で、子どもの頃の夏はどれだけ違うのか？</p></div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">生まれた時点で、世界のCO₂の<span id="lrn3"></span>%がすでに積み上がっていた。気温は積み上がった量で上がる。後の世代ほど、その影響を背負う。</p></div>
 </section>
 
 <section class="ch fade" id="s3b" data-ch="体験3／6 生まれ年で変わる夏" data-atmo="sun">
-    <div class="subdoor" data-rv><p class="sdn">03-2　生まれ年で変わる夏</p><p class="dq">生まれた年で、子どもの頃の夏はどれだけ違うのか？</p><p class="ddo"><b>やること</b>小中学生の9年間に経験した猛暑日を、世代で比べる</p></div>
+    <div class="subdoor" data-rv><p class="sdn">03-2　生まれ年で変わる夏</p><p class="dq">生まれた年で、子どもの夏はどう違う？</p><p class="ddo"><b>やること</b>小中学生の9年間の猛暑日を、世代で比べる</p></div>
   <p class="kicker">体験3-2　生まれ年で変わる夏</p>
   <h2>生まれた年で、夏に外で遊べる日が変わる</h2>
   <p id="oppText">データを読み込み中です…</p>
   <div id="oppBars" class="oppbars" aria-hidden="true"></div>
-  <p style="font-size:.875rem;color:var(--sub)">猛暑日＝最高気温35℃以上。日本スポーツ協会の熱中症予防運動指針では、気温35℃以上（暑さ指数31以上）は運動を原則中止とする目安です。データ：気象庁「大都市における猛暑日日数の長期変化傾向」（<span id="oppSt">大阪</span>の年別値。観測場所の移転前の年は使っていません）。</p>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">本人が選べない「生まれた年」によって、夏に外で運動できる日が減っている。これが、この提案の考える機会格差。</p><p class="ln2"><span>次の体験へ</span>このまま気温が上がると、あなたの部屋はどうなるのか？</p></div>
+  <p style="font-size:.875rem;color:var(--sub)">猛暑日＝最高気温35℃以上。日本スポーツ協会の指針で、運動を原則中止とする目安です（暑さ指数31以上）。気象庁の<span id="oppSt">大阪</span>の値（移転前の年は除く）。</p>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">選べない「生まれた年」で、夏に外で運動できる日が減っている。これが機会格差。</p></div>
 </section>
 
-<aside class="field" role="note" style="margin-top:24px"><b>この先について</b><p style="margin:6px 0 10px;font-size:.92rem">このあと、浸水や猛暑の場面を<span class="no-tx">3Dで</span>表示します。災害を経験された方など、見るのがつらい場合は読み飛ばせます。</p><a href="#s7" class="btn ghost" style="display:inline-block;text-decoration:none;padding:10px 16px;font-size:.9rem">体験のあとへ進む</a></aside>
+<aside class="field" role="note" style="margin-top:24px"><b>この先について</b><p style="margin:6px 0 10px;font-size:.92rem">このあと、浸水や猛暑の場面を<span class="no-tx">3Dで</span>表示します。見るのがつらい方は、読み飛ばせます。</p><a href="#s7" class="btn ghost" style="display:inline-block;text-decoration:none;padding:10px 16px;font-size:.9rem">体験のあとへ進む</a></aside>
 <div class="door d4" id="door-s4" data-ch="体験4／6 このままの未来" role="group" aria-label="体験4のはじまり">
-  <div class="din"><p class="dn" data-rv><span class="no-jdg">04</span><span class="jdg">2／2</span></p><p class="dname" data-rv><span class="no-jdg">体験4</span><span class="jdg">審査員版 2</span>　このままの未来</p><p class="dq" data-rv>このまま気温が上がると、あなたの部屋はどうなるのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">2℃と4℃の未来を比べ、浸水を自分の部屋に重ね、祖母と一緒にいつ避難するかを決める</span><span class="jdg">2℃と4℃の未来を比べ、浸水を自分の部屋に重ねる（ARなら実物大で）</span></span><span class="txi">2℃と4℃の未来を比べ、浸水と避難のしかたを文章と数字で読む</span></p></div>
+  <div class="din"><p class="dn" data-rv><span class="no-jdg">04</span><span class="jdg">2／2</span></p><p class="dname" data-rv><span class="no-jdg">体験4</span><span class="jdg">審査員版 2</span>　このままの未来</p><p class="dq" data-rv>このまま暑くなると、あなたの部屋はどうなる？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">2℃と4℃を比べ、浸水を部屋に重ね、避難を決める</span><span class="jdg">2℃と4℃の未来を比べ、浸水を部屋に重ねる</span></span><span class="txi">2℃と4℃の未来と、浸水・避難を読む</span></p></div>
 </div>
 <section class="ch fade" id="s4" data-ch="体験4／6 このままの未来" data-atmo="night" data-scene="flood">
   <p class="kicker">体験4　このままの未来</p>
   <h2>今の政策のままだと、あなたの暮らしはこうなる</h2>
-  <p>今の政策のまま進むと、今世紀末の気温上昇は約3.2℃と見込まれています（IPCC）。日本の予測は2℃と4℃の2つの場合で示されているので、その間に入ります。</p>
+  <p>今の政策のままだと、今世紀末に約3.2℃上がる見込みです（IPCC）。2℃と4℃の間です。</p>
   <div class="seg" role="group" aria-label="シナリオ"><button aria-pressed="true" data-sc="2">2℃上昇</button><button aria-pressed="false" data-sc="4">4℃上昇</button></div>
   <p><b>寝苦しい夜（熱帯夜）が、20世紀末より <span id="tnN">12日増える</span></b>　<span id="futReg" style="font-size:.875rem;color:var(--sub)">21世紀末・近畿地方（気象庁）</span></p>
   <div id="cal" aria-hidden="true"></div>
@@ -600,76 +620,75 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <p id="rainLife" style="font-size:.95rem"></p>
   <div id="regBox" class="pcard" hidden></div>
   <h3>その大雨で、あなたの部屋が浸水したら</h3>
-  <p class="no-tx" style="font-size:.9rem;color:var(--sub)">あなたの目の高さ（1.5m）から見た部屋。水は下から上がってきます。</p>
+  <p class="no-tx" style="font-size:.9rem;color:var(--sub)">あなたの目の高さ（1.5m）から見た部屋です。</p>
   <div class="seg" role="group" aria-label="浸水の深さ"><button aria-pressed="true" data-wd="0.5">0.5m</button><button aria-pressed="false" data-wd="1">1.0m</button><button aria-pressed="false" data-wd="3">3.0m</button></div>
   <div class="pin" id="pin4"><div class="stick"><div class="scene" id="scFlood" data-vis="flood"><div class="under" id="under"></div><div class="fglv" id="fgLv" hidden><b id="fgLvT"></b><span id="fgLvW"></span></div><div class="fgsit" id="fgSit" aria-live="polite" hidden></div><div class="cap" id="capFlood">ドラッグで見回せます</div></div>
   <p class="tx" id="txFlood"></p>
   <p id="wdText" style="margin-top:12px"></p></div></div>
   <div class="fgame no-tx" id="fgame">
-    <div id="fgStart"><p class="how">祖母と一緒に、いつ避難するかを決めてみましょう（約1分。やらなくても先へ進めます）</p><button type="button" class="btn" id="fgGo">判断ゲームを始める</button></div>
+    <div id="fgStart"><p class="how">祖母と一緒に、いつ避難するか決めてみましょう（約1分・任意）</p><button type="button" class="btn" id="fgGo">判断ゲームを始める</button></div>
     <div id="fgPlay" hidden><p class="fgstep" id="fgStep"></p>
       <div class="fgbtns" role="group" aria-label="どうする？"><button type="button" data-fg="go">祖母と避難所へ向かう</button><button type="button" data-fg="up">2階へ上がる</button><button type="button" data-fg="wait">様子を見る</button></div></div>
     <div id="fgEnd" hidden><div class="fgcard" id="fgCard"><span class="rc" id="fgRc"></span><b id="fgMsg"></b><p id="fgMsg2"></p></div>
       <div class="fgend"><button type="button" class="btn ghost" id="fgAgain">もう一度</button><a class="btn" href="#s4b">次の場面へ</a></div></div>
   </div>
-  <p class="tx" id="txGame">警戒レベル3「高齢者等避難」は、高齢者など避難に時間がかかる人が、危険な場所から避難を始める段階です。警戒レベル4「避難指示」は、危険な場所にいる人が全員避難する段階です。警戒レベル5「緊急安全確保」は、すでに災害が起きているおそれがあり、命を守るための最善の行動をとる段階で、必ず出るとは限りません。水がひざ（約50cm）を超えると、大人でも歩いての避難は危険です。流れがあれば20cmでも歩けなくなります。そのときは2階以上へ上がります。ただ、家が浸水する深さによっては2階も安全ではないので、<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で自宅の浸水の深さを確かめておきましょう。</p>
+  <p class="tx" id="txGame">警戒レベル3「高齢者等避難」で、避難に時間がかかる人は避難を開始。レベル4「避難指示」で、危険な場所の人は全員避難。レベル5「緊急安全確保」は災害のおそれがある段階で、出ないこともあります。水がひざ（約50cm）を超えると、歩いての避難は危険です（流れがあれば20cmでも）。そのときは2階以上へ。2階も危ない深さがあるので、<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で自宅を確かめましょう。</p>
   <div class="arbox">
     <p class="safe">周りに人や段差がない、広い場所で使ってください</p>
     <model-viewer id="mvFlood" src="flood_050.glb?v=4" alt="床から0.5mまで水が来た部屋（実寸）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" loading="lazy" shadow-intensity="0.4" style="width:100%;height:220px;background:var(--soft);border-radius:16px">
       <button slot="ar-button" class="btn" style="position:absolute;left:12px;bottom:12px">ARで、自分の部屋に水を入れる</button>
     </model-viewer>
-    <p style="font-size:.875rem;color:var(--sub);margin-top:8px">部屋の真ん中に立ち、足もとの床にカメラを向けて置いてください。選んだ高さに水面が広がり、壁や家具と水位を見比べられます。横の柱と板が目盛り、隣の人が身長1.70mです。</p>
+    <p style="font-size:.875rem;color:var(--sub);margin-top:8px">部屋の真ん中で、床にカメラを向けて置いてください。横の柱と板が目盛り、隣の人は身長1.70mです。</p>
   </div>
-  <p style="font-size:.9rem">あなたの家が大雨でどれくらい浸水する想定になっているかは、国土交通省の<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で住所から調べられます。</p>
-  <div class="hint"><b>変えられること</b>2℃になるか4℃になるかは、これから世界で積み上がる排出の量で決まります。2℃と4℃では、熱帯夜の増え方が数倍ちがいます。その差を生むのは、一人ひとりの選択の積み重ねです。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">気温が上がるほど、熱帯夜と激しい雨が増え、浸水の危険も高まる。2℃で止めるか4℃まで進むかは、今の排出で決まる。</span><span class="jdg">気温が上がるほど激しい雨が増え、浸水の危険も高まる。2℃で止めるか4℃まで進むかは、今の排出で決まる。</span></p><p class="ln2"><span>次の体験へ</span><span class="no-jdg">海面が上がると、大阪の街はどうなるのか？</span><span class="jdg">ここまでをふまえて、あなたが選べることは？</span></p></div>
+  <p style="font-size:.9rem">自宅の浸水の想定は、国土交通省の<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で調べられます。</p>
+  <div class="hint"><b>変えられること</b>熱帯夜の増え方は、2℃と4℃で数倍ちがいます。差を生むのは、私たちの選択です。</div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">気温が上がるほど、熱帯夜と激しい雨が増え、浸水の危険が高まる。2℃か4℃かは、今の排出で決まる。</span><span class="jdg">気温が上がるほど激しい雨が増え、浸水の危険が高まる。2℃か4℃かは、今の排出で決まる。</span></p></div>
 </section>
 
 
 <section class="ch fade" id="s4b" data-ch="体験4／6 海の側から" data-atmo="sea" data-scene="sea">
-    <div class="subdoor" data-rv><p class="sdn">04-2　海の側から</p><p class="dq">海面が上がると、大阪の街はどうなるのか？</p><p class="ddo"><b>やること</b><span class="no-tx">大阪湾の岸壁から、高潮と海面上昇を見る</span><span class="txi">高潮と海面上昇を文章と数字で読む</span></p></div>
+    <div class="subdoor" data-rv><p class="sdn">04-2　海の側から</p><p class="dq">海面が上がると、大阪の街はどうなる？</p><p class="ddo"><b>やること</b><span class="no-tx">大阪湾の岸壁から、高潮と海面上昇を見る</span><span class="txi">高潮と海面上昇の数字を読む</span></p></div>
   <p class="kicker">体験4-2　海の側から</p>
   <h2>大阪湾の海が、底上げされる</h2>
-  <p>海面は、気温上昇とともにゆっくり上がり続けます。日本沿岸の平均海面は、21世紀末に2℃上昇で約0.40m、4℃上昇で約0.68m上がると予測されています。上がった分は、台風の高潮にそのまま上乗せされます。</p>
+  <p>日本沿岸の海面は、21世紀末に約0.40m上がる予測です（2℃上昇）。4℃上昇なら約0.68mです。</p>
   <div class="seg" role="group" aria-label="海面の高さ"><button aria-pressed="true" data-sl="0">いまの平均海面</button><button aria-pressed="false" data-sl="0.40">2℃上昇（+0.40m）</button><button aria-pressed="false" data-sl="0.68">4℃上昇（+0.68m）</button></div>
   <div class="seg" role="group" aria-label="高潮"><button aria-pressed="true" data-surge="0">ふだん</button><button aria-pressed="false" data-surge="3.29">2018年 台風21号の高潮</button></div>
   <div class="seg" role="group" aria-label="視点"><button aria-pressed="true" data-sv="quay">岸壁の上から</button><button aria-pressed="false" data-sv="street">防潮堤の内側の街から</button></div>
   <div class="scene" id="scSea" data-vis="sea"><div class="cap" id="capSea">大阪湾の岸壁（イメージ）。右の岸壁の目盛りが水位で、青い線は2018年の最高潮位。ドラッグで見回せます</div><div class="sealevel" id="seaLv"></div></div>
   <p class="tx" id="txSea"></p>
   <p id="seaText" style="margin-top:12px"></p>
-  <p id="seaStreet" style="font-size:.92rem" hidden><span class="no-tx">青い帯が堤防の向こうの海の高さ、黄色の線が街の地面の高さです。</span>大阪の西部には、標高0m以下の土地が約21km²、満潮時の海面より低い土地が約41km²あります（大阪府）。<span class="no-tx">「防潮堤の内側の街から」では、堤防を半透明にして、外の海面と街の地面の高さを比べています（地面の高さはイメージ）。</span></p>
-  <div class="hint"><b>変えられること</b>0.40mで済むか0.68mになるかは、これから世界で積み上がる排出の量で決まります。海面の上昇は気温が下がってもすぐには戻らないため、今の選択の影響は、より長く残ります。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西大阪地域には、満潮時の海面より低い土地が約41km²ある。海面が上がるほど、高潮の危険は大きくなる。</p><p class="ln2"><span>次の体験へ</span>気候変動の影響は、もう起きているのか？</p></div>
+  <p id="seaStreet" style="font-size:.92rem" hidden><span class="no-tx">青い帯は堤防の外の海面、黄色の線は街の地面です（堤防は半透明、地面の高さはイメージ）。</span>大阪の西部には、標高0m以下の土地が約21km²、満潮時の海面より低い土地が約41km²あります（大阪府）。</p>
+  <div class="hint"><b>変えられること</b>0.40mか0.68mかは、これからの排出で決まります。</div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西大阪には、満潮時の海面より低い土地が約41km²ある。海面が上がるほど、高潮の危険が増す。</p></div>
 </section>
 
 
 
 <div class="door d5" id="door-s5" data-ch="体験5／6 すでに起きたこと" role="group" aria-label="体験5のはじまり">
-  <div class="din"><p class="dn" data-rv>05</p><p class="dname" data-rv>体験5　すでに起きたこと</p><p class="dq" data-rv>気候変動の影響は、もう起きているのか？</p><p class="ddo" data-rv><b>やること</b>実際に起きた大雨と猛暑を、温暖化がなかった場合と比べる</p></div>
+  <div class="din"><p class="dn" data-rv>05</p><p class="dname" data-rv>体験5　すでに起きたこと</p><p class="dq" data-rv>気候変動の影響は、もう起きている？</p><p class="ddo" data-rv><b>やること</b>実際の大雨と猛暑を、温暖化がない場合と比べる</p></div>
 </div>
 <section class="ch fade" id="s5" data-ch="体験5／6 すでに起きたこと" data-atmo="storm">
   <p class="kicker">体験5　すでに起きたこと</p>
   <h2>過去の異常気象も、温暖化で起きやすくなっていた</h2>
-  <p>「温暖化がなかった世界」と「実際の世界」を比べます。</p>
-  <div class="pcard"><b>2018年7月　西日本豪雨</b><p style="margin:6px 0 0">瀬戸内地域では、50年に1度級の大雨の起きやすさが、温暖化によって約3.3倍になっていました。死者は224人にのぼりました。</p></div>
+  <div class="pcard"><b>2018年7月　西日本豪雨</b><p style="margin:6px 0 0">瀬戸内では、50年に1度級の大雨が、温暖化で約3.3倍起きやすくなっていました。死者は224人です。</p></div>
   <p style="margin:14px 0 0">温暖化がなかった世界の100年（約2回）</p><div class="years" id="yNo"></div>
   <p style="margin:14px 0 0">実際の世界の100年（約7回）</p><div class="years real" id="yYes"></div>
-  <p style="font-size:.875rem;color:var(--sub)">50年に1度＝100年に約2回として、3.3倍を丸めて表示</p>
-  <div class="pcard" style="margin-top:22px"><b>2025年夏　記録的な高温</b><p style="margin:6px 0 0">気象研究所などの解析では、温暖化がなければ、この夏の高温は発生し得なかったとされています。</p></div>
+  <p style="font-size:.875rem;color:var(--sub)">50年に1度＝100年に約2回。3.3倍を丸めて表示</p>
+  <div class="pcard" style="margin-top:22px"><b>2025年夏　記録的な高温</b><p style="margin:6px 0 0">気象研究所などの解析では、温暖化がなければ、この夏の高温は起こり得ませんでした。</p></div>
   <p class="tx">温暖化のない世界：起こり得なかった。実際の世界：起きた。</p>
   <div class="verdict"><div class="no">温暖化のない世界<br><span style="font-size:.9rem;font-weight:700">起こり得なかった</span></div><div class="yes">実際の世界<br><span style="font-size:.9rem;font-weight:700">起きた</span></div></div>
-  <div class="hint"><b>変えられること</b>この2つの出来事は、すでに積み上がった排出の結果です。これから先の起きやすさは、これから積み上がる分で変わります。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西日本豪雨のような大雨は、温暖化によって約3.3倍起きやすくなっていた。影響は未来の話ではなく、すでに始まっている。</p><p class="ln2"><span>次の体験へ</span>80歳になったあなたの夏は、どうなっているのか？</p></div>
+  <div class="hint"><b>変えられること</b>この先の起きやすさは、これからの排出で変わります。</div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西日本豪雨のような大雨は、温暖化で約3.3倍起きやすくなっていた。影響はすでに始まっている。</p></div>
 </section>
 
 <div class="door d6" id="door-s6" data-ch="体験6／6 年を取ったあなたの視点" role="group" aria-label="体験6のはじまり">
-  <div class="din"><p class="dn" data-rv>06</p><p class="dname" data-rv>体験6　年を取ったあなたの視点</p><p class="dq" data-rv>80歳になったあなたの夏は、どうなっているのか？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">部屋の温度と体が感じる暑さを比べ、エアコンや扇風機を操作する</span><span class="txi">部屋の温度と体が感じる暑さ、エアコンや扇風機の効果を文章と数字で読む</span></p></div>
+  <div class="din"><p class="dn" data-rv>06</p><p class="dname" data-rv>体験6　年を取ったあなたの視点</p><p class="dq" data-rv>80歳のあなたの夏は、どうなる？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx">室温と体が感じる暑さを比べ、エアコンや扇風機を使う</span><span class="txi">室温と体感、エアコンや扇風機の効果を読む</span></p></div>
 </div>
 <section class="ch fade" id="s6" data-ch="体験6／6 年を取ったあなたの視点" data-atmo="heat" data-scene="elder">
   <p class="kicker">体験6　年を取ったあなたの視点</p>
   <h2 id="h6x">2086年、80歳になったあなたの部屋</h2>
   <p id="p6x"></p>
-  <p>高齢になると、暑さやのどの渇きを感じにくくなります。今の高齢者でも、熱中症で亡くなる人の多くは65歳以上で、東京23区では、亡くなった人の約9割が屋内でした。温度を上げて、いまのあなたと、年を取ったあなたを比べてください。</p>
+  <p>高齢になると、暑さやのどの渇きを感じにくくなります。温度を上げて比べてください。</p>
   <div class="seg" role="group" aria-label="視点"><button aria-pressed="true" data-pv="young">いまのあなた</button><button aria-pressed="false" data-pv="old" id="pvOld">80歳のあなた</button></div>
   <label class="q" for="temp">部屋の温度　<span id="tempOut">34</span>℃</label>
   <input id="temp" type="range" min="26" max="36" value="34">
@@ -677,53 +696,55 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
     <div class="meters"><div><span>実際の暑さ</span><div class="mt"><i id="mReal"></i></div></div><div><span>体が感じる暑さ</span><div class="mt"><i id="mFeel"></i></div></div></div>
     <div class="cap">ドラッグで見回せます</div></div>
   <div class="eco no-tx" id="eco" hidden>
-    <p class="how">ボタンを押すと、部屋の機器が動きます（押さなくても先へ進めます）</p>
+    <p class="how">ボタンで、部屋の機器が動きます（任意）</p>
     <div class="ecobtns" role="group" aria-label="部屋の機器"><button type="button" aria-pressed="false" data-dev="ac">エアコン（冷房28℃）</button><button type="button" aria-pressed="false" data-dev="fan">扇風機</button><button type="button" aria-pressed="false" data-dev="cur">カーテンを閉める（日差しを遮る）</button></div>
-    <p class="enote" id="ecoWin">猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）</p>
+    <p class="enote" id="ecoWin">猛暑日の昼は窓を閉め、夜と早朝に開けましょう（WHO）</p>
     <div class="ecom" aria-live="polite">
       <div><div class="lab"><span>部屋の温度（目安）</span><b id="ecoT">34℃</b></div><div class="bar"><i id="ecoTb" style="background:#c0392b"></i></div><p class="enote" id="ecoTn">外は猛暑日（35℃）</p></div>
       <div><div class="lab"><span>熱中症の危険度</span><b id="ecoR" class="risk-high">高い</b></div><p class="enote" id="ecoRn"></p><p class="warn" id="ecoW" hidden></p></div>
       <div><div class="lab"><span>このままひと夏使うと出るCO₂</span><b id="ecoC">0kg</b></div><div class="bar"><i id="ecoCb"></i></div><p class="enote" id="ecoCn"></p></div>
     </div>
     <label class="ecore"><input type="checkbox" role="switch" id="ecoRe"><span>実質再エネ100%（CO₂ゼロ）の電気プランにすると</span></label>
-    <div class="ecomsg" id="ecoMsg" hidden><b>暑さから身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りながら排出を減らす方向に進める。</b><span id="ecoMsg2"></span></div>
+    <div class="ecomsg" id="ecoMsg" hidden><b>身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りつつ排出を減らせる。</b><span id="ecoMsg2"></span></div>
     <p class="ecosim" id="ecoSim"></p>
   </div>
   <p class="tx" id="txElder"></p>
   <p class="tx" id="txEco"></p>
   <p id="elderText" style="margin-top:12px"></p>
   <div class="pair"><div><span>熱中症で亡くなった人のうち65歳以上</span><b>85%</b><span>2024年（人口動態統計）</span></div><div><span>東京23区で熱中症で亡くなった人のうち屋内</span><b>約9割</b><span>2020年夏（東京都監察医務院）</span></div></div>
-  <div class="hint"><b>変えられること</b>年を取ったあなたが暮らす部屋の暑さは、これから世界で積み上がる排出の量で変わります。あなたの選択もその一部で、未来の自分を守ることにつながります。</div>
-  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">暑さから身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りながら排出を減らす方向に進める。</p><p class="ln2"><span>次の体験へ</span>ここまでをふまえて、あなたが選べることは？</p></div>
+  <div class="hint"><b>変えられること</b>80歳のあなたの部屋の暑さは、これからの排出で変わります。</div>
+  <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">身を守るにはエアコンが必要。でも、その電気がCO₂を出す。CO₂の少ない電気を選べば、身を守りつつ排出を減らせる。</p></div>
 </section>
 
 <div class="door d7" id="door-s7" data-ch="体験のあと" role="group" aria-label="体験のあとのはじまり">
-  <div class="din"><p class="dn dn-s" data-rv>まとめ</p><p class="dname" data-rv>体験のあと</p><p class="dq" data-rv>ここまでをふまえて、あなたが選べることは？</p></div>
+  <div class="din"><p class="dn dn-s" data-rv>まとめ</p><p class="dname" data-rv>体験のあと</p><p class="dq" data-rv>では、あなたが選べることは？</p></div>
 </div>
 <section class="ch fade" id="s7" data-ch="体験のあと">
   <p class="kicker">体験のあと</p>
   <h2><span class="no-jdg">84%の側に、</span><span class="jdg"></span>あなたが関われる選択</h2>
-  <p>やってみたいものを選んでください（いくつでも）。</p>
+  <p>やってみたいものを選んでください（複数可）。</p>
   <div id="choices"></div>
   <div class="field"><span class="q" id="qc">その中から、まず1つ決めるなら</span><div class="pick" id="pick" role="group" aria-labelledby="qc"><span style="color:var(--sub);font-size:.875rem">上で選ぶと、ここに出てきます</span></div></div>
   <div class="field"><span class="q" id="q2">あらためて。日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q2" data-q="post"></div></div>
-  <div class="field jhide"><span class="q" id="qi2">IPCCの最新の報告書で、初めて、人間の活動が地球を温暖化させてきたと断定する見解が示されたことを知っていますか</span><div class="likert two" role="group" aria-labelledby="qi2" data-q="ipost"></div></div>
   <div class="field jhide"><span class="q">理解度クイズ（3問）：体験の内容から、あてはまるものを1つずつ選んでください。</span><div id="quizBox"></div></div>
-  <div class="field jhide"><span class="q">体験を終えて、あらためて。「脱炭素社会」の実現に向け、あなたが日常生活の中で、今後、新たに取り組んでみたいと思うことはありますか。（○はいくつでも。ただし、選択肢1～10のうち最初の質問で「現在、取り組んでいる」と回答したものと同じ取組は選択できません。）</span><div class="checks" data-cq="q7post"></div></div>
-  <p style="font-size:.875rem;color:var(--sub)">回答は、体験の効果を確かめるために匿名で集計します。<span class="saveItems">保存するのは、年代・地域・前後の回答・企業の商品選択の前後・理解度クイズの正答数・選んだ選択肢・かかった時間・実証の群・送信した日時だけです。名前やメールアドレスは保存しません。</span></p>
-  <button class="btn" id="finish">宣言カードをつくる</button>
+  <div class="field jhide"><span class="q" id="qk2">地球温暖化への対策に取り組む企業の商品の購入やサービスの利用について、あてはまるものを1つ選んでください。</span><div class="opts" role="group" aria-labelledby="qk2" data-a="cpost"><button type="button" data-v="1" aria-pressed="false">1　現在、取り組んでいる</button><button type="button" data-v="2" aria-pressed="false">2　今は取り組んでいないが、今後取り組んでみたい</button><button type="button" data-v="3" aria-pressed="false">3　どちらでもない</button></div></div>
+  <p style="font-size:.875rem;color:var(--sub)">回答は匿名で集計し、体験の効果を確かめます。<span class="saveItems">保存するのは、年代・地域・各質問の回答・クイズの正答数・選んだ選択肢・かかった時間・実証の群・送信日時だけです。名前やメールアドレスは保存しません。</span></p>
+  <h3 class="fin-h" id="finH">宣言カードをつくる（アンケートの回答を送信）</h3>
+  <button class="btn" id="finish" aria-describedby="finNote">宣言カードをつくる（アンケートの回答を送信）</button>
+  <p class="fnote" id="finNote">ここを押すと、これまでの回答が送信され、あなたの選んだ行動がカードになります</p>
   <div id="summary" hidden>
     <div class="card"><div class="t" id="cT"></div><div class="a" id="cA"></div><div class="m" id="cM"></div></div>
-    <p style="font-size:.875rem;color:var(--sub)">スクリーンショットで保存して、見返せるようにしておきましょう。</p>
+    <p style="font-size:.875rem;color:var(--sub)">スクリーンショットで保存しておきましょう。</p>
     <div class="result"><div><span style="font-size:.875rem;color:var(--sub)">体験の前</span><b id="preV">―</b></div><div><span style="font-size:.875rem;color:var(--sub)">体験の後</span><b id="postV">―</b></div></div>
     <p id="sumText"></p>
+    <div id="quizRes" class="field quizres" hidden aria-live="polite"></div>
     <p style="font-size:.875rem;color:var(--sub)">全国では、対策に取り組む企業の商品やサービスを選んでいる人は10.5%、今後そうしたい人は26.3%です（内閣府、令和7年9月）。</p>
     <div id="agg" class="field" hidden></div>
   </div>
   <div class="judge-end jdg-b"><a class="btn" id="fullLink" href="./">全体の体験（約15分）はこちら</a></div>
 </section>
 
-<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）／「実質」の表示＝経済産業省「電力の小売営業に関する指針」（非化石証書による「実質」の表示、閲覧日2026-11-09）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1、設問文は内閣府「気候変動に関する世論調査」問2と同じ／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
+<p class="src">出典：一人当たり排出（年別）・累積排出・世代別の計算・各国比較＝Our World in Data「CO₂ and Greenhouse Gas Emissions」（Global Carbon Project、1868〜2024年）。「あなたの分」は生まれた年から年齢分の各年の日本の一人当たり排出量を足し合わせたもの（2025年以降は2024年値で推計）で、国内で出た量を人口で割った値／部門別の内訳＝環境省・国立環境研究所「2023年度の温室効果ガス排出量」（エネルギー起源CO₂に占める割合、電気・熱配分後）／世界の累積＝同データの世界全体の値（1750〜2024年）／前例のない熱波＝Grant et al.（2025）Nature 641（世界全体の推計）／約3.2℃＝IPCC AR6 統合報告書 政策決定者向け要約／熱帯夜・1時間30mm以上の強い雨の増え方＝各管区気象台「これからの気候の変化（将来予測）」（地域未選択時は近畿地方）／地域別の予測＝各管区気象台「これからの気候の変化（将来予測）」（日本の気候変動2025に基づく、20世紀末〔1980〜1999年〕と21世紀末〔2076〜2095年〕の比較）／海面上昇＝文部科学省・気象庁「日本の気候変動2025」第9章（日本沿岸の平均海面水位、20世紀末比の21世紀末、2℃上昇0.40m〔可能性の幅0.30〜0.55m〕、4℃上昇0.68m〔0.56〜0.88m〕）／2018年台風21号の潮位＝大阪市港湾局「大阪湾港湾等における高潮対策検討委員会（大阪港部会）とりまとめ」（大阪：TP+3.29m、それまでの最高は1961年第二室戸台風のTP+2.93m）。水位は東京湾平均海面（TP）基準で、岸壁・防潮堤の高さと街並みはイメージです／大阪の低い土地（西大阪で標高0m以下 約21km²、朔望平均満潮位以下 約41km²）＝大阪府「海より低いまち大阪」。体験4-2の岸壁・地面の高さはイメージ／浸水深の目安＝国土交通省「水害ハザードマップ作成の手引き」の区分（0.5m：床上浸水、3.0m：2階の床まで）／警戒レベル＝内閣府「避難情報に関するガイドライン」の区分（大牟田市の資料による、閲覧日2026-11-08）／浸水時に歩ける深さの目安＝札幌市・明和町の防災資料（閲覧日2026-11-08）／2018年豪雨＝気象研究所ほか共同発表（2020年10月20日、今田ほか）・死者数は気象庁（平成30年11月6日現在）／生まれ年別の猛暑日＝気象庁「大都市における猛暑日日数の長期変化傾向」／2025年夏の高温＝気象研究所・文部科学省（2025年9月5日発表）／高齢者の感覚＝環境省「熱中症環境保健マニュアル」／熱中症死亡の65歳以上の割合＝厚生労働省「人口動態統計」（2024年、環境省資料より）／屋内の割合＝東京都監察医務院（東京23区、2020年夏）／電気の全国平均係数＝資源エネルギー庁（2026年5月公表、0.423kg-CO₂/kWh、閲覧日2026-11-08）／室温の目安・扇風機・窓の開け閉め＝WHO「熱中症対策の助言」（閲覧日2026-11-08）／エアコン・扇風機の消費電力＝エアコンはチームの家のエアコンの銘板（コロナ CSH-N2219R、冷房535W）、扇風機は一般的な目安（30W）（閲覧日2026-11-08）／「実質」の表示＝経済産業省「電力の小売営業に関する指針」（非化石証書による「実質」の表示、閲覧日2026-11-09）。体験6の部屋の温度はシミュレーション（目安）／IPCCの断定＝IPCC AR6 第1作業部会報告書 政策決定者向け要約（2021）A.1／ARの立方体＝1日分約11.6m³（一辺約2.26m）／「80歳のあなた」の年＝生まれ年＋80年で計算／全国値＝内閣府「気候変動に関する世論調査」（令和7年9月）。体積はCO₂密度1.84kg/m³（20℃・1気圧）、6畳間＝約9.7m²×天井高2.4mとして換算。「体が感じる暑さ」の表示は感覚が鈍くなることを示す演出で、測定値ではありません。</p>
 </div>
 <script type="module" src="https://cdn.jsdelivr.net/npm/@google/model-viewer@3.5.0/dist/model-viewer.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -843,7 +864,7 @@ const PERCAP=7.772, DENS=1.84, ROOM={w:3.6,d:2.7,h:2.4}, ROOMV=ROOM.w*ROOM.d*ROO
 const dayKg=PERCAP*1000/365, dayV=dayKg/DENS, yearV=PERCAP*1000/DENS, yearRooms=Math.round(yearV/ROOMV);
 const LIK=['まったく\n思わない','あまり\n思わない','どちらとも\nいえない','ややそう\n思う','そう思う'];
 let RM=matchMedia('(prefers-reduced-motion: reduce)').matches||!!window.STILL;   // v1.21：「動きを止める」で実行中に true にできる
-const ans={pre:null,post:null,ipre:null,ipost:null}; let age=20, guess=0.6; const t0=performance.now();
+const ans={pre:null,post:null,ipre:null,ipost:null,cpre:null,cpost:null}; let age=20, guess=null; const t0=performance.now();   // v1.24：IPCCの質問は外した（ipre・ipost は空のまま保存）
 const gps=PERCAP*1e6/(365*24*3600);
 const tickBig=document.getElementById('tickBig');
 (function tick(){ const v=((performance.now()-t0)/1000*gps).toFixed(1); document.getElementById('tick').textContent=v; if(tickBig) tickBig.textContent=v; requestAnimationFrame(tick); })();
@@ -853,10 +874,31 @@ function lifeTons(){let s=0;for(let y=birth();y<birth()+age;y++) s+=PC[String(y)
 function press(attr,val){document.querySelectorAll(`[${attr}]`).forEach(x=>x.setAttribute('aria-pressed',x.getAttribute(attr)==String(val)?'true':'false'));}
 
 // inputs
-$('age').addEventListener('input',e=>{age=+e.target.value;$('ageOut').textContent=age;updateAll();});
-const gsVal=v=>+(0.1*Math.pow(500,v/100)).toFixed(v<40?1:0);
-$('gs').addEventListener('input',e=>{guess=gsVal(+e.target.value);$('gsOut').textContent=guess;reveal();});
-document.querySelectorAll('.likert').forEach(g=>{const key=g.dataset.q;(g.classList.contains('two')?['知っている','知らない']:LIK).forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=t.replace('\n','<br>');b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{ans[key]=i+1;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));});g.appendChild(b);});});
+// v1.24：年齢は数字の入力欄と −・＋（1歳ずつ）。15〜90歳。入力中の途中の値（空・範囲外）では更新せず、確定したときに範囲へ収める
+const AGE_MIN=15, AGE_MAX=90, ageEl=$('age');
+const ageOk=v=>Number.isInteger(v)&&v>=AGE_MIN&&v<=AGE_MAX;
+ageEl.addEventListener('input',()=>{ const v=+ageEl.value; if(ageEl.value!==''&&ageOk(v)&&v!==age){ age=v; updateAll(); } });
+const setAge=v=>{ v=Math.max(AGE_MIN,Math.min(AGE_MAX,Math.round(v))); if(!Number.isFinite(v)) v=age; ageEl.value=v; ageEl.dispatchEvent(new Event('input',{bubbles:true})); };
+ageEl.addEventListener('change',()=>setAge(ageEl.value===''?age:+ageEl.value));
+ageEl.addEventListener('keydown',e=>{ if(e.key==='Enter'){ ageEl.blur(); } });
+$('ageDn').addEventListener('click',()=>setAge((ageOk(+ageEl.value)?+ageEl.value:age)-1));
+$('ageUp').addEventListener('click',()=>setAge((ageOk(+ageEl.value)?+ageEl.value:age)+1));
+// v1.24：答えたら、次の質問（またはボタン）が画面の下に隠れているときだけ、そっと見える位置まで送る
+const QSEL='.field,.qz,.map,#finH';
+function nextQ(unit){ if(!unit) return; let n=unit.nextElementSibling;
+  while(n && !(n.matches(QSEL)&&n.offsetHeight>0)) n=n.nextElementSibling;
+  if(!n){ const up=unit.parentElement&&unit.parentElement.closest('.field'); if(up&&up!==unit) return nextQ(up); return; }
+  const r=n.getBoundingClientRect(); n.classList.remove('qnext'); void n.offsetWidth; n.classList.add('qnext'); setTimeout(()=>n.classList.remove('qnext'),1400);
+  if(r.top>innerHeight*0.72){ const tk=(document.querySelector('.ticker')||{offsetHeight:0}).offsetHeight; scrollBy({top:r.top-tk-innerHeight*0.2,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}); } }
+window.nextQ=nextQ;
+// 1タップの選択肢（.opts）：押したら印を付け、data-a ごとの処理をする
+document.querySelectorAll('.opts').forEach(g=>g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b||!g.contains(b)) return;
+  g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); const a=g.dataset.a, v=b.dataset.v;
+  if(a==='gs'){ guess=+v; reveal(); }
+  else if(a==='reg'){ const s=$('reg'); s.value=v; s.dispatchEvent(new Event('change')); }
+  else if(a in ans){ ans[a]=+v; }
+  g.dispatchEvent(new CustomEvent('pick',{detail:v})); nextQ(b.closest('.qz')||b.closest('.field')); }));
+document.querySelectorAll('.likert').forEach(g=>{const key=g.dataset.q;(g.classList.contains('two')?['知っている','知らない']:LIK).forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=t.replace('\n','<br>');b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{ans[key]=i+1;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));nextQ(g.closest('.field'));});g.appendChild(b);});});
 
 // fade-in & scene visibility
 const vis={};
@@ -867,8 +909,8 @@ const vio=new IntersectionObserver(es=>es.forEach(e=>{ const k=e.target.dataset.
 document.querySelectorAll('[data-vis]').forEach(s=>vio.observe(s));
 const s1fill=()=>(spanMode==='day'&&window.MOTION)?MOTION.s1:1;   // 体験1：スクロールで床からせり上がる（v1.8）
 
-function reveal(){ $('rvG').textContent=guess+'kg'; const r=dayKg/guess;
-  $('rvMsg').textContent= r>1.5?`予想の約${r.toFixed(r>10?0:1)}倍です。目に見えないぶん、実感しにくい量です。`: r<0.67?`予想より少ない値でした。それでも1日で約${dayV.toFixed(0)}m³、部屋の半分ほどの体積になります。`:'ほぼ予想どおりでした。では、それはどれくらいの大きさでしょう。'; }
+function reveal(){ if(!guess){ $('rvG').textContent='―'; $('rvMsg').textContent=''; return; } $('rvG').textContent=guess+'kg'; const r=dayKg/guess;
+  $('rvMsg').textContent= r>1.5?`予想の約${r.toFixed(r>10?0:1)}倍。見えないぶん、実感しにくい量です。`: r<0.67?`予想より少ない値でした。それでも1日で約${dayV.toFixed(0)}m³、部屋の半分ほどです。`:'ほぼ予想どおり。では、どれくらいの大きさでしょう。'; }
 
 // ---------- procedural textures ----------
 function tex(w,h,draw,rep){const c=document.createElement('canvas');c.width=w;c.height=h;const g=c.getContext('2d');draw(g,w,h);const t=new THREE.CanvasTexture(c);if(rep){t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep[0],rep[1]);}t.anisotropy=4;return t;}
@@ -948,7 +990,7 @@ function buildGrid(n){ const g=S1.grid; while(g.children.length) g.remove(g.chil
 function setSpan(m){ spanMode=m; press('data-span',m); const t=$('volText'),cap=$('capSize'); const lifeV=lifeTons()*1000/DENS, lifeRooms=Math.round(lifeV/ROOMV);
   if(!S1){ return; }
   if(m==='day'){ S1.target=dayV/(ROOM.w*ROOM.d); S1.camT=1; S1.grid.visible=false; S1.room.visible=S1.gas.visible=true; cap.textContent='6畳間とあなたの1日分。ドラッグで回転できます';
-    t.innerHTML=`1日分は約<b>${dayKg.toFixed(0)}kg</b>。気体にすると約<b>${dayV.toFixed(0)}m³</b>で、6畳間の半分ほどが埋まります。`; }
+    t.innerHTML=`1日分は約<b>${dayKg.toFixed(0)}kg</b>。気体で約<b>${dayV.toFixed(0)}m³</b>、6畳間の半分ほどです。`; }
   else { const n=m==='year'?yearRooms:lifeRooms; buildGrid(n); S1.grid.visible=true; S1.room.visible=S1.gas.visible=false; S1.camT=Math.ceil(Math.sqrt(n))*1.1;
     if(m==='year'){cap.textContent=`箱1つが6畳間（黒は比較用の1部屋）。1年分で${n}部屋`; t.innerHTML=`1年分（${PERCAP.toFixed(2)}トン）は約<b>${Math.round(yearV).toLocaleString()}m³</b>。6畳間にして約<b>${n}部屋</b>分です。`;}
     else {cap.textContent=`箱1つが6畳間。${age}年分で${n.toLocaleString()}部屋`; t.innerHTML=`生まれてから今日まで、あなたの分として数えられるのは約<b>${Math.round(lifeTons())}トン</b>。6畳間にして約<b>${n.toLocaleString()}部屋</b>分が、見えないまますでに大気にあります。`;} } }
@@ -958,25 +1000,25 @@ document.querySelectorAll('[data-span]').forEach(b=>b.addEventListener('click',(
   const note=document.getElementById('arSpanNote'); if(note) note.textContent = sp==='day' ? '' : 'とても大きいので、ARは屋外の広い場所で試してください。室内では1日分がおすすめです。'; }));
 
 // ---------- 体験2 ----------
-const SECT=[['家庭',16,'#1a1d23','照明、冷暖房、お風呂のお湯、冷蔵庫やテレビ。家の中で使う電気・ガス・灯油の分です。節電が効くのは、ここです。'],['産業',37,'#1f5fbf','スマホや家電、車、食品のパッケージ、住まいの鉄やコンクリート。あなたが使う物の材料や製品をつくる工場の分です。'],['運輸',21,'#2f66b8','通勤・通学や旅行の移動、ネットで買った商品を運ぶトラック、食べ物を運ぶ船。人と物が動く分です。'],['業務その他',18,'#6b9be0','コンビニやスーパー、飲食店、学校、病院、オフィス。あなたが毎日立ち寄る場所の電気や冷暖房の分です。'],['エネルギー転換',9,'#9dbbe8','発電所や製油所が、電気やガソリンをつくるために自ら使う分です。']];
+const SECT=[['家庭',16,'#1a1d23','照明、冷暖房、お風呂、家電。家で使う電気・ガス・灯油の分です。節電が効くのはここです。'],['産業',37,'#1f5fbf','スマホ、家電、車、食品の包装、家の鉄やコンクリート。あなたが使う物をつくる工場の分です。'],['運輸',21,'#2f66b8','通勤・通学や旅行、通販の荷物を運ぶトラック、食べ物を運ぶ船。人と物が動く分です。'],['業務その他',18,'#6b9be0','コンビニ、飲食店、学校、病院、オフィス。毎日立ち寄る場所の電気や冷暖房の分です。'],['エネルギー転換',9,'#9dbbe8','発電所や製油所が、電気やガソリンをつくるために自ら使う分です。']];
 const seen=new Set(), stack=$('stack');
 // v1.12：帯の中には、収まるときだけ文字を入れる。下に凡例（色・名前・割合。押せる）を常に出す
 const LIGHT=c=>['#6b9be0','#9dbbe8'].includes(c), slegend=$('slegend');
 SECT.forEach(([n,v,c,d],i)=>{const el=document.createElement('div');el.style.background=c;el.style.color=LIGHT(c)?'#0d1b2e':'#fff';el.innerHTML=`<span>${n} ${v}%</span>`;el.dataset.v=v;el.dataset.full=`${n} ${v}%`;el.dataset.short=`${v}%`;el.tabIndex=0;el.setAttribute('role','button');el.setAttribute('aria-label',`${n} ${v}%`);
   const lg=document.createElement('button');lg.type='button';lg.setAttribute('aria-pressed','false');lg.innerHTML=`<i style="background:${c}"></i><span>${n}</span><b>${v}%</b>`;
-  const show=()=>{[...stack.children].forEach(x=>x.classList.remove('sel'));el.classList.add('sel');[...slegend.children].forEach(x=>x.setAttribute('aria-pressed',x===lg?'true':'false'));seen.add(i);$('detail').innerHTML=`<b>${n}　${v}%</b>${d}`;$('seenMsg').textContent=seen.size>=SECT.length?'どの部門も、あなたの毎日のどこかにつながっていました。家の外の84%の多くも、あなたが使う物やサービスを通じて、あなたの暮らしとつながっています。':`${seen.size}/${SECT.length} を確認しました。`;};
+  const show=()=>{[...stack.children].forEach(x=>x.classList.remove('sel'));el.classList.add('sel');[...slegend.children].forEach(x=>x.setAttribute('aria-pressed',x===lg?'true':'false'));seen.add(i);$('detail').innerHTML=`<b>${n}　${v}%</b>${d}`;$('seenMsg').textContent=seen.size>=SECT.length?'どの部門も、あなたの毎日につながっていました。家の外の84%も、使う物やサービスを通じて暮らしとつながっています。':`${seen.size}/${SECT.length} を確認しました。`;};
   el.addEventListener('click',show);el.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();show();}});stack.appendChild(el); lg.addEventListener('click',show); slegend.appendChild(lg);});
-$('txSect').textContent='部門別の内訳は、'+SECT.map(([n,v])=>`${n}${v}%`).join('、')+'です。';   // B群：帯と同じ値・同じ順
+$('txSect').textContent='内訳：'+SECT.map(([n,v])=>`${n}${v}%`).join('、')+'。';   // B群：帯と同じ値・同じ順
 function fitStack(){ [...stack.children].forEach(d=>{ const sp=d.firstElementChild, room=d.clientWidth-10; sp.textContent=d.dataset.full; if(sp.scrollWidth>room){ sp.textContent=d.dataset.short; if(sp.scrollWidth>room) sp.textContent=''; } }); }
 stack.addEventListener('transitionend',fitStack); addEventListener('resize',fitStack);
 function growStack(){[...stack.children].forEach(d=>d.style.flexGrow=d.dataset.v); fitStack(); setTimeout(fitStack,1100);}
 
 // ---------- 体験3 ----------
 const CTR=[['アメリカ',14.197],['中国',8.658],['日本（あなた）',7.772],['ドイツ',6.769],['世界全体',4.729],['インド',2.201],['バングラデシュ',0.624],['エチオピア',0.135]];
-$('txCtr').textContent='一人当たりの年間排出量は、'+CTR.map(([n,v])=>`${n}${v.toFixed(1)}t`).join('、')+'です。';   // B群：棒グラフと同じ値・同じ順
+$('txCtr').textContent='一人当たりの年間排出量：'+CTR.map(([n,v])=>`${n}${v.toFixed(1)}t`).join('、')+'。';   // B群：棒グラフと同じ値・同じ順
 CTR.forEach(([n,v])=>{const r=document.createElement('div');r.className='cbar'+(n.startsWith('日本')?' jp':'');r.innerHTML=`<span>${n}</span><span class="t"><i></i></span><span class="v">${v.toFixed(1)}t</span>`;$('countries').appendChild(r);});
 function genVals(){const pw=CUMW[String(birth()-1)]||0, pj=CUM[String(birth()-1)]||0; const b=Math.round(pw/CUMW['2024']*100), bj=Math.round(pj/CUM['2024']*100); return [b,100-b,bj];}
-function updateGen(){const [b,a]=genVals(); if(window.FXgen) setTimeout(()=>FXgen(),0); const l3=$('lrn3'); if(l3) l3.textContent=b; $('txGen').textContent=`生まれる前に積み上がっていた：${b}%、生まれてから加わった：${a}%。`;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）で計算すると${genVals()[2]}%。あなたの生まれ年をもとに算出`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
+function updateGen(){const [b,a]=genVals(); if(window.FXgen) setTimeout(()=>FXgen(),0); const l3=$('lrn3'); if(l3) l3.textContent=b; $('txGen').textContent=`生まれる前に積み上がっていた：${b}%、生まれてから加わった：${a}%。`;$('h3x').textContent=`${birth()}年生まれのあなたが生まれた時点で、世界の排出の${b}%はすでに積み上がっていました`; $('genNote').textContent=`世界の累積（1750〜2024年、約1兆8,500億トン）に対する割合。日本の累積（約696億トン）では${genVals()[2]}%`;$('gB').textContent=b+'%';$('gA').textContent=a+'%';$('lifeT').innerHTML=Math.round(lifeTons())+'<small>トン</small>';}
 function fitGen(){ [...$('gen').children].forEach(d=>{ d.classList.toggle('tight',d.clientWidth<96); d.classList.toggle('tiny',d.clientWidth<52); }); }
 $('gen').addEventListener('transitionend',fitGen); addEventListener('resize',fitGen);
 let genGrown=false; function growGen(){genGrown=true;const [b,a]=genVals();const g=$('gen').children; if(!(window.MOTION&&MOTION.pinGen)){g[0].style.flexGrow=Math.max(b,8);g[1].style.flexGrow=Math.max(a,8);} setTimeout(fitGen,60); setTimeout(fitGen,1300);[...$('countries').children].forEach((r,i)=>r.querySelector('i').style.width=(CTR[i][1]/14.197*100)+'%');}
@@ -989,9 +1031,9 @@ const cal=$('cal'); for(let i=0;i<365;i++) cal.appendChild(document.createElemen
 function drawFuture(){ const RR=REG[region]||REG.kinki, rn=REG[region]?RR.n:'近畿地方', tn=sc===2?RR.tn[0]:RR.tn[1], rain=sc===2?RR.r30[0]:RR.r30[1];
   $('tnN').textContent = tn==null ? '有意な変化なし' : `${tn}日増える`; $('rainN').textContent = rain==null ? '有意な変化なし' : `約${rain}倍になる`; $('futReg').textContent=`21世紀末・${rn}（気象庁）`;
   [...cal.children].forEach((c,i)=>c.classList.toggle('on',i>=180&&i<180+Math.round(tn||0)));
-  $('rainLife').textContent = rain==null ? `${rn}では、この強さの雨の回数に有意な変化は予測されていません。` : `1時間に30mm以上の強い雨に出会う回数が、20世紀末の約${rain}倍になります。あなたがこの先生きる年月（85歳までとして約${Math.max(0,85-age)}年）の間に、それだけ多く出会う可能性があります。`;
-  $('txFlood').textContent=`部屋の床から${wd.toFixed(1)}mの高さまで水が来ています（あなたの目の高さは1.5m）。`;
-  $('wdText').textContent={0.5:'0.5m：床上浸水。大人のひざの上まで水が来ます。流れがあると、歩いて逃げるのが難しくなるおそれがあります。',1:'1.0m：大人の腰から胸まで。家具が動き、ドアが水圧で開きにくくなるおそれがあります。',3:'3.0m：2階の床の高さまで。1階にいると、上の階へ逃げるしかなくなります。'}[wd]; }
+  $('rainLife').textContent = rain==null ? `${rn}では、この強さの雨の回数に有意な変化は予測されていません。` : `85歳までの約${Math.max(0,85-age)}年で、この雨に約${rain}倍多く出会うおそれがあります。`;
+  $('txFlood').textContent=`床から${wd.toFixed(1)}mまで水が来ています（目の高さは1.5m）。`;
+  $('wdText').textContent={0.5:'0.5m：床上浸水。大人のひざの上まで。流れがあると、歩いて逃げにくくなります。',1:'1.0m：大人の腰から胸まで。家具が動き、ドアが水圧で開きにくくなるおそれがあります。',3:'3.0m：2階の床の高さまで。1階からは、上の階へ逃げるしかありません。'}[wd]; }
 document.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{sc=+b.dataset.sc;press('data-sc',sc);drawFuture();drawRegion();}));
 document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{wd=+b.dataset.wd;press('data-wd',b.dataset.wd);drawFuture();}));
 document.querySelectorAll('[data-wd]').forEach(b=>b.addEventListener('click',()=>{ const cm=String(Math.round(Number(b.dataset.wd)*100)).padStart(3,'0'); const f=document.getElementById('mvFlood'); if(f) f.setAttribute('src',`flood_${cm}.glb?v=4`); }));
@@ -1093,7 +1135,7 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   drawElder();
 }
 function drawElder6Head(){ const y80=birth()+80; $('h6x').textContent=`${y80}年、80歳になったあなたの部屋`; $('pvOld').textContent=`${y80}年・80歳のあなた`;
-  $('p6x').textContent = age>=80 ? `あなたはすでに80歳を超えています。この部屋は、いまのあなたの部屋です。` : `あなたが80歳になるのは${y80}年。${y80>=2081?'今世紀末、体験4で見た気温上昇の世界です。':'今より暑くなった世界です。'}体験3で見た積み重なりの影響を、年を取ったあなたが、一番暑さに弱い体で受けることになります。`; }
+  $('p6x').textContent = age>=80 ? `あなたはすでに80歳を超えています。この部屋は、いまのあなたの部屋です。` : `あなたが80歳になるのは${y80}年。${y80>=2081?'体験4で見た、暑くなった世界です。':'今より暑くなった世界です。'}`; }
 window.ECO={ac:false,fan:false,cur:false,re:false,fanLimit:35};   // 体験6の機器（v1.9）
 function drawElder(){ drawElder6Head(); const real=Math.min(100,(temp-24)/12*100), feel0=pv==='young'?real:Math.max(0,real*.55-8), feel=(ECO.fan&&temp<=ECO.fanLimit)?Math.max(0,feel0-8):feel0;   // 扇風機：体感だけ少し下がる
   $('mReal').style.width=real+'%'; $('mFeel').style.width=feel+'%';
@@ -1101,9 +1143,9 @@ function drawElder(){ drawElder6Head(); const real=Math.min(100,(temp-24)/12*100
   if(cv) cv.style.filter=`saturate(${1+heat*.06}) sepia(${Math.min(.45,heat*.05)}) brightness(${1+heat*.015}) contrast(${1-heat*.01})`;
   $('vig').style.opacity=Math.min(.9,heat*.11);
   if(thermo){ thermo.material.map.dispose(); thermo.material.map=thermoTex(temp); thermo.material.needsUpdate=true; }
-  $('txElder').textContent=`${pv==='young'?'いまのあなた':`${birth()+80}年・80歳のあなた`}がいる部屋の温度は${temp}℃です。`;
+  $('txElder').textContent=`${pv==='young'?'いまのあなた':`${birth()+80}年・80歳のあなた`}の部屋は${temp}℃です。`;
   $('elderText').textContent= pv==='young' ? (temp>=31?`${temp}℃。あなたなら、もうエアコンをつけているはずです。`:`${temp}℃。少し暑いと感じる程度です。`)
-    : (temp>=31?`${birth()+80}年、${temp}℃。部屋はとても暑いのに、80歳のあなたの体はまだそれほど暑いと感じていません。気づくのが遅れると、そのあいだに体に熱がこもってしまいます。エアコンは、まだついていません。`:`${birth()+80}年、${temp}℃。80歳のあなたの体は、ほとんど暑さを感じていません。のどの渇きにも気づきにくくなっています。`); }
+    : (temp>=31?`${birth()+80}年、${temp}℃。部屋はとても暑いのに、80歳のあなたの体はまだ暑さを感じていません。気づくのが遅れ、体に熱がこもります。エアコンは、まだついていません。`:`${birth()+80}年、${temp}℃。80歳のあなたの体は、ほとんど暑さを感じていません。のどの渇きにも気づきにくくなっています。`); }
 document.querySelectorAll('[data-pv]').forEach(b=>b.addEventListener('click',()=>{pv=b.dataset.pv;press('data-pv',pv);drawElder();}));
 $('temp').addEventListener('input',e=>{temp=+e.target.value;$('tempOut').textContent=temp;drawElder();});
 
@@ -1116,7 +1158,7 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
   $('cT').textContent=`${birth()}年生まれ　生まれた時点で積み上がっていた世界の排出 ${b}%`; $('cA').textContent=chosen!==null?`わたしは、${CH[chosen][2]}。`:'わたしは、84%の側にも関わっていることを知った。';
   $('cM').textContent=`このページを見ているあいだにも、あなたの分として約${(sec*gps).toFixed(0)}gのCO₂が出ていました。`;
   $('preV').textContent=lab(ans.pre);$('postV').textContent=lab(ans.post);let msg='';if(ans.pre&&ans.post){const d=ans.post-ans.pre;msg=d>0?'体験の前より、自分の関わりを強く感じるようになりました。':d<0?'体験の前より、関わりを弱く感じています。':'体験の前後で、感じ方は変わりませんでした。';}
-  $('sumText').textContent=msg;$('summary').hidden=false; saveAndAggregate([...ch.children].map((x,i)=>x.getAttribute('aria-pressed')==='true'?i:-1).filter(i=>i>=0), chosen);$('summary').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});});
+  $('sumText').textContent=msg;$('summary').hidden=false; const qh=window.QUIZRES?window.QUIZRES():''; if(qh){ $('quizRes').innerHTML=qh; $('quizRes').hidden=false; } saveAndAggregate([...ch.children].map((x,i)=>x.getAttribute('aria-pressed')==='true'?i:-1).filter(i=>i>=0), chosen);$('summary').scrollIntoView({behavior:RM?'auto':'smooth',block:'center'});});
 
 
 // ---------- AR (model-viewer) ----------
@@ -1128,7 +1170,7 @@ let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $
   const ready=()=>{ diag();
     if(isIOS && !qlOK){ const btn=mv.querySelector('[slot=ar-button]'); if(btn) btn.style.display='none';
       msg.innerHTML = iosOther ? 'iPhoneのChromeなどでは、AR表示（AR Quick Look）が使えません。<b>Safariで開き直してください。</b>上の立方体は指で回転できます。' : 'このブラウザ・表示状態ではAR表示が使えません。iPhoneでは<b>Safari</b>で開いてください。上の立方体は指で回転できます。'; return; }
-    const ok=mv.canActivateAR; let inFrame=true; try{inFrame=window.self!==window.top;}catch(e){} msg.textContent= ok ? ('ボタンを押して、床にカメラを向けてください。立方体の中に立つと、1日分の大きさが実感できます。'+(isIOS&&inFrame?'（iPhoneでは、このページ内からARが起動しない場合があります。その場合はAR確認用の別ページで試してください）':'')) : 'この端末・ブラウザではARを起動できません。スマホ（iPhoneのSafari、AndroidのChrome）で開くと、実際の部屋に置けます。上の立方体は指で回転できます。'; };
+    const ok=mv.canActivateAR; let inFrame=true; try{inFrame=window.self!==window.top;}catch(e){} msg.textContent= ok ? ('床にカメラを向け、立方体の中に立ってみてください。'+(isIOS&&inFrame?'（iPhoneでは、このページ内からARが起動しない場合があります。その場合はAR確認用の別ページで試してください）':'')) : 'この端末・ブラウザではARを起動できません。スマホ（iPhoneのSafari、AndroidのChrome）で開くと、実際の部屋に置けます。上の立方体は指で回転できます。'; };
   mv.addEventListener('load',ready); customElements.whenDefined('model-viewer').then(()=>setTimeout(ready,1500)).catch(()=>{});
   setTimeout(()=>{ if(!customElements.get('model-viewer')) msg.textContent='AR表示の部品を読み込めませんでした。通信環境を確認してください。'; },6000);
   mv.addEventListener('ar-status',e=>{ if(e.detail.status==='failed') msg.textContent='ARを起動できませんでした。床が映るように、明るい場所でもう一度お試しください。'; });
@@ -1142,18 +1184,17 @@ async function saveAndAggregate(chosenIdxs, chosenOne){
   const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:.88rem;color:var(--sub)"';
   if(!API){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>このページでは、回答は保存されません。</p>`; return; }
   box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計しています…</p>`;
-  const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={idh:window.IDH||'', region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:ans.ipre, ipost:ans.ipost, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
+  const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={idh:window.IDH||'', region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:null, ipost:null, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
   let saved=true; try{ await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(doc)}); }catch(e){ saved=false; }   // 失敗しても体験は止めない
   let a=null; try{ a=await (await fetch(API)).json(); }catch(e){}
   if(!a){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計を読み込めませんでした。</p>`; return; }
   box.innerHTML=`<b>みんなの結果（${a.n}人）</b>${saved?'':'<p style="font-size:.875rem;color:var(--sub);margin:4px 0">※あなたの回答は保存できませんでした</p>'}
    ${document.body.classList.contains('text-mode')
-     ? `<p style="margin:10px 0 0">自分も関わっていると思う：体験前 <b>${pct(a.preInv,a.bothN)}</b>、体験後 <b>${pct(a.postInv,a.bothN)}</b>。</p><p style="margin:6px 0 0">IPCCの断定を知っている：体験前 <b>${pct(a.preKnow,a.ibN)}</b>、体験後 <b>${pct(a.postKnow,a.ibN)}</b>（全国 34.5%）。</p>`
+     ? `<p style="margin:10px 0 0">自分も関わっていると思う：体験前 <b>${pct(a.preInv,a.bothN)}</b>、体験後 <b>${pct(a.postInv,a.bothN)}</b>。</p>`
      : `<div class="aggrow" style="margin-top:10px"><span></span><span style="font-size:.875rem;color:var(--sub)">体験前</span><span style="font-size:.875rem;color:var(--sub)">体験後</span>
-   <span>自分も関わっていると思う</span><b>${pct(a.preInv,a.bothN)}</b><b>${pct(a.postInv,a.bothN)}</b>
-   <span>IPCCの断定を知っている<br><small style="color:var(--sub)">全国 34.5%</small></span><b>${pct(a.preKnow,a.ibN)}</b><b>${pct(a.postKnow,a.ibN)}</b></div>`}
-   <p style="margin:10px 0 0;font-size:.9rem">「対策に取り組む企業の商品やサービスを選びたい」を選んだ人：<b>${pct(a.sel0,a.n)}</b>　<span style="font-size:.875rem;color:var(--sub)">全国 36.8%（実践中＋今後）</span></p>
-   <p style="margin:8px 0 0;font-size:.875rem;color:var(--sub)">「関わっていると思う」は「ややそう思う」「そう思う」の合計。前後の両方に答えた人で集計。</p>`;
+   <span>自分も関わっていると思う</span><b>${pct(a.preInv,a.bothN)}</b><b>${pct(a.postInv,a.bothN)}</b></div>`}
+   <p style="margin:10px 0 0;font-size:.9rem">「対策に取り組む企業の商品やサービスを選びたい」を選んだ人：<b>${pct(a.sel0,a.n)}</b></p>
+   <p style="margin:8px 0 0;font-size:.875rem;color:var(--sub)">「関わっていると思う」は「ややそう思う」と「そう思う」の合計（前後の両方に答えた人）。</p>`;
 }
 
 
@@ -1285,17 +1326,17 @@ function drawSea(){ const storm=slSurge>0, tot=slBase+slSurge;
   if(S7){ S7.scene.fog.color.set(storm?0x5d656e:0xdfe6ee); S7.scene.fog.near=storm?30:120; S7.scene.fog.far=storm?260:700; S7.rain.visible=storm; S7.sun.intensity=storm?.3:1.0; S7.waterU.fogC.value.set(storm?0x5d656e:0xdfe6ee); S7.waterU.fogN.value=storm?30:120; S7.waterU.fogF.value=storm?260:700; S7.r.setClearColor(storm?0x4a525c:0xdfe6ee); }
   const sc2 = slBase===0?'いまの平均海面':(slBase===0.4?'2℃上昇（+0.40m）':'4℃上昇（+0.68m）');
   let t;
-  if(!storm) t = slBase===0 ? 'いまの大阪湾。穏やかな日の平均的な海面です。' : `${sc2}の世界。ふだんの海では、この差はほとんど目に見えません。けれども、この底上げは、台風が来たときにそのまま効いてきます。「2018年 台風21号の高潮」を押してみてください。`;
-  else t = slBase===0 ? '2018年9月の台風21号で、大阪の潮位は+3.29mと観測史上最高を記録しました（それまでの最高は1961年第二室戸台風の+2.93m）。このときは防潮扉と水門をすべて閉め、防潮堤の内側の市街地への浸水はほとんど防がれました。' : `同じ台風が${sc2}の海に来ると、潮位は約+${tot.toFixed(2)}m。2018年の記録をさらに${slBase.toFixed(2)}m上回ります。防潮堤は、今の海面を前提に造られています。`;
-  if(seaView==='street'){ const d=tot-LAND; t+=` 防潮堤の内側では、海面が街の地面より約${d.toFixed(1)}m高い位置にあります（地面の高さはイメージ）。`; }
-  $('seaText').textContent=t; $('txSea').textContent=`水位は平均海面から+${tot.toFixed(2)}mです（2018年 台風21号の最高潮位は+3.29m）。`; }
+  if(!storm) t = slBase===0 ? 'いまの大阪湾の、ふだんの海面です。' : `${sc2}の世界。ふだんは、この差はほとんど見えません。でも台風が来ると、この底上げがそのまま効きます。「2018年 台風21号の高潮」を押してください。`;
+  else t = slBase===0 ? '2018年9月の台風21号で、大阪の潮位は観測史上最高の+3.29m（それまでは1961年第二室戸台風の+2.93m）。防潮扉と水門をすべて閉め、市街地の浸水はほぼ防がれました。' : `同じ台風が${sc2}の海に来ると、潮位は約+${tot.toFixed(2)}m。2018年の記録を${slBase.toFixed(2)}m上回ります。防潮堤は、今の海面を前提に造られています。`;
+  if(seaView==='street'){ const d=tot-LAND; t+=` 防潮堤の内側では、海面が街の地面より約${d.toFixed(1)}m高くなります（地面の高さはイメージ）。`; }
+  $('seaText').textContent=t; $('txSea').textContent=`水位は平均海面から+${tot.toFixed(2)}m（2018年 台風21号の最高潮位は+3.29m）。`; }
 document.querySelectorAll('[data-sl]').forEach(b=>b.addEventListener('click',()=>{slBase=+b.dataset.sl;press('data-sl',b.dataset.sl);drawSea();}));
 document.querySelectorAll('[data-sv]').forEach(b=>b.addEventListener('click',()=>{seaView=b.dataset.sv;press('data-sv',seaView);$('seaStreet').hidden=seaView!=='street'; $('capSea').textContent= seaView==='street' ? '防潮堤の内側の道路から（堤防は半透明）。青い帯が海の高さ、黄色の線が街の地面' : '大阪湾の岸壁（イメージ）。右の岸壁の目盛りが水位で、青い線は2018年の最高潮位。ドラッグで見回せます';if(S7){S7.xray.forEach(m=>{m.opacity=seaView==='street'?.22:1;m.depthWrite=seaView!=='street';m.needsUpdate=true;});S7.st.yaw=0;S7.st.pitch=0;} drawSea();}));
 document.querySelectorAll('[data-surge]').forEach(b=>b.addEventListener('click',()=>{slSurge=+b.dataset.surge;press('data-surge',b.dataset.surge);drawSea();}));
 
 function updateAll(){ drawElder6Head(); updateGen(); if(genGrown) growGen(); drawFuture(); if(S1&&spanMode==='life') setSpan('life'); }
 if(window.THREE){ try{ makeTextures(); initSize(); initFlood(); initSea(); initElder(); }catch(e){ window.NOGL=true; console.warn('3D を初期化できませんでした',e); } }
-$('txSize').textContent=`1日分のCO₂は約${dayKg.toFixed(0)}kgで、体積は約${dayV.toFixed(1)}m³、一辺約${Math.cbrt(dayV).toFixed(2)}mの立方体になります。`;   // ?mode=text 用
+$('txSize').textContent=`1日分のCO₂は約${dayKg.toFixed(0)}kg。体積は約${dayV.toFixed(1)}m³、一辺約${Math.cbrt(dayV).toFixed(2)}mの立方体です。`;   // ?mode=text 用
 reveal(); updateGen(); drawFuture(); drawElder();
 </script><script>
 (function(){
@@ -1319,14 +1360,15 @@ reveal(); updateGen(); drawFuture(); drawElder();
     const note=me.years<9?`（データのある${me.years}年分）`:'';
     const extra=[(D.regionNote||{})[region], (D.relocationNote||{})[st]?`${D.stationName[st]}は${D.relocationNote[st]}しており、前後の値は単純に比べられません。`:''].filter(Boolean).join('');
     document.getElementById('oppSt').textContent=D.stationName[st];
-    const mine = me.years===0 ? `あなた（${by}年生まれ）が小中学生だったころの${D.stationName[st]}のデータは、観測場所の移転のため比べられません。` : `あなた（${by}年生まれ）が小中学生だった9年間に、${D.stationName[st]}で最高気温35℃以上だった日は<b>${me.days}日</b>${note}。`;
-    document.getElementById('oppText').innerHTML=`${mine}今の15歳（2011年生まれ）は<b>${young.days}日</b>でした。外での運動が原則中止になる暑さの日数が、生まれた年でこれだけ違います。${extra?`<br><small style="color:var(--sub)">${extra}</small>`:''}`;
+    const mine = me.years===0 ? `あなた（${by}年生まれ）の小中学生のころの${D.stationName[st]}のデータは、観測場所の移転で比べられません。` : `あなた（${by}年生まれ）の小中学生の9年間、${D.stationName[st]}の猛暑日は<b>${me.days}日</b>${note}。`;
+    document.getElementById('oppText').innerHTML=`${mine}今の15歳（2011年生まれ）は<b>${young.days}日</b>。生まれた年で、これだけ違います。${extra?`<br><small style="color:var(--sub)">${extra}</small>`:''}`;
     const mx=Math.max(me.days,young.days,1);
     document.getElementById('oppBars').innerHTML=`<div class="row"><span>あなた（${by}年生まれ）</span><div class="bar me" style="width:${me.days/mx*100}%"></div></div><div class="row"><span>今の15歳</span><div class="bar young" style="width:${young.days/mx*100}%"></div></div>`;
     if(window.FXopp) FXopp({by,me:me.days,young:young.days,max:mx});
   }
   fetch('data.json').then(r=>r.json()).then(d=>{D=d;drawOpportunity(); try{ initEco(d); }catch(e){ console.error(e); } }).catch(()=>{document.getElementById('oppText').textContent='データを読み込めませんでした。';});
   // ---------- 体験6：エアコン・扇風機・窓（v1.9）。数値は data.json の room6 ----------
+  const RENOTE_T='非化石証書などでCO₂ゼロの価値を調達した場合です。届く電気は送電網で混ざり、設備をつくる排出は含みません。再エネの割合はプランで違います';   // 「実質」の注記（体験6のカードとB群の文章で同じ文）
   function initEco(d){ const R=d.room6, dens=d.densityKgPerM3; if(!R) return; const E=window.ECO; E.fanLimit=R.fanLimitC;
     const kgOf=kw=>kw*R.hoursPerDay*R.days*R.kgCO2PerKWh, rooms=kg=>kg/dens/R.room6M3;
     const fkg=v=>v>=10?Math.round(v).toLocaleString():v.toFixed(1), frm=v=>v.toFixed(1);
@@ -1341,7 +1383,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
       $e('ecoRn').textContent=E.fan&&t<=R.fanLimitC?'扇風機で体感は少し下がりますが、危険度の段階は変わりません。':'';
       const w=$e('ecoW'); w.hidden=!(E.fan&&t>R.fanLimitC); w.textContent='扇風機だけでは熱中症を防ぎきれないおそれがあります（WHO）';
       const kw=(E.ac?R.kW.ac:0)+(E.fan?R.kW.fan:0), kg=kgOf(kw);
-      if(E.re){ $e('ecoC').textContent='契約上のCO₂：実質ゼロ'; $e('ecoCb').style.transform='scaleX(0)'; $e('ecoCn').textContent='電力会社が非化石証書などで、使った電気と同じ量のCO₂ゼロの価値を調達した場合の計算です。家に届く電気そのものは送電網で混ざっており、発電設備をつくるときなどの排出は含みません。再エネの割合はプランによって違うので、契約前に電源構成を確かめましょう。'; }
+      if(E.re){ $e('ecoC').textContent='契約上のCO₂：実質ゼロ'; $e('ecoCb').style.transform='scaleX(0)'; $e('ecoCn').textContent=RENOTE_T+'。'; }
       else { $e('ecoC').textContent=kw?`約${fkg(kg)}kg`:'0kg'; $e('ecoCb').style.transform=`scaleX(${(kg/maxKg).toFixed(3)})`; $e('ecoCn').textContent=kw?`6畳間 約${frm(rooms(kg))}部屋分（1日${R.hoursPerDay}時間×${R.days}日）`:'電気を使っていません。'; }
       $e('ecoMsg').hidden=!E.re; $e('ecoCn').classList.toggle('renote',E.re); $e('ecoC').classList.toggle('reval',E.re); if(window.FXeco) FXeco({t,lo:24,hi:36,r1:R.riskCautionC,r2:R.riskHighC,kg:E.re?0:kg,maxKg}); }
     document.querySelectorAll('[data-dev]').forEach(b=>b.addEventListener('click',()=>{ const k=b.dataset.dev; E[k]=!E[k]; b.setAttribute('aria-pressed',E[k]?'true':'false');
@@ -1349,9 +1391,9 @@ reveal(); updateGen(); drawFuture(); drawElder();
     $e('ecoRe').addEventListener('change',e=>{ E.re=e.target.checked; update(); });
     $e('temp').addEventListener('input',update);
     $e('ecoMsg2').textContent=`体験のあとの「${CH[1][0]}」から選べます。`;
-    $e('ecoSim').textContent=`部屋の温度はシミュレーション（目安）です。CO₂は、エアコン${R.kW.ac}kW・扇風機${R.kW.fan}kWを1日${R.hoursPerDay}時間×${R.days}日、電気1kWhあたり${R.kgCO2PerKWh}kgで計算しています。`;
+    $e('ecoSim').textContent=`室温は目安。CO₂はエアコン${R.kW.ac}kW・扇風機${R.kW.fan}kW、1日${R.hoursPerDay}時間×${R.days}日、1kWhあたり${R.kgCO2PerKWh}kgで計算。`;
     const acKg=kgOf(R.kW.ac);
-    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）のとき、部屋の温度（目安）は、何もしないと${R.roomC.none}℃、カーテンを閉めて日差しを遮ると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）をつけると${R.roomC.ac}℃です。猛暑日の昼に窓を開けると、外の熱い空気が入ります。日中は窓とカーテンを閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。WHOは、室温が${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防ぎきれないおそれがあるとしています。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）出ます。実質再エネ100%（CO₂ゼロ）の電気プランにすると、契約上のCO₂は実質ゼロになります（電力会社が非化石証書などで、使った電気と同じ量のCO₂ゼロの価値を調達した場合の計算です。家に届く電気そのものは送電網で混ざっており、発電設備をつくるときなどの排出は含みません。再エネの割合はプランによって違うので、契約前に電源構成を確かめましょう）。`;
+    $e('txEco').textContent=`外が猛暑日（${R.outdoorC}℃）の部屋は、何もしないと${R.roomC.none}℃。カーテンを閉めると${R.roomC.curtain}℃、エアコン（冷房${R.roomC.ac}℃）で${R.roomC.ac}℃です（目安）。猛暑日の昼は窓を閉め、夜と早朝に開けましょう（WHO）。扇風機は室温を下げません。室温${R.fanLimitC}℃を超えると、扇風機だけでは熱中症を防げないおそれがあります（WHO）。エアコンをひと夏（1日${R.hoursPerDay}時間×${R.days}日）使うと、CO₂は約${fkg(acKg)}kg（6畳間 約${frm(rooms(acKg))}部屋分）。実質再エネ100%（CO₂ゼロ）の電気プランなら、契約上は実質ゼロです（${RENOTE_T}）。`;
     $e('eco').hidden=false; update(); }
   // ---------- 体験4：祖母と一緒に、いつ避難するか（v1.11） ----------
   (function(){ const G=window.FGAME, $g=id=>document.getElementById(id); if(!$g('fgame')) return;
@@ -1391,23 +1433,21 @@ reveal(); updateGen(); drawFuture(); drawElder();
   document.getElementById('age').addEventListener('input',drawOpportunity);
   document.getElementById('reg').addEventListener('change',drawOpportunity);
   document.getElementById('reg').addEventListener('change',()=>{ try{ drawFuture(); }catch(e){} });
-  // 内閣府調査 問6・問7の選択肢（調査票の表記。12番だけ問6と問7で異なる）
-  const OPT=['軽装や重ね着などにより、冷暖房の設定温度を適切に管理','こまめな消灯、家電のコンセントを抜くなどによる電気消費量の削減','冷蔵庫、エアコン、照明器具などの家電製品を購入する際に、省エネルギー効果の高い製品を購入','宅配便の１回での受取り、又は宅配ボックスでの受取りなどによる再配達の防止','部屋の温度を快適に保つ高断熱などの省エネ住宅への居住、又はリフォームの施工','太陽光発電パネルの設置による自家発電、又は自宅の電気プランを再生可能エネルギー利用のものに切替え','移動時に徒歩・自転車・公共交通機関の利用','電気自動車などのエコカーの選択やゆっくり加速・減速などのエコドライブの実践','地球温暖化への対策に取り組む企業の商品の購入やサービスの利用','地球温暖化への対策に取り組む団体・個人への応援・支援','その他'];
-  const LIST={q6:[...OPT,'現在は取り組んでいない'], q7pre:[...OPT,'取り組みたいとは思わない'], q7post:[...OPT,'取り組みたいとは思わない']};
-  document.querySelectorAll('[data-cq]').forEach(box=>{ const key=box.dataset.cq;
-    box.innerHTML=LIST[key].map((t,i)=>`<label><input type="checkbox" value="${i+1}" data-k="${key}"><span>${i+1}．${t}</span></label>`).join(''); });
-  const picked=k=>[...document.querySelectorAll(`input[data-k="${k}"]:checked`)].map(x=>+x.value);
-  const sync=()=>{ const now=picked('q6').filter(v=>v<=10); ['q7pre','q7post'].forEach(k=>document.querySelectorAll(`input[data-k="${k}"]`).forEach(x=>{ const off=now.includes(+x.value); x.disabled=off; if(off) x.checked=false; x.parentElement.classList.toggle('off',off); })); };
-  document.querySelectorAll('input[data-k="q6"]').forEach(x=>x.addEventListener('change',sync));
-  // 企業の商品選択（選択肢9）：1＝現在実践、2＝今後取り組みたい、3＝どちらでもない（分析⑤の主な指標）
-  window.KAKU=()=>{ const q6=picked('q6'); if(!q6.length && !picked('q7pre').length && !picked('q7post').length) return {};
-    return { cpre: q6.includes(9)?1:(picked('q7pre').includes(9)?2:3), cpost: q6.includes(9)?1:(picked('q7post').includes(9)?2:3) }; };
-  const QUIZ=[['今の20歳が生まれた時点で、世界のこれまでのCO₂排出のうち、すでに積み上がっていたのはおよそ何%？',['約10%','約40%','約64%','約90%'],2],
-    ['日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分はおよそ何%？',['約16%','約40%','約60%','約84%'],0],
-    ['大阪で、小中学生の9年間に経験した猛暑日が多かったのはどちら？',['今の60歳','今の15歳','ほぼ同じ'],1]];
+  // v1.24：企業の商品選択は、はじめと体験のあとに1問ずつ（3択）。1＝現在取り組んでいる、2＝今後取り組みたい、3＝どちらでもない（分析⑤の主な指標）
+  window.KAKU=()=>({ cpre: ans.cpre||undefined, cpost: ans.cpost||undefined });
+  // 理解度クイズ（3問）。答え合わせは、回答を送信したあとにだけ出す（送信の前は正解を見せない）
+  const QUIZ=[['今の20歳が生まれた時点で、世界のこれまでのCO₂排出のうち、すでに積み上がっていたのはおよそ何%？',['約10%','約40%','約64%','約90%'],2,'今の20歳が生まれた時点で、世界の排出の64%はすでに積み上がっていました（体験3）。'],
+    ['日本国内でエネルギーを使って出たCO₂のうち、家庭で使う電気やガスの分はおよそ何%？',['約16%','約40%','約60%','約84%'],0,'家庭の分は16%。残りの84%は、工場や物流など家の外で出ています（体験2）。'],
+    ['大阪で、小中学生の9年間に経験した猛暑日が多かったのはどちら？',['今の60歳','今の15歳','ほぼ同じ'],1,'大阪では、今の60歳が50日、今の15歳が225日でした（体験3-2）。']];
+  const qa=QUIZ.map(()=>null);
   const qb=document.getElementById('quizBox');
-  if(qb) qb.innerHTML=QUIZ.map(([q,opts],i)=>`<p style="margin:10px 0 4px">${i+1}．${q}</p><div class="checks">${opts.map((o,j)=>`<label><input type="radio" name="quiz${i}" value="${j}"><span>${o}</span></label>`).join('')}</div>`).join('');
-  window.QUIZSCORE=()=>{ const a=QUIZ.map((_,i)=>document.querySelector(`input[name="quiz${i}"]:checked`)); if(a.every(x=>!x)) return ''; return QUIZ.reduce((n,[, ,ok],i)=>n+(a[i]&&+a[i].value===ok?1:0),0); };
+  if(qb){ qb.innerHTML=QUIZ.map(([q,opts],i)=>`<div class="qz"><p class="qzq" id="qz${i}">${i+1}．${q}</p><div class="opts${opts.length>3?' c2':''}" role="group" aria-labelledby="qz${i}" data-a="quiz${i}">${opts.map((o,j)=>`<button type="button" data-v="${j}" aria-pressed="false">${o}</button>`).join('')}</div></div>`).join('');
+    qb.querySelectorAll('.opts').forEach((g,i)=>{ g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b) return; g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); qa[i]=+b.dataset.v; nextQ(b.closest('.qz')); }); }); }
+  window.QUIZSCORE=()=>{ if(qa.every(x=>x===null)) return ''; return QUIZ.reduce((n,[, ,ok],i)=>n+(qa[i]===ok?1:0),0); };
+  window.QUIZRES=()=>{ if(!qb||!qb.offsetHeight) return '';   // 審査員版（クイズなし）では出さない
+    const n=QUIZ.reduce((n,[, ,ok],i)=>n+(qa[i]===ok?1:0),0);
+    return `<b>理解度クイズの答え合わせ：3問中${n}問正解</b><ol class="qzr">${QUIZ.map(([q,opts,ok,why],i)=>{ const me=qa[i], hit=me===ok;
+      return `<li><span class="${hit?'ok':'ng'}">${hit?'○ 正解':(me===null?'－ 未回答':'× あなたの答え：'+opts[me])}</span><br>正解：<b>${opts[ok]}</b>。${why}</li>`; }).join('')}</ol>`; };
   const SAVE_ITEMS=document.querySelector('.saveItems').textContent;   // 保存項目の説明（体験のあとと同じ文。Code.gs の COLS に合わせる）
   const CONTACT='worketcluke@gmail.com', DELETE_DATE='2027年3月31日';   // ← 問い合わせ先（メールアドレス）とデータ削除日が決まったら入れる
   document.getElementById('consent').textContent='この体験は、関西大学の学生チームがコンテストのために、アプリの効果を調べるものです。回答は匿名で集計します。'+SAVE_ITEMS+'途中でやめても問題ありません。'+(DELETE_DATE?`データは${DELETE_DATE}に削除します。`:'')+(CONTACT?`問い合わせ：${CONTACT}`:'');
@@ -1565,7 +1605,7 @@ reveal(); updateGen(); drawFuture(); drawElder();
    const fall=sc=>{ sc.classList.add('nogl','ready'); let v=sc.querySelector('.fxfig'); if(!v){ v=S('svg',{class:'fxfig',viewBox:'0 0 320 224',fill:'none',stroke:'#fff','stroke-opacity':'.75','stroke-width':'2','stroke-linejoin':'round','aria-hidden':'true'}); sc.insertBefore(v,sc.firstChild);
        const cap=sc.querySelector('.cap'); if(cap){ cap.textContent='この端末では3Dを表示できないため、図で示しています'; cap.style.color='#fff'; cap.id=''; } }
      v.innerHTML=(FIG[sc.id]||FIG.scSize)();
-     const vt=$('volText'); if(sc.id==='scSize'&&vt&&!vt.textContent&&typeof dayKg==='number') vt.innerHTML=`1日分は約<b>${dayKg.toFixed(0)}kg</b>。気体にすると約<b>${dayV.toFixed(0)}m³</b>で、6畳間の半分ほどが埋まります。`;   // 3Dが無いときも、体験1の文は出す（既存の文と同じ）
+     const vt=$('volText'); if(sc.id==='scSize'&&vt&&!vt.textContent&&typeof dayKg==='number') vt.innerHTML=`1日分は約<b>${dayKg.toFixed(0)}kg</b>。気体で約<b>${dayV.toFixed(0)}m³</b>、6畳間の半分ほどです。`;   // 3Dが無いときも、体験1の文は出す（既存の文と同じ）
    };
    const redraw=()=>setTimeout(()=>document.querySelectorAll('.scene.nogl').forEach(fall),0);
    document.querySelectorAll('.scene').forEach(sc=>{ const cv=sc.querySelector('canvas'); if(cv){ requestAnimationFrame(()=>requestAnimationFrame(()=>sc.classList.add('ready'))); cv.addEventListener('webglcontextlost',e=>{ e.preventDefault(); fall(sc); }); } else fall(sc); });
