@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ja"><head><meta charset="utf-8">
 <script>
+// v1.24.1：実証のA群（?g=A）・B群（?mode=text&g=B）は、実証のあいだ v1.23 の画面（pilot.html）のままで回答を集める。
+//   URL の後ろ（?g=A など）はそのまま引き継ぐ。通常のデモと審査員版（?mode=judge・?start=ar）は、このページ（v1.24）
+(function(){ try{ var q=new URLSearchParams(location.search), g=(q.get('g')||'').slice(0,2);
+  if((g==='A'||g==='B') && q.get('mode')!=='judge' && q.get('start')!=='ar'){ document.documentElement.style.visibility='hidden'; location.replace('pilot.html'+location.search+location.hash); } }catch(e){} })();
+</script>
+<script>
 // スクロール演出（v1.8）：視差効果を減らす設定でなければ有効
 // ============================================================================================
 // ★ 表示の切り替え（実証の当日に不具合が出たら、この1行を書き換えて push する）
