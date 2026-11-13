@@ -44,7 +44,7 @@ try{ const q=new URLSearchParams(location.search); window.JUDGE=q.get('mode')===
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:calc(var(--tkh,60px) + 8px);scroll-behavior:smooth;-webkit-text-size-adjust:100%;overflow-x:hidden}
 body{margin:0;font-size:1.0625rem;background:var(--bg);color:var(--ink);font-family:"Noto Sans JP","Hiragino Sans","Yu Gothic",sans-serif;line-height:1.75;font-feature-settings:"palt";-webkit-font-smoothing:antialiased}
-.ticker{position:sticky;top:0;padding-top:calc(6px + env(safe-area-inset-top,0px))!important;transition:opacity .3s ease,transform .3s ease,visibility 0s;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:.875rem;color:var(--sub)}
+.ticker{position:sticky;top:0;padding-top:calc(6px + env(safe-area-inset-top,0px))!important;transition:opacity .3s ease,transform .3s ease,visibility 0s;z-index:20;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;font-size:1rem;color:var(--sub)}
 .ticker{line-height:1.35;padding-bottom:6px!important}
 .ticker.tk-hide{opacity:0;transform:translateY(-100%);visibility:hidden;pointer-events:none;transition:opacity .3s ease,transform .3s ease,visibility 0s linear .3s}
 .ticker b{font-size:1.2rem;white-space:nowrap;color:var(--ink);font-variant-numeric:tabular-nums}
@@ -52,21 +52,21 @@ body{margin:0;font-size:1.0625rem;background:var(--bg);color:var(--ink);font-fam
 header{padding:48px 0 28px}
 h1{font-size:clamp(1.9rem,6vw,2.9rem);font-weight:900;line-height:1.22;margin:0 0 12px}
 .lead{color:var(--sub);margin:0;max-width:32em}
-.note{font-size:.875rem;color:var(--sub);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:18px}
+.note{font-size:1rem;color:var(--sub);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:18px}
 section.ch{padding:36px 0 8px;border-top:1px solid var(--line)}
 section.ch:first-of-type{border-top:0}
-.kicker{font-size:.875rem;font-weight:700;color:var(--blue);margin:0 0 4px}
+.kicker{font-size:1rem;font-weight:700;color:var(--blue);margin:0 0 4px}
 h2{font-size:clamp(1.3rem,1rem + 2.2vw,1.85rem);font-weight:900;line-height:1.38;margin:0 0 14px}
 h3{font-size:1.1rem;font-weight:900;margin:34px 0 8px}
 p{margin:0 0 14px}
 .big{font-size:clamp(2.6rem,10vw,4rem);font-weight:900;line-height:1;font-variant-numeric:tabular-nums}
-.big small{font-size:.35em;font-weight:700;margin-left:4px}
+.big small{font-size:max(1rem,.35em);font-weight:700;margin-left:4px}
 .field{background:var(--soft);border-radius:14px;padding:18px;margin:14px 0}
 .q{display:block;font-weight:700;margin-bottom:10px}
 input[type=range]{width:100%;height:44px;margin:0;accent-color:var(--blue);cursor:pointer}
 .likert{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .likert button,.seg button,.pick button{appearance:none;font:inherit;cursor:pointer;color:var(--ink);background:var(--bg)}
-.likert button{font-size:.875rem;line-height:1.3;border:1.5px solid var(--line);border-radius:10px;padding:10px 4px;min-height:58px}
+.likert button{font-size:1rem;line-height:1.3;border:1.5px solid var(--line);border-radius:10px;padding:10px 4px;min-height:58px}
 .likert button[aria-pressed=true]{background:var(--blue);color:var(--on-blue);border-color:var(--blue)}
 /* v1.24：年齢（数字の入力欄と −・＋）、1タップの選択肢（.opts）、答えたあとの次の質問の印 */
 .agebox{display:flex;align-items:center;gap:10px;margin-top:8px}
@@ -101,19 +101,19 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
 .scene{width:100%;height:min(62vh,440px);border-radius:16px;background:var(--soft);overflow:hidden;position:relative;touch-action:pan-y}
 .scene canvas{display:block;width:100%;height:100%}
-.cap{position:absolute;left:14px;right:14px;bottom:10px;font-size:.875rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);pointer-events:none}
+.cap{position:absolute;left:14px;right:14px;bottom:10px;font-size:1rem;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);pointer-events:none}
 .reveal{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
 .reveal div{background:var(--soft);border-radius:14px;padding:14px}
 .reveal div.real{background:var(--ink);color:var(--bg)}
-.reveal span{font-size:.875rem;opacity:.8}
+.reveal span{font-size:1rem;opacity:.8}
 .reveal b{display:block;font-size:2rem;font-weight:900;line-height:1.2;font-variant-numeric:tabular-nums}
 .me{display:flex;align-items:center;gap:12px;margin-bottom:14px}
 .me .dot{width:46px;height:46px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-weight:900}
 .stack{display:flex;height:64px;border-radius:12px;overflow:hidden}
-.stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.9375rem;transition:flex-grow 1s ease;flex:0 0 0;min-width:0;white-space:nowrap;overflow:hidden;cursor:pointer}
+.stack div{display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;transition:flex-grow 1s ease;flex:0 0 0;min-width:0;white-space:nowrap;overflow:hidden;cursor:pointer}
 .stack div.sel{box-shadow:inset 0 -5px 0 #fff, inset 0 0 0 2px #fff}
 .slegend{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
-.slegend button{appearance:none;font:inherit;font-size:.9375rem;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}
+.slegend button{appearance:none;font:inherit;font-size:1rem;display:flex;align-items:center;gap:8px;min-height:44px;padding:6px 10px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);cursor:pointer;text-align:left}
 .slegend button[aria-pressed=true]{border-color:var(--blue);box-shadow:inset 0 0 0 1px var(--blue)}
 .slegend i{width:14px;height:14px;border-radius:3px;flex:none;outline:1px solid rgba(0,0,0,.15)}
 .slegend span{white-space:nowrap}.slegend b{font-variant-numeric:tabular-nums}
@@ -122,14 +122,14 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .gen{display:flex;height:90px;border-radius:14px;overflow:hidden;margin:14px 0 6px}
 .gen div{display:flex;flex-direction:column;justify-content:center;padding:0 14px;transition:flex-grow 1.2s ease;flex:1 1 0;min-width:0;overflow:hidden}
 .gen .before{background:var(--ink);color:var(--bg)} .gen .after{background:var(--blue-soft);color:var(--ink)}
-.gen b{font-size:1.4rem} .gen span{font-size:.875rem}
+.gen b{font-size:1.4rem} .gen span{font-size:1rem}
 .life{background:var(--ink);color:var(--bg);border-radius:16px;padding:18px;margin:16px 0}
 .life .big{color:var(--bg)}
 .pair{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
 .pair div{background:var(--soft);border-radius:14px;padding:12px}
 .pair b{display:block;font-size:1.6rem;font-weight:900;font-variant-numeric:tabular-nums}
-.pair span{font-size:.875rem;color:var(--sub)}
-.cbar{display:grid;grid-template-columns:7.5em 1fr 3.6em;align-items:center;gap:10px;margin:7px 0;font-size:.9rem}
+.pair span{font-size:1rem;color:var(--sub)}
+.cbar{display:grid;grid-template-columns:7.5em 1fr 3.6em;align-items:center;gap:10px;margin:7px 0;font-size:1rem}
 .cbar .t{height:14px;border-radius:7px;background:var(--blue-soft);position:relative;overflow:hidden}
 .cbar .t i{position:absolute;inset:0 auto 0 0;background:var(--blue);border-radius:7px;width:0;transition:width 1s ease}
 .cbar.jp .t i{background:var(--ink)} .cbar .v{text-align:right}
@@ -143,7 +143,7 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .verdict{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .verdict div{border-radius:14px;padding:16px;text-align:center;font-weight:900;font-size:1.15rem}
 .verdict .no{background:var(--soft)} .verdict .yes{background:var(--ink);color:var(--bg)}
-.meters{position:absolute;top:12px;left:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:.875rem;pointer-events:none;z-index:2}
+.meters{position:absolute;top:12px;left:12px;right:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:1rem;pointer-events:none;z-index:2}
 .meters span{display:inline-block;margin-bottom:3px;background:rgba(255,255,255,.85);color:#1a1d23;border-radius:6px;padding:0 6px}
 .mt{height:12px;border-radius:6px;background:rgba(255,255,255,.7);overflow:hidden}
 .mt i{display:block;height:100%;width:0;transition:width .6s}
@@ -156,31 +156,31 @@ button:focus-visible,input:focus-visible,[tabindex]:focus-visible{outline:3px so
 .choice .box{width:22px;height:22px;border-radius:6px;border:2px solid var(--line);flex:none;margin-top:3px;display:grid;place-items:center;color:var(--on-blue);font-size:14px}
 .choice[aria-pressed=true] .box{background:var(--blue);border-color:var(--blue)}
 .choice small{display:block;color:var(--sub)}
-.pick button{font-size:.9375rem;min-height:44px;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;margin:4px 6px 0 0}
+.pick button{font-size:1rem;min-height:44px;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;margin:4px 6px 0 0}
 .pick button[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .card{border-radius:18px;background:var(--blue);color:var(--on-blue);padding:22px;margin:16px 0}
 .card .a{font-size:1.3rem;font-weight:900;line-height:1.45;margin:8px 0}
-.card .t,.card .m{font-size:.875rem;opacity:.92}
+.card .t,.card .m{font-size:1rem;opacity:.92}
 .result{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
 .result div{background:var(--soft);border-radius:14px;padding:14px}
 .result b{display:block;font-size:1.15rem;font-weight:900;line-height:1.4;margin-top:4px}
-.hint{border-left:4px solid var(--blue);background:var(--soft);border-radius:0 12px 12px 0;padding:12px 14px;margin:18px 0 0;font-size:.95rem}
-.hint b{display:block;color:var(--blue);font-size:.875rem;margin-bottom:2px}
+.hint{border-left:4px solid var(--blue);background:var(--soft);border-radius:0 12px 12px 0;padding:12px 14px;margin:18px 0 0;font-size:1rem}
+.hint b{display:block;color:var(--blue);font-size:1rem;margin-bottom:2px}
 .likert.two{grid-template-columns:1fr 1fr}
 .arbox model-viewer{--poster-color:transparent}
-.aggrow{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;font-size:.9rem;align-items:baseline}
+.aggrow{display:grid;grid-template-columns:1fr auto auto;gap:4px 14px;font-size:1rem;align-items:baseline}
 .aggrow b{font-variant-numeric:tabular-nums}
-.sealevel{position:absolute;top:10px;right:10px;background:rgba(10,20,35,.72);color:#fff;border-radius:10px;padding:8px 12px;font-size:.875rem;line-height:1.4;text-align:right;pointer-events:none}
+.sealevel{position:absolute;top:10px;right:10px;background:rgba(10,20,35,.72);color:#fff;border-radius:10px;padding:8px 12px;font-size:1rem;line-height:1.4;text-align:right;pointer-events:none}
 .sealevel b{font-size:1.3rem;display:block}
-.src{font-size:.8125rem;color:var(--sub);line-height:1.6;margin-top:18px}
+.src{font-size:1rem;color:var(--sub);line-height:1.6;margin-top:18px}
 .fade{opacity:.4;transform:translateY(10px);transition:opacity .7s ease,transform .7s ease}
 .fade.in{opacity:1;transform:none}
 @media (prefers-reduced-motion: reduce){*{transition:none!important;scroll-behavior:auto!important}.fade{opacity:1;transform:none}}
 .oppbars{display:grid;gap:10px;margin:14px 0}
-.oppbars .row{display:grid;grid-template-columns:7.5em 1fr;align-items:center;gap:10px;font-size:.9rem}
+.oppbars .row{display:grid;grid-template-columns:7.5em 1fr;align-items:center;gap:10px;font-size:1rem}
 .oppbars .bar{height:22px;border-radius:6px;background:var(--line)}
 .oppbars .bar.me{background:#1f5fbf}.oppbars .bar.young{background:#e8702a}
-.judge-note{background:var(--soft);border-left:4px solid #e8702a;padding:10px 12px;border-radius:8px;font-size:.92rem}
+.judge-note{background:var(--soft);border-left:4px solid #e8702a;padding:10px 12px;border-radius:8px;font-size:1rem}
 .inapp{background:#fff4d6;color:#1a1d23;border-bottom:3px solid #e8702a;padding:calc(14px + env(safe-area-inset-top,0px)) 20px 14px;font-size:1rem;line-height:1.6}.inapp p{margin:0 0 10px;font-weight:700}.inapp .btn{font-size:1rem;padding:10px 16px}.inapp span{display:block;margin-top:8px;font-size:1rem}
 body.text-mode .scene, body.text-mode model-viewer, body.text-mode .arbox, body.text-mode .no-tx{display:none!important}
 .safe{font-size:1rem;font-weight:700;margin:12px 0 8px}
@@ -198,7 +198,7 @@ header.hero{min-height:70vh;min-height:70svh;display:flex;flex-direction:column;
 .herotick{margin:0 0 26px;transform-origin:0 0;will-change:transform,opacity}
 .herotick>span{display:block;font-size:1rem;color:var(--sub)}
 .herotick b{display:block;font-size:clamp(3rem,15vw,5.6rem);font-weight:900;line-height:1.05;font-variant-numeric:tabular-nums;color:var(--blue)}
-.herotick b small{font-size:.4em;margin-left:6px;color:var(--ink)}
+.herotick b small{font-size:max(1rem,.4em);margin-left:6px;color:var(--ink)}
 .pin{position:relative}
 .pin.on>.stick{position:sticky;top:calc(env(safe-area-inset-top,0px) + 56px)}
 html.mo .hero h1 .ln,html.mo .herotick{opacity:0;transform:translateY(.5em);animation:mo-rise 1s cubic-bezier(.2,.7,.2,1) forwards}
@@ -219,7 +219,7 @@ html.mo .oppbars .bar{transform-origin:0 50%}
 .eco .how{font-size:1rem;font-weight:700;margin:0 0 10px}
 .ecobtns{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .ecobtns button{appearance:none;font:inherit;font-size:1rem;font-weight:700;line-height:1.3;min-height:68px;padding:8px 6px;border:2px solid var(--blue);border-radius:12px;background:var(--bg);color:var(--blue);cursor:pointer}
-.ecobtns button::before{content:"OFF";display:block;font-size:.875rem;font-weight:900}
+.ecobtns button::before{content:"OFF";display:block;font-size:1rem;font-weight:900}
 .ecobtns button[aria-pressed=true]{background:var(--blue);color:var(--on-blue)}
 .ecobtns button[aria-pressed=true]::before{content:"ON";opacity:1}
 .ecom{display:grid;gap:10px;margin:14px 0 8px}
@@ -237,7 +237,7 @@ html.mo .oppbars .bar{transform-origin:0 50%}
 .ecomsg{border-left:4px solid var(--blue);background:var(--bg);border-radius:0 12px 12px 0;padding:10px 12px;margin:10px 0 0;font-size:1rem}
 .ecomsg b{display:block}
 .ecom b.reval{font-size:1.15rem}
-.ecom .enote.renote{font-size:.875rem;line-height:1.6}
+.ecom .enote.renote{font-size:1rem;line-height:1.6}
 .ecosim{font-size:1rem;color:var(--sub);margin:8px 0 0}
 /* ---- v1.11 体験4 避難の判断ゲーム ---- */
 .fglv{position:absolute;left:10px;top:10px;z-index:3;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;max-width:calc(100% - 20px);background:rgba(15,20,30,.82);color:#fff;border-radius:10px;padding:6px 10px;font-size:1rem;line-height:1.4;pointer-events:none}
@@ -264,10 +264,10 @@ a{color:var(--blue);text-underline-offset:2px}
 .sub2{font-size:.55em;line-height:0;position:relative;top:.18em;vertical-align:baseline;margin-left:.03em}
 h2.hlong{font-size:clamp(1.05rem,.55rem + 3vw,1.6rem)}
 h1,h2,h3{overflow-wrap:anywhere}
-.likert button{font-size:.9375rem}
+.likert button{font-size:1rem}
 @media (max-width:520px){.likert:not(.two){grid-template-columns:1fr}.likert:not(.two) button{min-height:44px;padding:8px 14px;text-align:left}.likert:not(.two) br{display:none}}
 #regBox a{display:inline-block;padding:10px 0}
-.choice small,#agg small{font-size:.875rem}
+.choice small,#agg small{font-size:1rem}
 .gen div.tight span,.gen div.tiny b{visibility:hidden}
 @media (max-width:420px){.ecobtns{grid-template-columns:1fr}.ecobtns button{min-height:48px;text-align:left;padding:8px 12px}.ecobtns button::before{display:inline-block;min-width:2.8em}}
 @media (max-width:359px){.fgbtns{grid-template-columns:1fr}.fgbtns button{min-height:44px;text-align:left;padding:6px 12px}.fgame{padding:12px}}
@@ -276,7 +276,7 @@ h1,h2,h3{overflow-wrap:anywhere}
 .map h3{margin:0 0 12px;font-size:1.25rem}
 .map ol{list-style:none;margin:0 0 12px;padding:0;display:grid;gap:10px}
 .map li{display:flex;gap:10px;align-items:flex-start;font-size:1rem;line-height:1.55}
-.map li b{flex:none;width:28px;height:28px;margin-top:1px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:.9375rem}
+.map li b{flex:none;width:28px;height:28px;margin-top:1px;border-radius:50%;background:var(--ink);color:var(--bg);display:grid;place-items:center;font-size:1rem}
 .map p{margin:0;font-weight:700}
 .door{position:relative;width:100vw;margin:28px 0 0 calc(50% - 50vw);min-height:calc(100vh - var(--tkh,56px) - 24px);min-height:calc(100svh - var(--tkh,56px) - 24px);display:flex;align-items:center;color:#fff}
 .door .din{width:100%;max-width:760px;margin:0 auto;padding:40px max(20px,env(safe-area-inset-right,0px)) 40px max(20px,env(safe-area-inset-left,0px))}
@@ -285,29 +285,29 @@ h1,h2,h3{overflow-wrap:anywhere}
 .door .dname{font-size:1.0625rem;font-weight:700;margin:0 0 18px}
 .door .dq,.subdoor .dq{font-size:clamp(1.375rem,1rem + 2.6vw,2.1rem);font-weight:900;line-height:1.45;margin:0 0 18px}
 .door .ddo,.subdoor .ddo{font-size:1.0625rem;line-height:1.7;margin:0}
-.door .ddo b,.subdoor .ddo b{display:inline-block;margin-right:.6em;padding:1px 10px;border-radius:999px;background:rgba(0,0,0,.28);font-size:.9375rem}
+.door .ddo b,.subdoor .ddo b{display:inline-block;margin-right:.6em;padding:1px 10px;border-radius:999px;background:rgba(0,0,0,.28);font-size:1rem}
 .d1{background:#1f4e8c}.d2{background:#0f6262}.d3{background:#55307a}.d4{background:#1e2f4f}.d5{background:#3d434c}.d6{background:#8a3418}.d7{background:#1f6b42}
 .subdoor{color:#fff;border-radius:14px;padding:18px;margin:0 0 20px}
 #s3b .subdoor{background:#55307a}#s4b .subdoor{background:#1e2f4f}
 .subdoor .sdn{font-size:1.125rem;font-weight:900;margin:0 0 8px}
 .subdoor .dq{font-size:clamp(1.25rem,1rem + 1.8vw,1.75rem)}
 .learn{margin:24px 0 8px;background:var(--soft);border-left:5px solid var(--ink);border-radius:0 14px 14px 0;padding:16px 16px 14px}
-.learn .lt{font-size:.9375rem;font-weight:900;color:var(--blue);margin:0 0 6px}
+.learn .lt{font-size:1rem;font-weight:900;color:var(--blue);margin:0 0 6px}
 .learn .lb{font-size:1.0625rem;font-weight:700;line-height:1.75;margin:0 0 12px}
 .learn .ln2{margin:0;padding-top:10px;border-top:1px solid var(--line);font-size:1rem;line-height:1.6}
-.learn .ln2>span:first-child{display:block;font-size:.875rem;font-weight:700;color:var(--sub)}
+.learn .ln2>span:first-child{display:block;font-size:1rem;font-weight:700;color:var(--sub)}
 .learn .ln2>span:first-child::after{content:" →"}
 .txi{display:none}body.text-mode .txi{display:inline}
 /* v1.16：B群（?mode=text）は文字と数字だけ。図・グラフ・表・アイコン・色の見本は出さず、同じ数値を文章で示す */
 body.text-mode .atmo,body.text-mode body>svg,body.text-mode .me .dot,body.text-mode .stack,body.text-mode .slegend i,body.text-mode .gen,body.text-mode #countries,body.text-mode .oppbars,body.text-mode #cal,body.text-mode .years,body.text-mode .verdict{display:none!important}
 body.text-mode .slegend button{gap:6px}
 .ticker .tkt{display:flex;flex-direction:column;min-width:0}
-.ticker .tkc{font-size:.9375rem;font-weight:900;color:var(--ink)}
+.ticker .tkc{font-size:1rem;font-weight:900;color:var(--ink)}
 @media (max-width:400px){.ticker.has-ch .tkl{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}}
 /* ---- v1.18 実証（?g=A・?g=B）だけ：メールアドレスの入力 ---- */
 .gate input{width:100%;font:inherit;font-size:1rem;min-height:48px;padding:10px 12px;border:1.5px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink)}
 .gate input[aria-invalid=true]{border-color:#c0392b}
-.gate .gmsg{font-size:.9375rem;margin:6px 0 10px;min-height:1.5em}
+.gate .gmsg{font-size:1rem;margin:6px 0 10px;min-height:1.5em}
 .gate .gmsg.err{color:#a5281b}
 .gate .btn[disabled]{opacity:.45;cursor:not-allowed}
 body.gate-locked #s0>:not(h2):not(#consent):not(#gate),body.gate-locked .wrap>:not(header):not(#s0){display:none!important}
@@ -459,14 +459,14 @@ html.fx .fxtub .rim{fill:none;stroke:var(--ink);stroke-width:4;stroke-linejoin:r
 html.fx .fxtub .foot{stroke:var(--ink);stroke-width:4;stroke-linecap:round}
 html.fx .fxtub .mark{stroke:var(--ink);stroke-width:2;stroke-dasharray:6 5;opacity:.7}
 html.fx .fxtub ul{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:6px}
-html.fx .fxtub li{display:flex;align-items:center;gap:10px;font-size:.9375rem;line-height:1.5}
+html.fx .fxtub li{display:flex;align-items:center;gap:10px;font-size:1rem;line-height:1.5}
 html.fx .fxtub li span{flex:1}
 html.fx .fxtub li b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums;min-width:3.2em;text-align:right}
 html.fx .fxtub i{flex:none;width:22px;height:22px;border-radius:6px;background:#2F5FD0}
 html.fx .fxtub i.k1{background:repeating-linear-gradient(135deg,#17306F 0 4px,#2748A0 4px 8px)}
 html.fx .fxtub i.k2{background:#8DB6FF}
 html.fx .fxdots{display:grid;gap:16px;margin:16px 0}
-html.fx .fxdots p{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px;font-size:.9375rem;font-weight:700}
+html.fx .fxdots p{display:flex;justify-content:space-between;align-items:baseline;margin:0 0 6px;font-size:1rem;font-weight:700}
 html.fx .fxdots p b{font-size:1.5rem;font-weight:900;font-variant-numeric:tabular-nums}
 html.fx .fxdots canvas{display:block;width:100%}
 html.fx:not(.txm) .ecom>div{display:grid;grid-template-columns:56px 1fr;column-gap:12px;align-items:center}
@@ -483,10 +483,10 @@ html.fx .fxcard{margin:16px 0}
 html.fx .fxcard img{display:block;width:100%;aspect-ratio:4/5;border-radius:var(--r3);box-shadow:var(--sh2);background:var(--stage)}
 html.fx.mo .fxcard img{animation:fxfade .6s var(--ez) both}
 html.fx .fxcard .row{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:12px}
-html.fx .fxcard .row span{font-size:.875rem;color:var(--sub)}
+html.fx .fxcard .row span{font-size:1rem;color:var(--sub)}
 html.fx .card{border-radius:var(--r3);background:#0B1020 linear-gradient(155deg,var(--acci),#0B1020 120%);color:#fff;box-shadow:var(--sh2);padding:26px 22px}
 /* --- 動きを止める --- */
-html.fx .fxstill{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(11,16,32,.18);background:rgba(255,255,255,.94);color:#1a1d23;font:inherit;font-size:.875rem;font-weight:700;line-height:1.2;box-shadow:var(--sh1);cursor:pointer}
+html.fx .fxstill{position:fixed;right:max(10px,env(safe-area-inset-right,0px));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:30;min-height:44px;padding:8px 14px;border-radius:999px;border:1px solid rgba(11,16,32,.18);background:rgba(255,255,255,.94);color:#1a1d23;font:inherit;font-size:1rem;font-weight:700;line-height:1.2;box-shadow:var(--sh1);cursor:pointer}
 html.fx.still *,html.fx.still *::before,html.fx.still *::after{animation:none!important;transition:none!important}
 html.fx.still :is(.rv,.popt,.fade,.learn,.hero h1 .ln,.herotick,#heroT,#heroTick,.ml>span,.fxflow g.rb){opacity:1!important;transform:none!important}
 html.fx.still .learn mark.mk{background-size:100% 100%!important}
@@ -517,7 +517,7 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
 
 <section class="ch" id="s0" data-ch="">
   <h2>はじめに、<span class="no-jdg">4</span><span class="jdg">2</span>つだけ教えてください</h2>
-  <p id="consent" style="font-size:.875rem;color:var(--sub)"></p>
+  <p id="consent" style="font-size:1rem;color:var(--sub)"></p>
   <div class="field gate" id="gate" hidden>
     <label class="q" for="email">メールアドレス（必須）</label>
     <input id="email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="例：name@example.com" aria-describedby="emailMsg">
@@ -553,14 +553,14 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <p style="margin-top:14px" id="volText"></p></div></div>
   <div class="arbox">
     <h3 style="margin-top:22px">あなたの部屋に、1日分を置いてみる</h3>
-    <p style="font-size:.92rem">1日分のCO₂（一辺約2.3mの立方体）を、実物大で床に置けます。</p>
+    <p style="font-size:1rem">1日分のCO₂（一辺約2.3mの立方体）を、実物大で床に置けます。</p>
     <p class="safe">周りに人や段差がない、広い場所で使ってください</p>
     <model-viewer id="mv" alt="1日分のCO₂の立方体（一辺約2.3m）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" shadow-intensity="0.6" exposure="1" style="width:100%;height:240px;background:var(--soft);border-radius:16px">
       <button slot="ar-button" class="btn" style="position:absolute;left:12px;bottom:12px">ARで自分の部屋に置く</button>
     </model-viewer>
-    <p id="arSpanNote" style="font-size:.875rem;color:var(--sub);margin-top:8px"></p>
-    <p id="arMsg" style="font-size:.875rem;color:var(--sub);margin-top:8px">読み込み中…</p>
-    <details style="font-size:.875rem;color:var(--sub)"><summary style="padding:11px 0;cursor:pointer">うまく表示されないとき（診断情報）</summary><p id="arDiag" style="margin:6px 0 0;word-break:break-all"></p></details>
+    <p id="arSpanNote" style="font-size:1rem;color:var(--sub);margin-top:8px"></p>
+    <p id="arMsg" style="font-size:1rem;color:var(--sub);margin-top:8px">読み込み中…</p>
+    <details style="font-size:1rem;color:var(--sub)"><summary style="padding:11px 0;cursor:pointer">うまく表示されないとき（診断情報）</summary><p id="arDiag" style="margin:6px 0 0;word-break:break-all"></p></details>
   </div>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">日本人1人の1日分のCO₂は約21kg。一辺約2.26mの立方体になる。見えないだけで、毎日出している。</span><span class="jdg">1日分のCO₂は約21kg。一辺約2.26mの立方体になる。</span></p></div>
 </section>
@@ -572,7 +572,7 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <p class="kicker">体験2　分散をたどる</p>
   <h2>家の中で出ているのは、16%だけ</h2>
   <p>国内でエネルギーから出たCO₂のうち、家庭の電気やガスは16%。残り<span class="num">84%</span>は工場や物流、お店など家の外です（一部は輸出品の分）。<span class="no-tx">帯</span><span class="txi">下の部門の名前</span>をタップしてください。</p>
-  <div class="me"><div class="dot">私</div><div><b>7.77トン／年</b><br><span style="color:var(--sub);font-size:.875rem">日本の一人当たり（2024年）</span></div></div>
+  <div class="me"><div class="dot">私</div><div><b>7.77トン／年</b><br><span style="color:var(--sub);font-size:1rem">日本の一人当たり（2024年）</span></div></div>
   <div class="stack" id="stack" role="group" aria-label="部門別の内訳"></div>
   <div class="slegend" id="slegend" role="group" aria-label="部門別の内訳（凡例）"></div>
   <p class="tx" id="txSect"></p>
@@ -590,9 +590,9 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <h2 id="h3x" class="hlong"></h2>
   <p class="tx" id="txGen"></p>
   <div class="gen" id="gen"><div class="before"><b id="gB">0%</b><span>生まれる前に積み上がっていた</span></div><div class="after"><b id="gA">0%</b><span>生まれてから加わった</span></div></div>
-  <p style="font-size:.875rem;color:var(--sub)" id="genNote"></p>
+  <p style="font-size:1rem;color:var(--sub)" id="genNote"></p>
   </div></div>
-  <div class="life"><span style="font-size:.875rem;opacity:.85">生まれてから今日までの、あなたの分</span><div class="big" id="lifeT">0<small>トン</small></div><p style="margin:6px 0 0;font-size:.9rem;opacity:.85">あなたの分も、積み重なりに残ります。</p></div>
+  <div class="life"><span style="font-size:1rem;opacity:.85">生まれてから今日までの、あなたの分</span><div class="big" id="lifeT">0<small>トン</small></div><p style="margin:6px 0 0;font-size:1rem;opacity:.85">あなたの分も、積み重なりに残ります。</p></div>
   <div class="pair"><div><span>今年生まれる子が引き継ぐ量</span><b>約1.85兆t</b><span>世界がこれまでに出したすべて（うち日本は約696億t）</span></div><div><span>前例のない熱波にさらされる割合</span><b>52〜92%</b><span>2020年生まれ（1.5℃〜3.5℃の場合）。1960年生まれは16%（世界全体の推計）</span></div></div>
   <div class="hint" style="margin-top:0"><b>知っておきたいこと</b>IPCCは2021年、人間の活動による温暖化は「疑う余地がない」と初めて断定しました。</div>
   <h3>世界の一人分と並べると</h3>
@@ -607,11 +607,11 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <h2>生まれた年で、夏に外で遊べる日が変わる</h2>
   <p id="oppText">データを読み込み中です…</p>
   <div id="oppBars" class="oppbars" aria-hidden="true"></div>
-  <p style="font-size:.875rem;color:var(--sub)">猛暑日＝最高気温35℃以上。日本スポーツ協会の指針で、運動を原則中止とする目安です（暑さ指数31以上）。気象庁の<span id="oppSt">大阪</span>の値（移転前の年は除く）。</p>
+  <p style="font-size:1rem;color:var(--sub)">猛暑日＝最高気温35℃以上。日本スポーツ協会の指針で、運動を原則中止とする目安です（暑さ指数31以上）。気象庁の<span id="oppSt">大阪</span>の値（移転前の年は除く）。</p>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">選べない「生まれた年」で、夏に外で運動できる日が減っている。これが機会格差。</p></div>
 </section>
 
-<aside class="field" role="note" style="margin-top:24px"><b>この先について</b><p style="margin:6px 0 10px;font-size:.92rem">このあと、浸水や猛暑の場面を<span class="no-tx">3Dで</span>表示します。見るのがつらい方は、読み飛ばせます。</p><a href="#s7" class="btn ghost" style="display:inline-block;text-decoration:none;padding:10px 16px;font-size:.9rem">体験のあとへ進む</a></aside>
+<aside class="field" role="note" style="margin-top:24px"><b>この先について</b><p style="margin:6px 0 10px;font-size:1rem">このあと、浸水や猛暑の場面を<span class="no-tx">3Dで</span>表示します。見るのがつらい方は、読み飛ばせます。</p><a href="#s7" class="btn ghost" style="display:inline-block;text-decoration:none;padding:10px 16px;font-size:1rem">体験のあとへ進む</a></aside>
 <div class="door d4" id="door-s4" data-ch="体験4／6 このままの未来" role="group" aria-label="体験4のはじまり">
   <div class="din"><p class="dn" data-rv><span class="no-jdg">04</span><span class="jdg">2／2</span></p><p class="dname" data-rv><span class="no-jdg">体験4</span><span class="jdg">審査員版 2</span>　このままの未来</p><p class="dq" data-rv>このまま暑くなると、あなたの部屋はどうなる？</p><p class="ddo" data-rv><b>やること</b><span class="no-tx"><span class="no-jdg">2℃と4℃を比べ、浸水を部屋に重ね、避難を決める</span><span class="jdg">2℃と4℃の未来を比べ、浸水を部屋に重ねる</span></span><span class="txi">2℃と4℃の未来と、浸水・避難を読む</span></p></div>
 </div>
@@ -620,13 +620,13 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <h2>今の政策のままだと、あなたの暮らしはこうなる</h2>
   <p>今の政策のままだと、今世紀末に約3.2℃上がる見込みです（IPCC）。2℃と4℃の間です。</p>
   <div class="seg" role="group" aria-label="シナリオ"><button aria-pressed="true" data-sc="2">2℃上昇</button><button aria-pressed="false" data-sc="4">4℃上昇</button></div>
-  <p><b>寝苦しい夜（熱帯夜）が、20世紀末より <span id="tnN">12日増える</span></b>　<span id="futReg" style="font-size:.875rem;color:var(--sub)">21世紀末・近畿地方（気象庁）</span></p>
+  <p><b>寝苦しい夜（熱帯夜）が、20世紀末より <span id="tnN">12日増える</span></b>　<span id="futReg" style="font-size:1rem;color:var(--sub)">21世紀末・近畿地方（気象庁）</span></p>
   <div id="cal" aria-hidden="true"></div>
   <p><b>1時間に30mm以上の強い雨が、20世紀末の <span id="rainN">約1.3倍になる</span></b></p>
-  <p id="rainLife" style="font-size:.95rem"></p>
+  <p id="rainLife" style="font-size:1rem"></p>
   <div id="regBox" class="pcard" hidden></div>
   <h3>その大雨で、あなたの部屋が浸水したら</h3>
-  <p class="no-tx" style="font-size:.9rem;color:var(--sub)">あなたの目の高さ（1.5m）から見た部屋です。</p>
+  <p class="no-tx" style="font-size:1rem;color:var(--sub)">あなたの目の高さ（1.5m）から見た部屋です。</p>
   <div class="seg" role="group" aria-label="浸水の深さ"><button aria-pressed="true" data-wd="0.5">0.5m</button><button aria-pressed="false" data-wd="1">1.0m</button><button aria-pressed="false" data-wd="3">3.0m</button></div>
   <div class="pin" id="pin4"><div class="stick"><div class="scene" id="scFlood" data-vis="flood"><div class="under" id="under"></div><div class="fglv" id="fgLv" hidden><b id="fgLvT"></b><span id="fgLvW"></span></div><div class="fgsit" id="fgSit" aria-live="polite" hidden></div><div class="cap" id="capFlood">ドラッグで見回せます</div></div>
   <p class="tx" id="txFlood"></p>
@@ -644,9 +644,9 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
     <model-viewer id="mvFlood" src="flood_050.glb?v=4" alt="床から0.5mまで水が来た部屋（実寸）" ar ar-modes="webxr scene-viewer quick-look" ar-scale="fixed" ar-placement="floor" camera-controls touch-action="pan-y" loading="lazy" shadow-intensity="0.4" style="width:100%;height:220px;background:var(--soft);border-radius:16px">
       <button slot="ar-button" class="btn" style="position:absolute;left:12px;bottom:12px">ARで、自分の部屋に水を入れる</button>
     </model-viewer>
-    <p style="font-size:.875rem;color:var(--sub);margin-top:8px">部屋の真ん中で、床にカメラを向けて置いてください。横の柱と板が目盛り、隣の人は身長1.70mです。</p>
+    <p style="font-size:1rem;color:var(--sub);margin-top:8px">部屋の真ん中で、床にカメラを向けて置いてください。横の柱と板が目盛り、隣の人は身長1.70mです。</p>
   </div>
-  <p style="font-size:.9rem">自宅の浸水の想定は、国土交通省の<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で調べられます。</p>
+  <p style="font-size:1rem">自宅の浸水の想定は、国土交通省の<a href="https://disaportal.gsi.go.jp/" target="_blank" rel="noopener">重ねるハザードマップ</a>で調べられます。</p>
   <div class="hint"><b>変えられること</b>熱帯夜の増え方は、2℃と4℃で数倍ちがいます。差を生むのは、私たちの選択です。</div>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb"><span class="no-jdg">気温が上がるほど、熱帯夜と激しい雨が増え、浸水の危険が高まる。2℃か4℃かは、今の排出で決まる。</span><span class="jdg">気温が上がるほど激しい雨が増え、浸水の危険が高まる。2℃か4℃かは、今の排出で決まる。</span></p></div>
 </section>
@@ -663,7 +663,7 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <div class="scene" id="scSea" data-vis="sea"><div class="cap" id="capSea">大阪湾の岸壁（イメージ）。右の岸壁の目盛りが水位で、青い線は2018年の最高潮位。ドラッグで見回せます</div><div class="sealevel" id="seaLv"></div></div>
   <p class="tx" id="txSea"></p>
   <p id="seaText" style="margin-top:12px"></p>
-  <p id="seaStreet" style="font-size:.92rem" hidden><span class="no-tx">青い帯は堤防の外の海面、黄色の線は街の地面です（堤防は半透明、地面の高さはイメージ）。</span>大阪の西部には、標高0m以下の土地が約21km²、満潮時の海面より低い土地が約41km²あります（大阪府）。</p>
+  <p id="seaStreet" style="font-size:1rem" hidden><span class="no-tx">青い帯は堤防の外の海面、黄色の線は街の地面です（堤防は半透明、地面の高さはイメージ）。</span>大阪の西部には、標高0m以下の土地が約21km²、満潮時の海面より低い土地が約41km²あります（大阪府）。</p>
   <div class="hint"><b>変えられること</b>0.40mか0.68mかは、これからの排出で決まります。</div>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西大阪には、満潮時の海面より低い土地が約41km²ある。海面が上がるほど、高潮の危険が増す。</p></div>
 </section>
@@ -679,10 +679,10 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <div class="pcard"><b>2018年7月　西日本豪雨</b><p style="margin:6px 0 0">瀬戸内では、50年に1度級の大雨が、温暖化で約3.3倍起きやすくなっていました。死者は224人です。</p></div>
   <p style="margin:14px 0 0">温暖化がなかった世界の100年（約2回）</p><div class="years" id="yNo"></div>
   <p style="margin:14px 0 0">実際の世界の100年（約7回）</p><div class="years real" id="yYes"></div>
-  <p style="font-size:.875rem;color:var(--sub)">50年に1度＝100年に約2回。3.3倍を丸めて表示</p>
+  <p style="font-size:1rem;color:var(--sub)">50年に1度＝100年に約2回。3.3倍を丸めて表示</p>
   <div class="pcard" style="margin-top:22px"><b>2025年夏　記録的な高温</b><p style="margin:6px 0 0">気象研究所などの解析では、温暖化がなければ、この夏の高温は起こり得ませんでした。</p></div>
   <p class="tx">温暖化のない世界：起こり得なかった。実際の世界：起きた。</p>
-  <div class="verdict"><div class="no">温暖化のない世界<br><span style="font-size:.9rem;font-weight:700">起こり得なかった</span></div><div class="yes">実際の世界<br><span style="font-size:.9rem;font-weight:700">起きた</span></div></div>
+  <div class="verdict"><div class="no">温暖化のない世界<br><span style="font-size:1rem;font-weight:700">起こり得なかった</span></div><div class="yes">実際の世界<br><span style="font-size:1rem;font-weight:700">起きた</span></div></div>
   <div class="hint"><b>変えられること</b>この先の起きやすさは、これからの排出で変わります。</div>
   <div class="learn"><p class="lt">この体験でわかったこと</p><p class="lb">西日本豪雨のような大雨は、温暖化で約3.3倍起きやすくなっていた。影響はすでに始まっている。</p></div>
 </section>
@@ -730,21 +730,21 @@ html.fx.lite .door::before,html.fx.lite .scene::before{animation:none!important}
   <h2><span class="no-jdg">84%の側に、</span><span class="jdg"></span>あなたが関われる選択</h2>
   <p>やってみたいものを選んでください（複数可）。</p>
   <div id="choices"></div>
-  <div class="field"><span class="q" id="qc">その中から、まず1つ決めるなら</span><div class="pick" id="pick" role="group" aria-labelledby="qc"><span style="color:var(--sub);font-size:.875rem">上で選ぶと、ここに出てきます</span></div></div>
+  <div class="field"><span class="q" id="qc">その中から、まず1つ決めるなら</span><div class="pick" id="pick" role="group" aria-labelledby="qc"><span style="color:var(--sub);font-size:1rem">上で選ぶと、ここに出てきます</span></div></div>
   <div class="field"><span class="q" id="q2">あらためて。日々の生活で、自分もCO₂の排出に関わっていると思いますか</span><div class="likert" role="group" aria-labelledby="q2" data-q="post"></div></div>
   <div class="field jhide"><span class="q">理解度クイズ（3問）：体験の内容から、あてはまるものを1つずつ選んでください。</span><div id="quizBox"></div></div>
   <div class="field jhide"><span class="q" id="qk2">地球温暖化への対策に取り組む企業の商品の購入やサービスの利用について、あてはまるものを1つ選んでください。</span><div class="opts" role="group" aria-labelledby="qk2" data-a="cpost"><button type="button" data-v="1" aria-pressed="false">1　現在、取り組んでいる</button><button type="button" data-v="2" aria-pressed="false">2　今は取り組んでいないが、今後取り組んでみたい</button><button type="button" data-v="3" aria-pressed="false">3　どちらでもない</button></div></div>
-  <p style="font-size:.875rem;color:var(--sub)">回答は匿名で集計し、体験の効果を確かめます。<span class="saveItems">保存するのは、年代・地域・各質問の回答・クイズの正答数・選んだ選択肢・かかった時間・実証の群・送信日時だけです。名前やメールアドレスは保存しません。</span></p>
+  <p style="font-size:1rem;color:var(--sub)">回答は匿名で集計し、体験の効果を確かめます。<span class="saveItems">保存するのは、年代・地域・各質問の回答・クイズの正答数・選んだ選択肢・かかった時間・実証の群・送信日時だけです。名前やメールアドレスは保存しません。</span></p>
   <h3 class="fin-h" id="finH">宣言カードをつくる（アンケートの回答を送信）</h3>
   <button class="btn" id="finish" aria-describedby="finNote">宣言カードをつくる（アンケートの回答を送信）</button>
   <p class="fnote" id="finNote">ここを押すと、これまでの回答が送信され、あなたの選んだ行動がカードになります</p>
   <div id="summary" hidden>
     <div class="card"><div class="t" id="cT"></div><div class="a" id="cA"></div><div class="m" id="cM"></div></div>
-    <p style="font-size:.875rem;color:var(--sub)">スクリーンショットで保存しておきましょう。</p>
-    <div class="result"><div><span style="font-size:.875rem;color:var(--sub)">体験の前</span><b id="preV">―</b></div><div><span style="font-size:.875rem;color:var(--sub)">体験の後</span><b id="postV">―</b></div></div>
+    <p style="font-size:1rem;color:var(--sub)">スクリーンショットで保存しておきましょう。</p>
+    <div class="result"><div><span style="font-size:1rem;color:var(--sub)">体験の前</span><b id="preV">―</b></div><div><span style="font-size:1rem;color:var(--sub)">体験の後</span><b id="postV">―</b></div></div>
     <p id="sumText"></p>
     <div id="quizRes" class="field quizres" hidden aria-live="polite"></div>
-    <p style="font-size:.875rem;color:var(--sub)">全国では、対策に取り組む企業の商品やサービスを選んでいる人は10.5%、今後そうしたい人は26.3%です（内閣府、令和7年9月）。</p>
+    <p style="font-size:1rem;color:var(--sub)">全国では、対策に取り組む企業の商品やサービスを選んでいる人は10.5%、今後そうしたい人は26.3%です（内閣府、令和7年9月）。</p>
     <div id="agg" class="field" hidden></div>
   </div>
   <div class="judge-end jdg-b"><a class="btn" id="fullLink" href="./">全体の体験（約15分）はこちら</a></div>
@@ -901,7 +901,7 @@ window.nextQ=nextQ;
 document.querySelectorAll('.opts').forEach(g=>g.addEventListener('click',e=>{ const b=e.target.closest('button'); if(!b||!g.contains(b)) return;
   g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false')); const a=g.dataset.a, v=b.dataset.v;
   if(a==='gs'){ guess=+v; reveal(); }
-  else if(a==='reg'){ const s=$('reg'); s.value=v; s.dispatchEvent(new Event('change')); }
+  else if(a==='reg'){ const s=$('reg'); s.value=v; s.dispatchEvent(new Event('input')); s.dispatchEvent(new Event('change')); }   // 選択欄を手で変えたときと同じく input と change の両方を送る
   else if(a in ans){ ans[a]=+v; }
   g.dispatchEvent(new CustomEvent('pick',{detail:v})); nextQ(b.closest('.qz')||b.closest('.field')); }));
 document.querySelectorAll('.likert').forEach(g=>{const key=g.dataset.q;(g.classList.contains('two')?['知っている','知らない']:LIK).forEach((t,i)=>{const b=document.createElement('button');b.type='button';b.innerHTML=t.replace('\n','<br>');b.setAttribute('aria-pressed','false');b.addEventListener('click',()=>{ans[key]=i+1;g.querySelectorAll('button').forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));nextQ(g.closest('.field'));});g.appendChild(b);});});
@@ -1037,7 +1037,7 @@ const cal=$('cal'); for(let i=0;i<365;i++) cal.appendChild(document.createElemen
 function drawFuture(){ const RR=REG[region]||REG.kinki, rn=REG[region]?RR.n:'近畿地方', tn=sc===2?RR.tn[0]:RR.tn[1], rain=sc===2?RR.r30[0]:RR.r30[1];
   $('tnN').textContent = tn==null ? '有意な変化なし' : `${tn}日増える`; $('rainN').textContent = rain==null ? '有意な変化なし' : `約${rain}倍になる`; $('futReg').textContent=`21世紀末・${rn}（気象庁）`;
   [...cal.children].forEach((c,i)=>c.classList.toggle('on',i>=180&&i<180+Math.round(tn||0)));
-  $('rainLife').textContent = rain==null ? `${rn}では、この強さの雨の回数に有意な変化は予測されていません。` : `85歳までの約${Math.max(0,85-age)}年で、この雨に約${rain}倍多く出会うおそれがあります。`;
+  $('rainLife').textContent = rain==null ? `${rn}では、この強さの雨の回数に有意な変化は予測されていません。` : (age<85?`85歳までの約${85-age}年で、`:'この先、')+`この雨に約${rain}倍多く出会うおそれがあります。`;
   $('txFlood').textContent=`床から${wd.toFixed(1)}mまで水が来ています（目の高さは1.5m）。`;
   $('wdText').textContent={0.5:'0.5m：床上浸水。大人のひざの上まで。流れがあると、歩いて逃げにくくなります。',1:'1.0m：大人の腰から胸まで。家具が動き、ドアが水圧で開きにくくなるおそれがあります。',3:'3.0m：2階の床の高さまで。1階からは、上の階へ逃げるしかありません。'}[wd]; }
 document.querySelectorAll('[data-sc]').forEach(b=>b.addEventListener('click',()=>{sc=+b.dataset.sc;press('data-sc',sc);drawFuture();drawRegion();}));
@@ -1140,8 +1140,10 @@ function initElder(){ const el=$('heatwrap'); if(!window.THREE) return;
   $('heatwrap').style.filter='url(#heat)';
   drawElder();
 }
-function drawElder6Head(){ const y80=birth()+80; $('h6x').textContent=`${y80}年、80歳になったあなたの部屋`; $('pvOld').textContent=`${y80}年・80歳のあなた`;
-  $('p6x').textContent = age>=80 ? `あなたはすでに80歳を超えています。この部屋は、いまのあなたの部屋です。` : `あなたが80歳になるのは${y80}年。${y80>=2081?'体験4で見た、暑くなった世界です。':'今より暑くなった世界です。'}`; }
+// 「年を取ったあなた」の年と年齢。80歳以上の人は、いまの年（2026年）といまの年齢にする（過去の年にしない）
+const OLD=()=>age>=80?{y:2026,a:age}:{y:birth()+80,a:80};
+function drawElder6Head(){ const y80=birth()+80, o=OLD(); $('h6x').textContent=age>=80?`${o.y}年、${o.a}歳のあなたの部屋`:`${o.y}年、80歳になったあなたの部屋`; $('pvOld').textContent=`${o.y}年・${o.a}歳のあなた`;
+  $('p6x').textContent = age>=80 ? `あなたはすでに80歳以上です。この部屋は、いまのあなたの部屋です。` : `あなたが80歳になるのは${y80}年。${y80>=2081?'体験4で見た、暑くなった世界です。':'今より暑くなった世界です。'}`; }
 window.ECO={ac:false,fan:false,cur:false,re:false,fanLimit:35};   // 体験6の機器（v1.9）
 function drawElder(){ drawElder6Head(); const real=Math.min(100,(temp-24)/12*100), feel0=pv==='young'?real:Math.max(0,real*.55-8), feel=(ECO.fan&&temp<=ECO.fanLimit)?Math.max(0,feel0-8):feel0;   // 扇風機：体感だけ少し下がる
   $('mReal').style.width=real+'%'; $('mFeel').style.width=feel+'%';
@@ -1149,16 +1151,16 @@ function drawElder(){ drawElder6Head(); const real=Math.min(100,(temp-24)/12*100
   if(cv) cv.style.filter=`saturate(${1+heat*.06}) sepia(${Math.min(.45,heat*.05)}) brightness(${1+heat*.015}) contrast(${1-heat*.01})`;
   $('vig').style.opacity=Math.min(.9,heat*.11);
   if(thermo){ thermo.material.map.dispose(); thermo.material.map=thermoTex(temp); thermo.material.needsUpdate=true; }
-  $('txElder').textContent=`${pv==='young'?'いまのあなた':`${birth()+80}年・80歳のあなた`}の部屋は${temp}℃です。`;
+  const o=OLD(); $('txElder').textContent=`${pv==='young'?'いまのあなた':`${o.y}年・${o.a}歳のあなた`}の部屋は${temp}℃です。`;
   $('elderText').textContent= pv==='young' ? (temp>=31?`${temp}℃。あなたなら、もうエアコンをつけているはずです。`:`${temp}℃。少し暑いと感じる程度です。`)
-    : (temp>=31?`${birth()+80}年、${temp}℃。部屋はとても暑いのに、80歳のあなたの体はまだ暑さを感じていません。気づくのが遅れ、体に熱がこもります。エアコンは、まだついていません。`:`${birth()+80}年、${temp}℃。80歳のあなたの体は、ほとんど暑さを感じていません。のどの渇きにも気づきにくくなっています。`); }
+    : (temp>=31?`${o.y}年、${temp}℃。部屋はとても暑いのに、${o.a}歳のあなたの体はまだ暑さを感じていません。気づくのが遅れ、体に熱がこもります。エアコンは、まだついていません。`:`${o.y}年、${temp}℃。${o.a}歳のあなたの体は、ほとんど暑さを感じていません。のどの渇きにも気づきにくくなっています。`); }
 document.querySelectorAll('[data-pv]').forEach(b=>b.addEventListener('click',()=>{pv=b.dataset.pv;press('data-pv',pv);drawElder();}));
 $('temp').addEventListener('input',e=>{temp=+e.target.value;$('tempOut').textContent=temp;drawElder();});
 
 // ---------- あと ----------
 const CH=[['対策に取り組む企業の商品やサービスを選ぶ','買い物の選択が、工場や物流の排出につながります','次の買い物で、1つだけ選び方を変える'],['電気のプランを再生可能エネルギーのものに切り替える','家庭の16%のうち、電気の分を根元から減らせます','今月中に、電気のプランを調べてみる'],['移動に公共交通機関や自転車を使う','運輸（21%）の一部に関わります','近い距離は、歩くか自転車で行く'],['長く使える物を選び、買い替えを減らす','作る段階の排出を減らせます','次に壊れた物は、まず直せるか調べる']];
 const ch=$('choices'),pick=$('pick');let chosen=null;
-function renderPick(){const sel=[...ch.children].map((x,i)=>x.getAttribute('aria-pressed')==='true'?i:-1).filter(i=>i>=0);pick.innerHTML='';if(!sel.length){pick.innerHTML='<span style="color:var(--sub);font-size:.875rem">上で選ぶと、ここに出てきます</span>';chosen=null;return;}if(!sel.includes(chosen))chosen=sel[0];sel.forEach(i=>{const b=document.createElement('button');b.type='button';b.textContent=CH[i][2];b.setAttribute('aria-pressed',i===chosen?'true':'false');b.addEventListener('click',()=>{chosen=i;renderPick();});pick.appendChild(b);});}
+function renderPick(){const sel=[...ch.children].map((x,i)=>x.getAttribute('aria-pressed')==='true'?i:-1).filter(i=>i>=0);pick.innerHTML='';if(!sel.length){pick.innerHTML='<span style="color:var(--sub);font-size:1rem">上で選ぶと、ここに出てきます</span>';chosen=null;return;}if(!sel.includes(chosen))chosen=sel[0];sel.forEach(i=>{const b=document.createElement('button');b.type='button';b.textContent=CH[i][2];b.setAttribute('aria-pressed',i===chosen?'true':'false');b.addEventListener('click',()=>{chosen=i;renderPick();});pick.appendChild(b);});}
 CH.forEach(([t,s])=>{const b=document.createElement('button');b.type='button';b.className='choice';b.setAttribute('aria-pressed','false');b.innerHTML=`<span class="box" aria-hidden="true">✓</span><span><b>${t}</b><small>${s}</small></span>`;b.addEventListener('click',()=>{b.setAttribute('aria-pressed',b.getAttribute('aria-pressed')==='true'?'false':'true');renderPick();});ch.appendChild(b);});
 let submitted=false; $('finish').addEventListener('click',()=>{ if(submitted){ $('summary').scrollIntoView({block:'center'}); return; } submitted=true;const lab=v=>v?LIK[v-1].replace('\n',''):'未回答',sec=(performance.now()-t0)/1000,[b]=genVals();
   $('cT').textContent=`${birth()}年生まれ　生まれた時点で積み上がっていた世界の排出 ${b}%`; $('cA').textContent=chosen!==null?`わたしは、${CH[chosen][2]}。`:'わたしは、84%の側にも関わっていることを知った。';
@@ -1187,20 +1189,20 @@ const API='https://script.google.com/macros/s/AKfycbwUBvNo37f7Y0D1jM7PqMLqdTgLMQ
 const GROUP=window.JUDGE?'J':(new URLSearchParams(location.search).get('g')||'').slice(0,2);   // v1.20：審査員版は J（judge シート）
 const pct=(n,d)=>d?Math.round(n/d*100)+'%':'―';
 async function saveAndAggregate(chosenIdxs, chosenOne){
-  const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:.88rem;color:var(--sub)"';
+  const box=$('agg'); box.hidden=false; const sub='style="margin:6px 0 0;font-size:1rem;color:var(--sub)"';
   if(!API){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>このページでは、回答は保存されません。</p>`; return; }
   box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計しています…</p>`;
   const K=window.KAKU?window.KAKU():{}; const QZ=window.QUIZSCORE?window.QUIZSCORE():''; const doc={idh:window.IDH||'', region:region||'', ageBand:Math.floor(age/10)*10, pre:ans.pre, post:ans.post, ipre:null, ipost:null, choices:chosenIdxs, chosen:chosenOne, sec:Math.round((performance.now()-t0)/1000), group:GROUP, cpre:K.cpre, cpost:K.cpost, quiz:QZ};
   let saved=true; try{ await fetch(API,{method:'POST',mode:'no-cors',body:JSON.stringify(doc)}); }catch(e){ saved=false; }   // 失敗しても体験は止めない
   let a=null; try{ a=await (await fetch(API)).json(); }catch(e){}
   if(!a){ box.innerHTML=`<b>みんなの結果</b><p ${sub}>集計を読み込めませんでした。</p>`; return; }
-  box.innerHTML=`<b>みんなの結果（${a.n}人）</b>${saved?'':'<p style="font-size:.875rem;color:var(--sub);margin:4px 0">※あなたの回答は保存できませんでした</p>'}
+  box.innerHTML=`<b>みんなの結果（${a.n}人）</b>${saved?'':'<p style="font-size:1rem;color:var(--sub);margin:4px 0">※あなたの回答は保存できませんでした</p>'}
    ${document.body.classList.contains('text-mode')
      ? `<p style="margin:10px 0 0">自分も関わっていると思う：体験前 <b>${pct(a.preInv,a.bothN)}</b>、体験後 <b>${pct(a.postInv,a.bothN)}</b>。</p>`
-     : `<div class="aggrow" style="margin-top:10px"><span></span><span style="font-size:.875rem;color:var(--sub)">体験前</span><span style="font-size:.875rem;color:var(--sub)">体験後</span>
+     : `<div class="aggrow" style="margin-top:10px"><span></span><span style="font-size:1rem;color:var(--sub)">体験前</span><span style="font-size:1rem;color:var(--sub)">体験後</span>
    <span>自分も関わっていると思う</span><b>${pct(a.preInv,a.bothN)}</b><b>${pct(a.postInv,a.bothN)}</b></div>`}
-   <p style="margin:10px 0 0;font-size:.9rem">「対策に取り組む企業の商品やサービスを選びたい」を選んだ人：<b>${pct(a.sel0,a.n)}</b></p>
-   <p style="margin:8px 0 0;font-size:.875rem;color:var(--sub)">「関わっていると思う」は「ややそう思う」と「そう思う」の合計（前後の両方に答えた人）。</p>`;
+   <p style="margin:10px 0 0;font-size:1rem">「対策に取り組む企業の商品やサービスを選びたい」を選んだ人：<b>${pct(a.sel0,a.n)}</b></p>
+   <p style="margin:8px 0 0;font-size:1rem;color:var(--sub)">「関わっていると思う」は「ややそう思う」と「そう思う」の合計（前後の両方に答えた人）。</p>`;
 }
 
 
@@ -1222,9 +1224,9 @@ let region=''; $('reg').addEventListener('change',e=>{region=e.target.value;draw
 function drawRegion(){ const b=$('regBox'); const r=REG[region]; if(!r){b.hidden=true;return;} b.hidden=false; const i=sc===2?0:1;
   let h=`<b>あなたの地域（${r.n}）では</b>`;
   const NS='有意な変化は予測されていない'; const lines=[]; lines.push(r.hot[i]==null?`猛暑日（35℃以上）：${NS}`:`猛暑日（35℃以上）が、年に約${r.hot[i]}日増える`); lines.push(r.tn[i]==null?`熱帯夜：${NS}`:`熱帯夜が、年に約${r.tn[i]}日増える`); lines.push(r.r30[i]==null?`1時間に30mm以上の激しい雨：${NS}`:`1時間に30mm以上の激しい雨が、約${r.r30[i]}倍になる`);
-  if(lines.length){ h+=`<ul style="margin:6px 0 4px;padding-left:1.2em">${lines.map(x=>`<li>${x}</li>`).join('')}</ul><span style="font-size:.875rem;color:var(--sub)">${sc}℃上昇の場合・20世紀末と比べた21世紀末の変化（気象庁）</span>`; }
-  else h+=`<p style="margin:6px 0 0;font-size:.92rem">この地域の数値はデモには未収録です。</p>`;
-  h+=`<p style="margin:8px 0 0;font-size:.88rem"><a href="${r.u}" target="_blank" rel="noopener">${r.n}の将来予測（気象庁）を見る</a></p>`; b.innerHTML=h; }
+  if(lines.length){ h+=`<ul style="margin:6px 0 4px;padding-left:1.2em">${lines.map(x=>`<li>${x}</li>`).join('')}</ul><span style="font-size:1rem;color:var(--sub)">${sc}℃上昇の場合・20世紀末と比べた21世紀末の変化（気象庁）</span>`; }
+  else h+=`<p style="margin:6px 0 0;font-size:1rem">この地域の数値はデモには未収録です。</p>`;
+  h+=`<p style="margin:8px 0 0;font-size:1rem"><a href="${r.u}" target="_blank" rel="noopener">${r.n}の将来予測（気象庁）を見る</a></p>`; b.innerHTML=h; }
 
 
 // ---------- 体験4-2 : 大阪湾の海面 ----------
