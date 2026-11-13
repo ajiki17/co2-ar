@@ -102,7 +102,7 @@ function guideSheet_() {
   rows.push(['', '', '', '']);
   rows.push(['シート', '役割', '', '']);
   [['responses', '通常のデモ（URLに ?g= を付けないとき）。「みんなの結果」はこのシートだけを集計する'],
-   ['pilot', '実証（11/13〜15）のA群（?g=A）とB群（?mode=text&g=B）。同じ idh・同じ群は最新の回答で上書き。実証のあいだ、A群・B群は v1.23 の画面（pilot.html）で回答する'],
+   ['pilot', '実証（11/13〜15）のA群（?g=A）とB群（?mode=text&g=B）。同じ idh・同じ群は最新の回答で上書き。実証のあいだ、A群・B群は v1.23 の画面（pilot.html）で回答する。idh が空欄の A の行は、通常のデモ（v1.23 以前）から移した回答（「移動ログ」参照）'],
    ['judge', '審査員版（?mode=judge・?start=ar）'],
    ['集計', 'pilot から数式で自動集計（A群・B群）。setupSheets を実行すると作り直す'],
    ['見方', 'この表']].forEach((r) => rows.push([r[0], r[1], '', '']));
@@ -176,3 +176,52 @@ function header_(sh) {
 }
 
 const out = (o) => ContentService.createTextOutput(JSON.stringify(o)).setMimeType(ContentService.MimeType.JSON);
+
+// ============================================================================================
+// v1.24.2：通常のデモ（responses）の回答を、A群（pilot・group＝A）として扱うための移動（エディタから実行する1回きりの作業）
+//   1. previewMoveResponsesToA を実行 → 「実行ログ」に、移すもの・残すものの件数が出る（何も変えない）
+//   2. 件数を確かめてから moveResponsesToA を実行 → 先に responses と pilot の控え（コピー）を作り、
+//      対象の行を pilot の下に group＝A で足して、responses から消す。「移動ログ」シートに元の行を記録する
+//   対象：responses の group が空欄で、ts が MOVE_FROM 以上・MOVE_UNTIL より前の行
+//   MOVE_UNTIL は、通常のデモが v1.24（質問の形が変わった版）になった時刻。「今まで全部」にするなら new Date() に書き換える
+const MOVE_FROM = null;                                          // null＝いちばん古い行から
+const MOVE_UNTIL = new Date('2026-11-13T13:46:00+09:00');       // v1.24 の公開（PR #17 のマージ）
+function previewMoveResponsesToA() { moveResponsesToA_(true); }
+function moveResponsesToA() { moveResponsesToA_(false); }
+
+function moveResponsesToA_(dry) {
+  const ss = SpreadsheetApp.getActive(), src = ss.getSheetByName('responses'), dst = sheetFor_('pilot');
+  const sh = header_(src), dh = header_(dst), data = src.getDataRange().getValues();
+  const iT = sh.indexOf('ts'), iG = sh.indexOf('group'), pick = [], noDate = [], later = [];
+  for (let r = 1; r < data.length; r++) {
+    const ts = data[r][iT];
+    if (String(data[r][iG]) !== '') continue;
+    if (Object.prototype.toString.call(ts) !== '[object Date]' || isNaN(ts)) { noDate.push(r + 1); continue; }
+    if (MOVE_FROM && ts < MOVE_FROM) continue;
+    if (ts >= MOVE_UNTIL) { later.push(r + 1); continue; }
+    pick.push(r);
+  }
+  const fmt = (d) => Utilities.formatDate(d, 'Asia/Tokyo', 'yyyy-MM-dd HH:mm');
+  const msg = '移す行：' + pick.length + '件' + (pick.length ? '（' + fmt(data[pick[0]][iT]) + '〜' + fmt(data[pick[pick.length - 1]][iT]) + '）' : '') +
+    '／ v1.24 以降なので残す行：' + later.length + '件 ／ 日時が読めず残す行：' + noDate.length + '件' + (noDate.length ? '（行 ' + noDate.join(',') + '）' : '');
+  Logger.log((dry ? '【確認だけ・何も変えていません】' : '【移動します】') + msg);
+  if (dry || !pick.length) return;
+  const lock = LockService.getScriptLock();
+  lock.waitLock(30000);
+  try {
+    const stamp = Utilities.formatDate(new Date(), 'Asia/Tokyo', 'MMdd_HHmm');
+    src.copyTo(ss).setName('控え_responses_' + stamp);
+    dst.copyTo(ss).setName('控え_pilot_' + stamp);
+    const rows = pick.map((r) => dh.map((h) => (h === 'group' ? 'A' : h === 'dup' ? '' : sh.includes(h) ? data[r][sh.indexOf(h)] : '')));
+    const start = dst.getLastRow() + 1;
+    dst.getRange(start, 1, rows.length, dh.length).setValues(rows);
+    const log = ss.getSheetByName('移動ログ') || ss.insertSheet('移動ログ');
+    if (log.getLastRow() === 0) log.appendRow(['移動した日時', '元のシート', '元の行', '回答の ts', '移した先', '移した先の行', 'メモ']);
+    const now = new Date();
+    log.getRange(log.getLastRow() + 1, 1, pick.length, 7).setValues(pick.map((r, k) => [now, 'responses', r + 1, data[r][iT], 'pilot（group＝A）', start + k, '通常のデモ（v1.23 以前）の回答をA群として扱う']));
+    for (let k = pick.length - 1; k >= 0; k--) src.deleteRow(pick[k] + 1);   // 下の行から消す（行番号がずれないように）
+  } finally {
+    lock.releaseLock();
+  }
+  Logger.log('完了：pilot に ' + pick.length + '件を group＝A で追加し、responses から消しました。控えのシート：控え_responses_…・控え_pilot_…');
+}
