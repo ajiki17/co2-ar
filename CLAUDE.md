@@ -7,6 +7,7 @@
 - 公開URL：https://ajiki17.github.io/co2-ar/ （GitHub Pages、main ブランチの一番上の階層）
 - **ファイルはすべて一番上の階層に置く**（フォルダなし）。index.html は 3Dモデルを `cube_day.glb` のように直接参照し、`data.json` も同じ階層から読む。
 - 3Dモデルの参照には `?v=3` のような版番号を付けている。**.glb を作り直したら、index.html 内の版番号を上げる**（iPhoneのキャッシュ対策）。
+- **実証のA群・B群は pilot.html（v1.23 の画面）で回答を集める。** index.html を `?g=A`／`?mode=text&g=B` で開くと pilot.html に切り替わる。通常のデモと審査員版は index.html（v1.24〜）。実証が終わるまで pilot.html の中身は変えない。
 - 主な部品：index.html（画面・文言・three.js r128 の3D場面・model-viewer 3.5.0 のAR）、data.json（数値と出典）、*.glb（ARモデル95個）、Code.gs（Google Apps Script の控え）
 - AR：iPhone は AR Quick Look（glb から USDZ を自動生成。アニメーション不可）、Android は WebXR / Scene Viewer。ar-scale="fixed"（実寸）。
 
